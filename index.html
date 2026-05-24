@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マインスイーパーRPG</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <h1>マインスイーパーRPG</h1>
+  <div>左クリック：開く / 右クリック：旗を立てる</div>
+
+  <div id="game-container">
+    <div id="grid"></div>
+
+    <div id="sidebar">
+      <div><strong>プレイヤー</strong></div>
+      <div>Lv: <span id="player-level">1</span></div>
+      <div>HP: <span id="player-hp">30</span> / <span id="player-max-hp">30</span></div>
+      <div>攻撃: <span id="player-atk">6</span></div>
+      <div>経験値: <span id="player-exp">0</span></div>
+
+      <button id="reset-btn">リセット</button>
+
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <!-- 戦闘モーダル -->
+  <div id="battle-modal">
+    <div id="battle-window">
+      <div id="battle-text"></div>
+      <div style="margin-top: 10px;">
+        <button id="attack-btn">攻撃</button>
+        <button id="escape-btn">逃げる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- クリアモーダル -->
+<div id="clear-modal">
+  <div id="clear-window">
+    <h2>クリア！</h2>
+    <p>すべての安全マスを開きました！</p>
+    <button id="clear-ok-btn">OK</button>
+  </div>
+</div>
+
+<!-- クリアモーダル -->
+<div id="clear-modal">
+  <div id="clear-window">
+    <h2>クリア！</h2>
+    <p>すべての安全マスを開きました！</p>
+    <button id="clear-ok-btn">OK</button>
+  </div>
+</div>
+
+<!-- ゲームオーバーモーダル -->
+<div id="gameover-modal">
+  <div id="gameover-window">
+    <h2>ゲームオーバー</h2>
+    <p>あなたは倒れてしまった…</p>
+    <button id="gameover-retry-btn">リトライ</button>
+  </div>
+</div>
+
+
+  <!-- メインスクリプト -->
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
