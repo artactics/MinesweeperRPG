@@ -562,7 +562,14 @@ button:hover {
 
   #ds-right {
     width: 100%;
+    flex-wrap: wrap;
     justify-content: flex-end;
+  }
+
+  #ds-player-stats {
+    width: 100%;
+    order: -1;
+    text-align: left;
   }
 
   #dungeon-cards {
