@@ -21,41 +21,52 @@ export class GridRenderer {
         div.dataset.row = r;
         div.dataset.col = c;
 
-        div.addEventListener("click", () => this.onLeft(cell));
-        div.addEventListener("contextmenu", e => {
-          e.preventDefault();
-          this.onRight(cell);
-        });
-
-        // タッチ操作：タップ→開く、長押し→旗
+        // Pointer Events でマウス・タッチ両対応
+        // タップ/クリック→開く、長押し/右クリック→旗
         let pressTimer = null;
-        let touchStartX = 0;
-        let touchStartY = 0;
-        div.addEventListener("touchstart", e => {
+        let startX = 0;
+        let startY = 0;
+        let moved = false;
+
+        div.addEventListener("pointerdown", e => {
           e.preventDefault();
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
+          startX = e.clientX;
+          startY = e.clientY;
+          moved = false;
           pressTimer = setTimeout(() => {
             pressTimer = null;
             this.onRight(cell);
           }, 500);
-        }, { passive: false });
-        div.addEventListener("touchend", () => {
+        });
+        div.addEventListener("pointermove", e => {
+          if (!moved) {
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+              moved = true;
+              if (pressTimer !== null) {
+                clearTimeout(pressTimer);
+                pressTimer = null;
+              }
+            }
+          }
+        });
+        div.addEventListener("pointerup", () => {
           if (pressTimer !== null) {
             clearTimeout(pressTimer);
             pressTimer = null;
-            this.onLeft(cell);
+            if (!moved) this.onLeft(cell);
           }
         });
-        div.addEventListener("touchmove", e => {
+        div.addEventListener("pointercancel", () => {
           if (pressTimer !== null) {
-            const dx = e.touches[0].clientX - touchStartX;
-            const dy = e.touches[0].clientY - touchStartY;
-            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-              clearTimeout(pressTimer);
-              pressTimer = null;
-            }
+            clearTimeout(pressTimer);
+            pressTimer = null;
           }
+        });
+        div.addEventListener("contextmenu", e => {
+          e.preventDefault();
+          this.onRight(cell);
         });
 
         cell.element = div;
