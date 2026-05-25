@@ -1,9 +1,11 @@
+import { GAME_CONFIG } from "./constants.js";
+
 export class Player {
   constructor() {
     this.level = 1;
-    this.maxHp = 30;
-    this.hp = 30;
-    this.atk = 6;
+    this.maxHp = GAME_CONFIG.PLAYER_INITIAL_HP;
+    this.hp = GAME_CONFIG.PLAYER_INITIAL_HP;
+    this.atk = GAME_CONFIG.PLAYER_INITIAL_ATK;
     this.exp = 0;
   }
 
@@ -13,12 +15,12 @@ export class Player {
   }
 
   checkLevelUp() {
-    const need = this.level * 10;
+    const need = this.level * GAME_CONFIG.EXP_PER_LEVEL;
     while (this.exp >= need) {
       this.exp -= need;
       this.level++;
-      this.maxHp += 10;
-      this.atk += 2;
+      this.maxHp += GAME_CONFIG.HP_GAIN_PER_LEVEL;
+      this.atk += GAME_CONFIG.ATK_GAIN_PER_LEVEL;
       this.hp = this.maxHp;
     }
   }

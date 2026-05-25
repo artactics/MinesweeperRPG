@@ -64,7 +64,7 @@ body {
   white-space: pre-line;
 }
 
-#battle-modal {
+.modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.7);
@@ -73,12 +73,16 @@ body {
   justify-content: center;
 }
 
-#battle-window {
+.modal-window {
   background: #111;
-  padding: 16px;
+  padding: 20px;
   border-radius: 8px;
   width: 260px;
   text-align: center;
+}
+
+#battle-window {
+  padding: 16px;
 }
 
 button {
@@ -93,38 +97,4 @@ button {
 
 button:hover {
   background: #2f63aa;
-}
-
-#clear-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-#clear-window {
-  background: #111;
-  padding: 20px;
-  border-radius: 8px;
-  width: 260px;
-  text-align: center;
-}
-
-#gameover-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-#gameover-window {
-  background: #111;
-  padding: 20px;
-  border-radius: 8px;
-  width: 260px;
-  text-align: center;
 }

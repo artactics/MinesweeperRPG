@@ -4,12 +4,14 @@ import { BattleSystem } from "./core/BattleSystem.js";
 import { GridRenderer } from "./ui/GridRenderer.js";
 import { BattleUI } from "./ui/BattleUI.js";
 import { LogUI } from "./ui/LogUI.js";
+import { ModalUI } from "./ui/ModalUI.js";
+import { DIRECTIONS, GAME_CONFIG } from "./core/constants.js";
 
 
 export class GameController {
 
   constructor() {
-    this.grid = new Grid(10, 10, 15);
+    this.grid = new Grid(GAME_CONFIG.GRID_ROWS, GAME_CONFIG.GRID_COLS, GAME_CONFIG.ENEMY_COUNT);
     this.player = new Player();
     this.battle = new BattleSystem(this.player);
 
@@ -22,6 +24,7 @@ export class GameController {
 
     this.battleUI = new BattleUI();
     this.logUI = new LogUI();
+    this.modalUI = new ModalUI();
 
     this.gridRenderer.render();
     this.updateUI();
@@ -36,7 +39,7 @@ export class GameController {
     // 敵マス
     if (cell.isEnemy) {
       const enemy = this.battle.start(cell);
-      this.logUI.add(`敵が現れた！ 危険度:${cell.danger}`);
+      this.logUI.add(`${enemy.emoji} ${enemy.name}が現れた！ 危険度:${cell.danger}`);
 
       this.battleUI.show(enemy, this.player);
 
@@ -57,13 +60,7 @@ export class GameController {
           this.gridRenderer.updateCell(cell);
 
           // ★ 周囲 8 マスの danger も再計算
-          const dirs = [
-            [-1,-1],[-1,0],[-1,1],
-            [0,-1],        [0,1],
-            [1,-1],[1,0],[1,1]
-          ];
-
-          for (const [dr, dc] of dirs) {
+          for (const [dr, dc] of DIRECTIONS) {
             const nr = cell.row + dr;
             const nc = cell.col + dc;
 
@@ -88,8 +85,18 @@ export class GameController {
       });
 
       this.battleUI.onEscape(() => {
-        this.logUI.add("逃げた！");
+        this.player.hp -= GAME_CONFIG.ESCAPE_DAMAGE;
+        if (this.player.hp <= 0) {
+          this.player.hp = 0;
+          this.logUI.add(`逃げたが、${GAME_CONFIG.ESCAPE_DAMAGE}ダメージを受けた…`);
+          this.battleUI.hide();
+          this.showGameOver();
+          return;
+        }
+
+        this.logUI.add(`逃げた！（${GAME_CONFIG.ESCAPE_DAMAGE}ダメージ）`);
         this.battleUI.hide();
+        this.updateUI();
 
         cell.revealed = false;
         this.gridRenderer.updateCell(cell);
@@ -117,43 +124,13 @@ export class GameController {
     this.gridRenderer.updateCell(cell);
   }
 
-  showBattle(enemy) {
-    const modal = document.getElementById("battle-modal");
-    modal.style.display = "flex";
-
-    const update = () => {
-      document.getElementById("battle-text").innerHTML =
-        `敵HP: ${enemy.hp}<br>あなたのHP: ${this.player.hp}`;
-    };
-    update();
-
-    document.getElementById("attack-btn").onclick = () => {
-      const result = this.battle.attack();
-      update();
-      this.updateUI();
-
-      if (result !== "continue") {
-        modal.style.display = "none";
-      }
-    };
-  }
 
   updateUI() {
-    document.getElementById("player-level").textContent = this.player.level;
-    document.getElementById("player-hp").textContent = this.player.hp;
-    document.getElementById("player-max-hp").textContent = this.player.maxHp;
-    document.getElementById("player-atk").textContent = this.player.atk;
-    document.getElementById("player-exp").textContent = this.player.exp;
+    this.logUI.updatePlayer(this.player);
   }
 
   floodReveal(r, c) {
-    const dirs = [
-      [-1,-1],[-1,0],[-1,1],
-      [0,-1],        [0,1],
-      [1,-1],[1,0],[1,1]
-    ];
-
-    for (const [dr, dc] of dirs) {
+    for (const [dr, dc] of DIRECTIONS) {
       const nr = r + dr;
       const nc = c + dc;
 
@@ -188,26 +165,15 @@ export class GameController {
   }
 
   showClearModal() {
-    const modal = document.getElementById("clear-modal");
-    modal.style.display = "flex";
-
-    document.getElementById("clear-ok-btn").onclick = () => {
-      modal.style.display = "none";
-    };
+    this.modalUI.showClear();
   }
 
   showGameOver() {
-    const modal = document.getElementById("gameover-modal");
-    modal.style.display = "flex";
-
-    document.getElementById("gameover-retry-btn").onclick = () => {
-      modal.style.display = "none";
-      this.resetGame();
-    };
+    this.modalUI.showGameOver(() => this.resetGame());
   }
 
   resetGame() {
-    this.grid = new Grid(10, 10, 15);
+    this.grid = new Grid(GAME_CONFIG.GRID_ROWS, GAME_CONFIG.GRID_COLS, GAME_CONFIG.ENEMY_COUNT);
     this.player = new Player();
     this.battle = new BattleSystem(this.player);
 

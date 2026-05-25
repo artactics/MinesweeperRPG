@@ -13,6 +13,8 @@ export class BattleUI {
 
   update(enemy, player) {
     this.text.innerHTML =
+      `<span style="font-size: 32px;">${enemy.emoji}</span><br>` +
+      `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
       `敵HP: ${enemy.hp}<br>` +
       `あなたのHP: ${player.hp}`;
   }

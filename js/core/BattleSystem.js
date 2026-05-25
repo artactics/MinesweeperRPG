@@ -1,3 +1,6 @@
+import { Enemy } from "./Enemy.js";
+import { ENEMY_TYPES } from "./constants.js";
+
 export class BattleSystem {
   constructor(player) {
     this.player = player;
@@ -5,13 +8,29 @@ export class BattleSystem {
   }
 
   start(cell) {
-    const base = Math.max(1, cell.danger);
-    this.enemy = {
-      hp: 10 + base * 4,
-      atk: 3 + base * 2,
-      exp: 5 + base * 3
-    };
+    const danger = cell.danger;
+    const enemyType = this.selectEnemyType(danger);
+    this.enemy = new Enemy(enemyType, danger);
     return this.enemy;
+  }
+
+  selectEnemyType(danger) {
+    const types = Object.values(ENEMY_TYPES);
+    const validTypes = types.filter(type => 
+      danger >= type.dangerRange[0] && danger <= type.dangerRange[1]
+    );
+    
+    console.log('danger:', danger, 'validTypes:', validTypes);
+    
+    if (validTypes.length === 0) {
+      console.log('No valid types, returning SLIME');
+      return ENEMY_TYPES.SLIME;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * validTypes.length);
+    const selected = validTypes[randomIndex];
+    console.log('Selected enemy type:', selected);
+    return selected;
   }
 
   attack() {

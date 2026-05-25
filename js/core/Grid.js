@@ -1,3 +1,5 @@
+import { DIRECTIONS } from "./constants.js";
+
 export class Grid {
   constructor(rows, cols, enemyCount) {
     this.rows = rows;
@@ -29,26 +31,29 @@ export class Grid {
 
   placeEnemies() {
     let placed = 0;
-    while (placed < this.enemyCount) {
+    const maxAttempts = this.rows * this.cols * 10;
+    let attempts = 0;
+
+    while (placed < this.enemyCount && attempts < maxAttempts) {
       const r = Math.floor(Math.random() * this.rows);
       const c = Math.floor(Math.random() * this.cols);
       if (!this.cells[r][c].isEnemy) {
         this.cells[r][c].isEnemy = true;
         placed++;
       }
+      attempts++;
+    }
+
+    if (placed < this.enemyCount) {
+      console.warn(`Could only place ${placed} enemies out of ${this.enemyCount}`);
     }
   }
 
   calcDanger() {
-    const dirs = [
-      [-1,-1],[-1,0],[-1,1],
-      [0,-1],        [0,1],
-      [1,-1],[1,0],[1,1]
-    ];
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         let count = 0;
-        for (const [dr, dc] of dirs) {
+        for (const [dr, dc] of DIRECTIONS) {
           const nr = r + dr;
           const nc = c + dc;
           if (nr >= 0 && nr < this.rows && nc >= 0 && nc < this.cols) {
@@ -62,13 +67,7 @@ export class Grid {
 
   countDanger(r, c) {
     let count = 0;
-    const dirs = [
-      [-1,-1],[-1,0],[-1,1],
-      [0,-1],        [0,1],
-      [1,-1],[1,0],[1,1]
-    ];
-
-    for (const [dr, dc] of dirs) {
+    for (const [dr, dc] of DIRECTIONS) {
       const nr = r + dr;
       const nc = c + dc;
       if (nr < 0 || nr >= this.rows || nc < 0 || nc >= this.cols) continue;
