@@ -8,6 +8,420 @@ body {
   padding: 20px;
 }
 
+#home-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  width: 100%;
+}
+
+#home-content {
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+.home-title {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.home-subtitle {
+  font-size: 1rem;
+  color: #aaa;
+  margin-bottom: 24px;
+}
+
+.home-features {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 16px 24px;
+  margin-bottom: 28px;
+  text-align: left;
+  line-height: 2.2;
+  font-size: 0.95rem;
+}
+
+.home-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-buttons button {
+  width: 260px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+#home-guest-btn {
+  background: #555;
+}
+
+#home-guest-btn:hover {
+  background: #666;
+}
+
+#game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+#dungeon-select-screen {
+  width: 100%;
+  max-width: 740px;
+  padding: 8px 0;
+}
+
+#ds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #444;
+}
+
+#ds-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+#ds-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+#ds-right button {
+  white-space: nowrap;
+}
+
+#ds-player-stats {
+  font-size: 0.9rem;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+#dungeon-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.dungeon-card {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dungeon-card-locked {
+  opacity: 0.5;
+}
+
+.dungeon-card-name {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.dungeon-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82rem;
+  color: #aaa;
+  flex: 1;
+}
+
+.dungeon-card-lock {
+  margin-top: 10px;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.dungeon-enter-btn {
+  margin-top: 10px;
+  width: 100%;
+}
+
+#dungeon-play-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+#play-header {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 6px;
+}
+
+#back-to-select-btn {
+  background: #555;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+}
+
+#back-to-select-btn:hover {
+  background: #666;
+}
+
+#inventory-window {
+  width: 340px;
+  max-height: 70vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.inv-badge {
+  color: #ffd700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  min-width: 28px;
+  text-align: right;
+}
+
+#shop-window {
+  width: 360px;
+  max-height: 75vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+#shop-gold-display {
+  font-size: 1rem;
+  color: #ffd700;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#shop-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.shop-tab {
+  flex: 1;
+  background: #333;
+  color: #aaa;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  margin: 0;
+}
+
+.shop-tab.active {
+  background: #3a7bd5;
+  color: #fff;
+}
+
+.shop-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 0.88rem;
+}
+
+.shop-item-info {
+  flex: 1;
+}
+
+.shop-item-price {
+  color: #ffd700;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.shop-buy-btn {
+  background: #445544;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+  margin: 0;
+}
+
+.shop-buy-btn:hover { background: #557755; }
+
+.shop-sell-btn {
+  background: #554433;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+  margin: 0;
+}
+
+.shop-sell-btn:hover { background: #775544; }
+
+.shop-section-title {
+  font-size: 0.75rem;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 12px 0 4px;
+}
+
+#equipment-window {
+  width: 380px;
+  max-height: 75vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.eq-section-title {
+  font-size: 0.75rem;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.eq-slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #333;
+  font-size: 0.9rem;
+}
+
+.eq-slot-label {
+  color: #888;
+  width: 32px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.eq-item-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.eq-item-stat {
+  font-size: 0.8rem;
+  color: #5aaa88;
+  margin-left: 4px;
+}
+
+.eq-empty {
+  flex: 1;
+  color: #555;
+}
+
+.eq-unequip-btn {
+  background: #554444;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+}
+
+.eq-unequip-btn:hover {
+  background: #664444;
+}
+
+.eq-inventory-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 0.9rem;
+}
+
+.eq-item-info {
+  flex: 1;
+}
+
+.eq-equip-btn {
+  background: #445544;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+}
+
+.eq-equip-btn:hover {
+  background: #557755;
+}
+
+#result-screen {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+#result-content {
+  background: #1a1a2e;
+  border: 2px solid #3a7bd5;
+  border-radius: 12px;
+  padding: 28px 40px;
+  min-width: 360px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+#result-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+#result-dungeon-name {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #333;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.result-levelup {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.result-section-title {
+  text-align: left;
+  font-size: 0.75rem;
+  color: #777;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+#result-ok-btn {
+  margin-top: 22px;
+  padding: 10px 32px;
+  font-size: 1rem;
+}
+
 #game-container {
   display: flex;
   gap: 20px;
@@ -97,4 +511,74 @@ button {
 
 button:hover {
   background: #2f63aa;
+}
+
+/* ===== モバイル対応 ===== */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  /* ホーム画面 */
+  .home-title {
+    font-size: 1.7rem;
+  }
+
+  .home-buttons button {
+    width: 100%;
+  }
+
+  /* ダンジョン選択 */
+  #ds-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  #ds-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  #dungeon-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* プレイ画面 */
+  #game-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #sidebar {
+    width: 100%;
+    min-width: unset;
+  }
+
+  #log {
+    height: 120px;
+  }
+
+  /* グリッドセル */
+  .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+
+  /* リザルト画面 */
+  #result-content {
+    min-width: unset;
+    padding: 20px 16px;
+  }
+
+  /* 装備モーダル */
+  #equipment-window {
+    width: calc(100vw - 48px);
+  }
+
+  /* モーダル全般 */
+  .modal-window {
+    width: calc(100vw - 40px);
+  }
 }

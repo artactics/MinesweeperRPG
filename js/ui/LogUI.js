@@ -21,7 +21,8 @@ export class LogUI {
     this.playerLevelEl.textContent = player.level;
     this.playerHpEl.textContent = player.hp;
     this.playerMaxHpEl.textContent = player.maxHp;
-    this.playerAtkEl.textContent = player.atk;
+    const bonus = player.bonusAtk || 0;
+    this.playerAtkEl.textContent = bonus > 0 ? `${player.atk + bonus}(+${bonus})` : player.atk;
     this.playerExpEl.textContent = player.exp;
   }
 }

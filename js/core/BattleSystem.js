@@ -9,7 +9,7 @@ export class BattleSystem {
 
   start(cell) {
     const danger = cell.danger;
-    const enemyType = this.selectEnemyType(danger);
+    const enemyType = cell.enemyType || this.selectEnemyType(danger);
     this.enemy = new Enemy(enemyType, danger);
     return this.enemy;
   }
@@ -34,9 +34,8 @@ export class BattleSystem {
   }
 
   attack() {
-    this.enemy.hp -= this.player.atk;
+    this.enemy.hp -= this.player.atk + (this.player.bonusAtk || 0);
     if (this.enemy.hp <= 0) {
-      this.player.gainExp(this.enemy.exp);
       return "victory";
     }
 
