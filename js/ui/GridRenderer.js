@@ -21,49 +21,35 @@ export class GridRenderer {
         div.dataset.row = r;
         div.dataset.col = c;
 
-        // Pointer Events でマウス・タッチ両対応
-        // タップ/クリック→開く、長押し/右クリック→旗
-        let pressTimer = null;
-        let startX = 0;
-        let startY = 0;
-        let moved = false;
+        // tap→開く（click）、長押し→旗（touchstart/touchend）
+        let longPressTimer = null;
+        let longPressTriggered = false;
 
-        div.addEventListener("pointerdown", e => {
-          e.preventDefault();
-          startX = e.clientX;
-          startY = e.clientY;
-          moved = false;
-          pressTimer = setTimeout(() => {
-            pressTimer = null;
+        div.addEventListener("touchstart", () => {
+          longPressTriggered = false;
+          longPressTimer = setTimeout(() => {
+            longPressTriggered = true;
+            longPressTimer = null;
             this.onRight(cell);
           }, 500);
-        });
-        div.addEventListener("pointermove", e => {
-          if (!moved) {
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
-              moved = true;
-              if (pressTimer !== null) {
-                clearTimeout(pressTimer);
-                pressTimer = null;
-              }
-            }
+        }, { passive: true });
+        div.addEventListener("touchmove", () => {
+          if (longPressTimer !== null) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
           }
-        });
-        div.addEventListener("pointerup", () => {
-          if (pressTimer !== null) {
-            clearTimeout(pressTimer);
-            pressTimer = null;
-            if (!moved) this.onLeft(cell);
+        }, { passive: true });
+        div.addEventListener("touchend", e => {
+          if (longPressTimer !== null) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
           }
-        });
-        div.addEventListener("pointercancel", () => {
-          if (pressTimer !== null) {
-            clearTimeout(pressTimer);
-            pressTimer = null;
+          if (longPressTriggered) {
+            e.preventDefault();
+            longPressTriggered = false;
           }
-        });
+        }, { passive: false });
+        div.addEventListener("click", () => this.onLeft(cell));
         div.addEventListener("contextmenu", e => {
           e.preventDefault();
           this.onRight(cell);

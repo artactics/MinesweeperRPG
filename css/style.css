@@ -442,7 +442,7 @@ body {
   width: 32px;
   height: 32px;
   background: #444;
-  touch-action: none;
+  touch-action: manipulation;
   border-radius: 4px;
   display: flex;
   align-items: center;
