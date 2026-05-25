@@ -32,6 +32,7 @@ export class GameController {
     this.firebaseManager.init((user) => this.onUserChanged(user));
 
     this.dungeonEquipmentGained = [];
+    this.flagMode = false;
 
     this.setupAuthButtons();
     this.setupPlayButtons();
@@ -165,6 +166,13 @@ export class GameController {
     });
     document.getElementById("result-ok-btn").addEventListener("click", () => {
       this.showDungeonSelect();
+    });
+    document.getElementById("flag-mode-btn").addEventListener("click", () => {
+      this.flagMode = !this.flagMode;
+      const btn = document.getElementById("flag-mode-btn");
+      btn.classList.toggle("flag-mode-on", this.flagMode);
+      btn.classList.toggle("flag-mode-off", !this.flagMode);
+      btn.textContent = this.flagMode ? "⚑ 旗モード ON" : "⚑ 旗モード";
     });
   }
 
@@ -486,6 +494,10 @@ export class GameController {
       itemPool
     );
     this.player.bonusAtk = 0;
+    this.flagMode = false;
+    const flagBtn = document.getElementById("flag-mode-btn");
+    flagBtn.classList.replace("flag-mode-on", "flag-mode-off");
+    flagBtn.textContent = "⚑ 旗モード";
     this.battle = new BattleSystem(this.player);
 
     this.gridRenderer.grid = this.grid;
@@ -530,6 +542,7 @@ export class GameController {
   }
 
   onLeft(cell) {
+    if (this.flagMode) { this.onRight(cell); return; }
     if (cell.flagged) return;
 
     // 開いたマスでアイテムがある場合

@@ -185,6 +185,26 @@ body {
   background: #666;
 }
 
+#flag-mode-btn {
+  display: none;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  margin-left: 8px;
+}
+
+#flag-mode-btn.flag-mode-off {
+  background: #555;
+}
+
+#flag-mode-btn.flag-mode-on {
+  background: #c0392b;
+  color: #fff;
+  font-weight: bold;
+}
+
+#play-hint-pc  { display: inline; }
+#play-hint-mobile { display: none; }
+
 #inventory-window {
   width: 340px;
   max-height: 70vh;
@@ -519,6 +539,10 @@ button:hover {
   body {
     padding: 10px;
   }
+
+  #flag-mode-btn { display: inline-block; }
+  #play-hint-pc  { display: none; }
+  #play-hint-mobile { display: inline; }
 
   /* ホーム画面 */
   .home-title {

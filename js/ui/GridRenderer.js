@@ -29,8 +29,7 @@ export class GridRenderer {
     }
 
     // イベント委譲：グリッド全体で一括管理
-    let longPressTimer = null;
-    let longPressTarget = null;
+    let touchTarget = null;
     let touchMoved = false;
     let touchStartX = 0;
     let touchStartY = 0;
@@ -42,34 +41,22 @@ export class GridRenderer {
       touchStartY = touch.clientY;
       touchMoved = false;
       const el = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (!el || !el.classList.contains("cell")) return;
-      longPressTarget = el;
-      longPressTimer = setTimeout(() => {
-        longPressTimer = null;
-        const r = parseInt(longPressTarget.dataset.row);
-        const c = parseInt(longPressTarget.dataset.col);
-        this.onRight(this.grid.cells[r][c]);
-        longPressTarget = null;
-      }, 500);
+      touchTarget = (el && el.classList.contains("cell")) ? el : null;
     }, { passive: false });
 
     this.root.addEventListener("touchmove", e => {
       const dx = e.touches[0].clientX - touchStartX;
       const dy = e.touches[0].clientY - touchStartY;
-      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
-        touchMoved = true;
-        if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-      }
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) touchMoved = true;
     }, { passive: true });
 
-    this.root.addEventListener("touchend", e => {
-      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-      if (!touchMoved && longPressTarget) {
-        const r = parseInt(longPressTarget.dataset.row);
-        const c = parseInt(longPressTarget.dataset.col);
+    this.root.addEventListener("touchend", () => {
+      if (!touchMoved && touchTarget) {
+        const r = parseInt(touchTarget.dataset.row);
+        const c = parseInt(touchTarget.dataset.col);
         this.onLeft(this.grid.cells[r][c]);
       }
-      longPressTarget = null;
+      touchTarget = null;
     }, { passive: true });
 
     // マウス操作（PC）
