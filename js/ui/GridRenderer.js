@@ -29,8 +29,12 @@ export class GridRenderer {
 
         // タッチ操作：タップ→開く、長押し→旗
         let pressTimer = null;
+        let touchStartX = 0;
+        let touchStartY = 0;
         div.addEventListener("touchstart", e => {
           e.preventDefault();
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
           pressTimer = setTimeout(() => {
             pressTimer = null;
             this.onRight(cell);
@@ -43,10 +47,14 @@ export class GridRenderer {
             this.onLeft(cell);
           }
         });
-        div.addEventListener("touchmove", () => {
+        div.addEventListener("touchmove", e => {
           if (pressTimer !== null) {
-            clearTimeout(pressTimer);
-            pressTimer = null;
+            const dx = e.touches[0].clientX - touchStartX;
+            const dy = e.touches[0].clientY - touchStartY;
+            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+              clearTimeout(pressTimer);
+              pressTimer = null;
+            }
           }
         });
 
