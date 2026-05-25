@@ -8,11 +8,12 @@ export class GridRenderer {
 
   render() {
     this.root.innerHTML = "";
-    
-    // グリッドサイズに応じてCSSを動的に設定
-    this.root.style.gridTemplateColumns = `repeat(${this.grid.cols}, 32px)`;
-    this.root.style.gridTemplateRows = `repeat(${this.grid.rows}, 32px)`;
-    
+
+    // モバイルはセルを大きくする
+    const cellSize = window.innerWidth <= 600 ? 40 : 32;
+    this.root.style.gridTemplateColumns = `repeat(${this.grid.cols}, ${cellSize}px)`;
+    this.root.style.gridTemplateRows    = `repeat(${this.grid.rows}, ${cellSize}px)`;
+
     for (let r = 0; r < this.grid.rows; r++) {
       for (let c = 0; c < this.grid.cols; c++) {
         const cell = this.grid.cells[r][c];
@@ -20,45 +21,73 @@ export class GridRenderer {
         div.className = "cell";
         div.dataset.row = r;
         div.dataset.col = c;
-
-        // tap→開く（click）、長押し→旗（touchstart/touchend）
-        let longPressTimer = null;
-        let longPressTriggered = false;
-
-        div.addEventListener("touchstart", () => {
-          longPressTriggered = false;
-          longPressTimer = setTimeout(() => {
-            longPressTriggered = true;
-            longPressTimer = null;
-            this.onRight(cell);
-          }, 500);
-        }, { passive: true });
-        div.addEventListener("touchmove", () => {
-          if (longPressTimer !== null) {
-            clearTimeout(longPressTimer);
-            longPressTimer = null;
-          }
-        }, { passive: true });
-        div.addEventListener("touchend", e => {
-          if (longPressTimer !== null) {
-            clearTimeout(longPressTimer);
-            longPressTimer = null;
-          }
-          if (longPressTriggered) {
-            e.preventDefault();
-            longPressTriggered = false;
-          }
-        }, { passive: false });
-        div.addEventListener("click", () => this.onLeft(cell));
-        div.addEventListener("contextmenu", e => {
-          e.preventDefault();
-          this.onRight(cell);
-        });
-
+        div.style.width  = `${cellSize}px`;
+        div.style.height = `${cellSize}px`;
         cell.element = div;
         this.root.appendChild(div);
       }
     }
+
+    // イベント委譲：グリッド全体で一括管理
+    let longPressTimer = null;
+    let longPressTarget = null;
+    let touchMoved = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    this.root.addEventListener("touchstart", e => {
+      e.preventDefault(); // スクロール・300ms遅延を即座に排除
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchMoved = false;
+      const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (!el || !el.classList.contains("cell")) return;
+      longPressTarget = el;
+      longPressTimer = setTimeout(() => {
+        longPressTimer = null;
+        const r = parseInt(longPressTarget.dataset.row);
+        const c = parseInt(longPressTarget.dataset.col);
+        this.onRight(this.grid.cells[r][c]);
+        longPressTarget = null;
+      }, 500);
+    }, { passive: false });
+
+    this.root.addEventListener("touchmove", e => {
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+        touchMoved = true;
+        if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+      }
+    }, { passive: true });
+
+    this.root.addEventListener("touchend", e => {
+      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+      if (!touchMoved && longPressTarget) {
+        const r = parseInt(longPressTarget.dataset.row);
+        const c = parseInt(longPressTarget.dataset.col);
+        this.onLeft(this.grid.cells[r][c]);
+      }
+      longPressTarget = null;
+    }, { passive: true });
+
+    // マウス操作（PC）
+    this.root.addEventListener("click", e => {
+      const el = e.target.closest(".cell");
+      if (!el) return;
+      const r = parseInt(el.dataset.row);
+      const c = parseInt(el.dataset.col);
+      this.onLeft(this.grid.cells[r][c]);
+    });
+    this.root.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      const el = e.target.closest(".cell");
+      if (!el) return;
+      const r = parseInt(el.dataset.row);
+      const c = parseInt(el.dataset.col);
+      this.onRight(this.grid.cells[r][c]);
+    });
   }
 
   updateCell(cell) {
