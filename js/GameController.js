@@ -485,6 +485,7 @@ export class GameController {
       return;
     }
 
+    this._discardDungeonEquipment();
     this.player.handItems = {};
     this.dungeonEquipmentGained = [];
 
@@ -570,10 +571,41 @@ export class GameController {
     }
   }
 
-  async saveGameData() {
-    if (this.firebaseManager.getCurrentUser()) {
-      await this.firebaseManager.saveUserData(this.player.toJSON());
+  async saveGameData(dungeonClear = false) {
+    if (!this.firebaseManager.getCurrentUser()) return;
+    let data = this.player.toJSON();
+    if (!dungeonClear && this.dungeonEquipmentGained && this.dungeonEquipmentGained.length > 0) {
+      data = { ...data };
+      data.equipmentInventory = { ...data.equipmentInventory };
+      data.equipped = { ...data.equipped };
+      for (const item of this.dungeonEquipmentGained) {
+        if (data.equipmentInventory[item.id]) {
+          const cnt = data.equipmentInventory[item.id].count - 1;
+          if (cnt <= 0) delete data.equipmentInventory[item.id];
+          else data.equipmentInventory[item.id] = { ...data.equipmentInventory[item.id], count: cnt };
+        }
+        for (const slot of ["weapon", "head", "body", "legs"]) {
+          if (data.equipped[slot] && data.equipped[slot].id === item.id) data.equipped[slot] = null;
+        }
+      }
     }
+    await this.firebaseManager.saveUserData(data);
+  }
+
+  _discardDungeonEquipment() {
+    for (const item of (this.dungeonEquipmentGained || [])) {
+      for (const slot of ["weapon", "head", "body", "legs"]) {
+        if (this.player.equipped[slot] && this.player.equipped[slot].id === item.id) {
+          this.player._applyEquipmentStats(this.player.equipped[slot], -1);
+          this.player.equipped[slot] = null;
+        }
+      }
+      if (this.player.equipmentInventory[item.id]) {
+        this.player.equipmentInventory[item.id].count--;
+        if (this.player.equipmentInventory[item.id].count <= 0) delete this.player.equipmentInventory[item.id];
+      }
+    }
+    this.dungeonEquipmentGained = [];
   }
 
   onLeft(cell) {
@@ -889,7 +921,7 @@ export class GameController {
         this.player.moveToInventory(itemId);
       }
 
-      this.saveGameData();
+      this.saveGameData(true);
       this.showResultScreen({
         dungeonName: config.name,
         expGained: config.clearExp,
@@ -906,6 +938,7 @@ export class GameController {
   }
 
   showGameOver() {
+    this._discardDungeonEquipment();
     this.modalUI.showGameOver(() => this.resetGame());
   }
 
