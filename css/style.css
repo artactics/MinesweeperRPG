@@ -725,6 +725,8 @@ body {
 
 .battle-cell-mine {
   background: #3a1010;
+  color: #ff4040;
+  font-size: 18px;
 }
 
 .battle-num-1 { color: #80c8ff; }
