@@ -127,9 +127,17 @@ export class GameController {
       const card = document.createElement("div");
       card.className = `dungeon-card ${config.themeClass}` + (locked ? " dungeon-card-locked" : "");
 
+      const bannerEl = document.createElement("div");
+      bannerEl.className = "dungeon-card-banner";
+      bannerEl.textContent = config.emoji;
+      card.appendChild(bannerEl);
+
+      const bodyEl = document.createElement("div");
+      bodyEl.className = "dungeon-card-body";
+
       const nameEl = document.createElement("div");
       nameEl.className = "dungeon-card-name";
-      nameEl.textContent = `${config.emoji} Lv${level}: ${config.name}`;
+      nameEl.textContent = `Lv${level}: ${config.name}`;
 
       const detailsEl = document.createElement("div");
       detailsEl.className = "dungeon-card-details";
@@ -139,22 +147,23 @@ export class GameController {
         <span>クリアEXP: +${config.clearExp} &nbsp; クリアG: +${config.clearGold}</span>
       `;
 
-      card.appendChild(nameEl);
-      card.appendChild(detailsEl);
+      bodyEl.appendChild(nameEl);
+      bodyEl.appendChild(detailsEl);
 
       if (locked) {
         const lockEl = document.createElement("div");
         lockEl.className = "dungeon-card-lock";
         lockEl.textContent = `🔒 Lv${config.minPlayerLevel}以上で解放`;
-        card.appendChild(lockEl);
+        bodyEl.appendChild(lockEl);
       } else {
         const btn = document.createElement("button");
         btn.className = "dungeon-enter-btn";
         btn.textContent = "入場する";
         btn.addEventListener("click", () => this.enterDungeon(parseInt(level)));
-        card.appendChild(btn);
+        bodyEl.appendChild(btn);
       }
 
+      card.appendChild(bodyEl);
       container.appendChild(card);
     }
   }
@@ -502,6 +511,8 @@ export class GameController {
 
     const gridEl = document.getElementById("grid");
     gridEl.className = config.themeClass || "";
+    const playEl = document.getElementById("dungeon-play-screen");
+    playEl.className = config.themeClass || "";
 
     this.gridRenderer.grid = this.grid;
     this.gridRenderer.render();
