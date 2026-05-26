@@ -518,8 +518,29 @@ export class GameController {
     this.gridRenderer.render();
     this.logUI.clear();
     this.logUI.add(`${config.emoji} ${config.name}に入場しました`);
+    this._updateMonsterList();
     this.updateUI();
     this.showDungeonPlay();
+  }
+
+  _updateMonsterList() {
+    const el = document.getElementById("monster-list");
+    if (!el) return;
+    const counts = {};
+    for (let r = 0; r < this.grid.rows; r++) {
+      for (let c = 0; c < this.grid.cols; c++) {
+        const cell = this.grid.cells[r][c];
+        if (!cell.isEnemy || cell.revealed) continue;
+        const t = cell.enemyType;
+        const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
+        if (!counts[key]) counts[key] = { label: cell.isElite ? `${t.emoji}${t.name}(\u30a8\u30ea\u30fc\u30c8)` : `${t.emoji}${t.name}`, isElite: cell.isElite, count: 0 };
+        counts[key].count++;
+      }
+    }
+    el.innerHTML = Object.values(counts)
+      .sort((a, b) => b.isElite - a.isElite)
+      .map(e => `<div class="${e.isElite ? 'monster-elite' : ''}">${e.label} \xd7${e.count}</div>`)
+      .join("") || "<div>\u30af\u30ea\u30a2\uff01</div>";
   }
 
   async onUserChanged(user) {
@@ -654,6 +675,7 @@ export class GameController {
             }
           }
 
+          this._updateMonsterList();
           this.battleUI.hide();
           this.checkClear();
         } else if (result === "defeat") {

@@ -642,6 +642,21 @@ body {
   min-width: 200px;
 }
 
+#monster-section {
+  margin-top: 8px;
+  font-size: 0.82rem;
+}
+
+#monster-list div {
+  color: #bbb;
+  line-height: 1.6;
+}
+
+#monster-list .monster-elite {
+  color: #FFD700;
+  font-weight: bold;
+}
+
 #log {
   margin-top: 10px;
   padding: 8px;

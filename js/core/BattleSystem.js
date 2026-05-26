@@ -9,30 +9,11 @@ export class BattleSystem {
   }
 
   start(cell) {
-    const danger = cell.danger;
-    const enemyType = cell.enemyType || this.selectEnemyType(danger);
-    this.enemy = new Enemy(enemyType, danger);
-    this.battleGrid = new BattleGrid(danger);
+    const isElite = cell.isElite || false;
+    const enemyType = cell.enemyType || ENEMY_TYPES.SLIME;
+    this.enemy = new Enemy(enemyType, isElite);
+    this.battleGrid = new BattleGrid(isElite ? 3 : 2);
     return this.enemy;
-  }
-
-  selectEnemyType(danger) {
-    const types = Object.values(ENEMY_TYPES);
-    const validTypes = types.filter(type => 
-      danger >= type.dangerRange[0] && danger <= type.dangerRange[1]
-    );
-    
-    console.log('danger:', danger, 'validTypes:', validTypes);
-    
-    if (validTypes.length === 0) {
-      console.log('No valid types, returning SLIME');
-      return ENEMY_TYPES.SLIME;
-    }
-    
-    const randomIndex = Math.floor(Math.random() * validTypes.length);
-    const selected = validTypes[randomIndex];
-    console.log('Selected enemy type:', selected);
-    return selected;
   }
 
   attack(row, col) {

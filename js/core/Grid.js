@@ -46,14 +46,26 @@ export class Grid {
       if (!this.cells[r][c].isEnemy) {
         const enemyTypeKey = this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
         this.cells[r][c].isEnemy = true;
+        this.cells[r][c].isElite = false;
         this.cells[r][c].enemyType = ENEMY_TYPES[enemyTypeKey];
         placed++;
       }
       attempts++;
     }
 
-    if (placed < this.enemyCount) {
-      console.warn(`Could only place ${placed} enemies out of ${this.enemyCount}`);
+    // エリートを必ず1体配置
+    attempts = 0;
+    while (attempts < maxAttempts) {
+      const r = Math.floor(Math.random() * this.rows);
+      const c = Math.floor(Math.random() * this.cols);
+      if (!this.cells[r][c].isEnemy) {
+        const enemyTypeKey = this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
+        this.cells[r][c].isEnemy = true;
+        this.cells[r][c].isElite = true;
+        this.cells[r][c].enemyType = ENEMY_TYPES[enemyTypeKey];
+        break;
+      }
+      attempts++;
     }
   }
 
@@ -78,7 +90,8 @@ export class Grid {
           const nr = r + dr;
           const nc = c + dc;
           if (nr >= 0 && nr < this.rows && nc >= 0 && nc < this.cols) {
-            if (this.cells[nr][nc].isEnemy) count++;
+            const nb = this.cells[nr][nc];
+            if (nb.isEnemy) count += nb.isElite ? 2 : 1;
           }
         }
         this.cells[r][c].danger = count;
@@ -104,9 +117,9 @@ export class Grid {
       const nr = r + dr;
       const nc = c + dc;
       if (nr < 0 || nr >= this.rows || nc < 0 || nc >= this.cols) continue;
-      if (this.cells[nr][nc].isEnemy) count++;
+      const nb = this.cells[nr][nc];
+      if (nb.isEnemy) count += nb.isElite ? 2 : 1;
     }
-
     return count;
   }
 

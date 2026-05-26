@@ -1,7 +1,7 @@
 export class BattleGrid {
-  constructor(danger) {
+  constructor(mineCount = 2) {
     this.size = 3;
-    this.mineCount = danger <= 2 ? 1 : danger <= 5 ? 2 : 3;
+    this.mineCount = Math.min(mineCount, this.size * this.size - 1);
     this._init();
   }
 
