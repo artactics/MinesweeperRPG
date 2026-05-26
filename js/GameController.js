@@ -125,11 +125,11 @@ export class GameController {
     for (const [level, config] of Object.entries(DUNGEON_CONFIG)) {
       const locked = this.player.level < config.minPlayerLevel;
       const card = document.createElement("div");
-      card.className = "dungeon-card" + (locked ? " dungeon-card-locked" : "");
+      card.className = `dungeon-card ${config.themeClass}` + (locked ? " dungeon-card-locked" : "");
 
       const nameEl = document.createElement("div");
       nameEl.className = "dungeon-card-name";
-      nameEl.textContent = `Lv${level}: ${config.name}`;
+      nameEl.textContent = `${config.emoji} Lv${level}: ${config.name}`;
 
       const detailsEl = document.createElement("div");
       detailsEl.className = "dungeon-card-details";
@@ -500,10 +500,13 @@ export class GameController {
     flagBtn.textContent = "⚑ 旗モード";
     this.battle = new BattleSystem(this.player);
 
+    const gridEl = document.getElementById("grid");
+    gridEl.className = config.themeClass || "";
+
     this.gridRenderer.grid = this.grid;
     this.gridRenderer.render();
     this.logUI.clear();
-    this.logUI.add(`${config.name}に入場しました`);
+    this.logUI.add(`${config.emoji} ${config.name}に入場しました`);
     this.updateUI();
     this.showDungeonPlay();
   }

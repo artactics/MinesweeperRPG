@@ -486,6 +486,66 @@ body {
   background: #662222;
 }
 
+/* ===== ダンジョンテーマ ===== */
+
+/* 1. 初心者の洞窟 - 石灰色 */
+#grid.theme-cave                   { background: #1a1a1a; }
+#grid.theme-cave .cell             { background: #5a5550; }
+#grid.theme-cave .cell.revealed    { background: #2e2b28; }
+#grid.theme-cave .cell.flagged     { background: #7a6a30; }
+
+/* 2. 森の小道 - 深緑 */
+#grid.theme-forest                 { background: #0a1a0a; }
+#grid.theme-forest .cell           { background: #2a5a2a; }
+#grid.theme-forest .cell.revealed  { background: #142814; }
+#grid.theme-forest .cell.flagged   { background: #5a8a20; }
+
+/* 3. ゴブリンの巣窟 - 泥黄緑 */
+#grid.theme-goblin                 { background: #111508; }
+#grid.theme-goblin .cell           { background: #4a5218; }
+#grid.theme-goblin .cell.revealed  { background: #252a0c; }
+#grid.theme-goblin .cell.flagged   { background: #7a7a10; }
+
+/* 4. オークの要塞 - 焦げ茶 */
+#grid.theme-fortress               { background: #180d05; }
+#grid.theme-fortress .cell         { background: #6a3a18; }
+#grid.theme-fortress .cell.revealed{ background: #331a0a; }
+#grid.theme-fortress .cell.flagged { background: #aa5510; }
+
+/* 5. スケルトン墓地 - 紫灰 */
+#grid.theme-graveyard                  { background: #100e18; }
+#grid.theme-graveyard .cell            { background: #403850; }
+#grid.theme-graveyard .cell.revealed   { background: #201c30; }
+#grid.theme-graveyard .cell.flagged    { background: #604880; }
+
+/* 6. ドラゴンの山脈 - 赤岩 */
+#grid.theme-dragon                 { background: #180505; }
+#grid.theme-dragon .cell           { background: #6a2018; }
+#grid.theme-dragon .cell.revealed  { background: #300a08; }
+#grid.theme-dragon .cell.flagged   { background: #aa2010; }
+
+/* 7. 悪魔の領域 - 暗黒紫 */
+#grid.theme-demon                  { background: #12051a; }
+#grid.theme-demon .cell            { background: #581868; }
+#grid.theme-demon .cell.revealed   { background: #2a0835; }
+#grid.theme-demon .cell.flagged    { background: #8820aa; }
+
+/* 8. 魔王の城 - 漆黒紅 */
+#grid.theme-castle                 { background: #080003; }
+#grid.theme-castle .cell           { background: #420808; }
+#grid.theme-castle .cell.revealed  { background: #1e0303; }
+#grid.theme-castle .cell.flagged   { background: #880000; }
+
+/* ダンジョンカードのテーマボーダー */
+.dungeon-card.theme-cave      { border-left: 4px solid #8a7a60; }
+.dungeon-card.theme-forest    { border-left: 4px solid #3a9a3a; }
+.dungeon-card.theme-goblin    { border-left: 4px solid #7a8a20; }
+.dungeon-card.theme-fortress  { border-left: 4px solid #aa6030; }
+.dungeon-card.theme-graveyard { border-left: 4px solid #7060a0; }
+.dungeon-card.theme-dragon    { border-left: 4px solid #cc3020; }
+.dungeon-card.theme-demon     { border-left: 4px solid #aa30cc; }
+.dungeon-card.theme-castle    { border-left: 4px solid #cc0000; }
+
 #sidebar {
   min-width: 200px;
 }

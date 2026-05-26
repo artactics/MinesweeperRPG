@@ -17,14 +17,14 @@ export const GAME_CONFIG = {
 };
 
 export const DUNGEON_CONFIG = {
-  1: { name: "初心者の洞窟", minPlayerLevel: 1, maxPlayerLevel: 2, enemyTypes: ["SLIME"],            enemyCount: 10, gridSize: { rows: 8,  cols: 8  }, clearExp: 20,  clearGold: 30,  itemChance: 0.15 },
-  2: { name: "森の小道",       minPlayerLevel: 2, maxPlayerLevel: 3, enemyTypes: ["SLIME","GOBLIN"],   enemyCount: 12, gridSize: { rows: 9,  cols: 9  }, clearExp: 30,  clearGold: 50,  itemChance: 0.12 },
-  3: { name: "ゴブリンの巣窟", minPlayerLevel: 3, maxPlayerLevel: 4, enemyTypes: ["GOBLIN","WOLF"],    enemyCount: 14, gridSize: { rows: 10, cols: 10 }, clearExp: 45,  clearGold: 70,  itemChance: 0.10 },
-  4: { name: "オークの要塞",   minPlayerLevel: 4, maxPlayerLevel: 5, enemyTypes: ["WOLF","ORC"],       enemyCount: 16, gridSize: { rows: 10, cols: 10 }, clearExp: 60,  clearGold: 90,  itemChance: 0.08 },
-  5: { name: "スケルトン墓地", minPlayerLevel: 5, maxPlayerLevel: 6, enemyTypes: ["ORC","SKELETON"],   enemyCount: 18, gridSize: { rows: 11, cols: 11 }, clearExp: 80,  clearGold: 120, itemChance: 0.07 },
-  6: { name: "ドラゴンの山脈", minPlayerLevel: 6, maxPlayerLevel: 7, enemyTypes: ["SKELETON","DRAGON"],enemyCount: 20, gridSize: { rows: 12, cols: 12 }, clearExp: 100, clearGold: 160, itemChance: 0.06 },
-  7: { name: "悪魔の領域",     minPlayerLevel: 7, maxPlayerLevel: 8, enemyTypes: ["DRAGON","DEMON"],   enemyCount: 22, gridSize: { rows: 12, cols: 12 }, clearExp: 130, clearGold: 200, itemChance: 0.05 },
-  8: { name: "魔王の城",       minPlayerLevel: 8, maxPlayerLevel: 99,enemyTypes: ["DEMON"],            enemyCount: 25, gridSize: { rows: 13, cols: 13 }, clearExp: 200, clearGold: 300, itemChance: 0.04 }
+  1: { name: "初心者の洞窟", emoji: "🪨", themeClass: "theme-cave",     minPlayerLevel: 1, maxPlayerLevel: 2, enemyTypes: ["SLIME"],             enemyCount: 10, gridSize: { rows: 8,  cols: 8  }, clearExp: 20,  clearGold: 30,  itemChance: 0.15 },
+  2: { name: "森の小道",     emoji: "🌲", themeClass: "theme-forest",   minPlayerLevel: 2, maxPlayerLevel: 3, enemyTypes: ["SLIME","GOBLIN"],    enemyCount: 12, gridSize: { rows: 9,  cols: 9  }, clearExp: 30,  clearGold: 50,  itemChance: 0.12 },
+  3: { name: "ゴブリンの巣窟",emoji: "👺", themeClass: "theme-goblin",  minPlayerLevel: 3, maxPlayerLevel: 4, enemyTypes: ["GOBLIN","WOLF"],     enemyCount: 14, gridSize: { rows: 10, cols: 10 }, clearExp: 45,  clearGold: 70,  itemChance: 0.10 },
+  4: { name: "オークの要塞", emoji: "🏰", themeClass: "theme-fortress", minPlayerLevel: 4, maxPlayerLevel: 5, enemyTypes: ["WOLF","ORC"],        enemyCount: 16, gridSize: { rows: 10, cols: 10 }, clearExp: 60,  clearGold: 90,  itemChance: 0.08 },
+  5: { name: "スケルトン墓地",emoji: "💀", themeClass: "theme-graveyard",minPlayerLevel: 5, maxPlayerLevel: 6, enemyTypes: ["ORC","SKELETON"],   enemyCount: 18, gridSize: { rows: 11, cols: 11 }, clearExp: 80,  clearGold: 120, itemChance: 0.07 },
+  6: { name: "ドラゴンの山脈",emoji: "🐉", themeClass: "theme-dragon",  minPlayerLevel: 6, maxPlayerLevel: 7, enemyTypes: ["SKELETON","DRAGON"], enemyCount: 20, gridSize: { rows: 12, cols: 12 }, clearExp: 100, clearGold: 160, itemChance: 0.06 },
+  7: { name: "悪魔の領域",   emoji: "😈", themeClass: "theme-demon",    minPlayerLevel: 7, maxPlayerLevel: 8, enemyTypes: ["DRAGON","DEMON"],    enemyCount: 22, gridSize: { rows: 12, cols: 12 }, clearExp: 130, clearGold: 200, itemChance: 0.05 },
+  8: { name: "魔王の城",     emoji: "🏯", themeClass: "theme-castle",   minPlayerLevel: 8, maxPlayerLevel: 99,enemyTypes: ["DEMON"],             enemyCount: 25, gridSize: { rows: 13, cols: 13 }, clearExp: 200, clearGold: 300, itemChance: 0.04 }
 };
 
 export const ENEMY_TYPES = {
