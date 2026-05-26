@@ -509,53 +509,89 @@ body {
 
 /* ===== ダンジョンテーマ ===== */
 
-/* 1. 初心者の洞窟 - 石灰色 */
-#grid.theme-cave                   { background: #1a1a1a; }
-#grid.theme-cave .cell             { background: #5a5550; }
-#grid.theme-cave .cell.revealed    { background: #2e2b28; }
-#grid.theme-cave .cell.flagged     { background: #7a6a30; }
+/* 1. 初心者の洞窟 - 石畳・斜め亀裂 */
+#grid.theme-cave { background: #1a1a1a; }
+#grid.theme-cave .cell {
+  background-color: #5a5550;
+  background-image: repeating-linear-gradient(-45deg,rgba(255,255,255,0.04) 0,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 7px);
+  box-shadow: inset 2px 2px 0 rgba(210,190,150,0.18), inset -1px -1px 0 rgba(0,0,0,0.45);
+}
+#grid.theme-cave .cell.revealed { background-color: #2e2b28; color: #c8b87a; font-weight: bold; }
+#grid.theme-cave .cell.flagged  { background-color: #7a6a30; }
 
-/* 2. 森の小道 - 深緑 */
-#grid.theme-forest                 { background: #0a1a0a; }
-#grid.theme-forest .cell           { background: #2a5a2a; }
-#grid.theme-forest .cell.revealed  { background: #142814; }
-#grid.theme-forest .cell.flagged   { background: #5a8a20; }
+/* 2. 森の小道 - 縦木目 */
+#grid.theme-forest { background: #0a1a0a; }
+#grid.theme-forest .cell {
+  background-color: #2a5a2a;
+  background-image: repeating-linear-gradient(90deg,rgba(80,160,40,0.10) 0,rgba(80,160,40,0.10) 1px,transparent 1px,transparent 5px);
+  box-shadow: inset 2px 2px 0 rgba(100,200,60,0.20), inset -1px -1px 0 rgba(0,0,0,0.45);
+}
+#grid.theme-forest .cell.revealed { background-color: #142814; color: #80d840; font-weight: bold; }
+#grid.theme-forest .cell.flagged  { background-color: #5a8a20; }
 
-/* 3. ゴブリンの巣窟 - 泥黄緑 */
-#grid.theme-goblin                 { background: #111508; }
-#grid.theme-goblin .cell           { background: #4a5218; }
-#grid.theme-goblin .cell.revealed  { background: #252a0c; }
-#grid.theme-goblin .cell.flagged   { background: #7a7a10; }
+/* 3. ゴブリンの巣窟 - 格子汚れ */
+#grid.theme-goblin { background: #111508; }
+#grid.theme-goblin .cell {
+  background-color: #4a5218;
+  background-image: repeating-linear-gradient(0deg,rgba(140,160,20,0.08) 0,rgba(140,160,20,0.08) 1px,transparent 1px,transparent 6px),
+                    repeating-linear-gradient(90deg,rgba(140,160,20,0.08) 0,rgba(140,160,20,0.08) 1px,transparent 1px,transparent 6px);
+  box-shadow: inset 2px 2px 0 rgba(160,180,30,0.15), inset -1px -1px 0 rgba(0,0,0,0.50);
+}
+#grid.theme-goblin .cell.revealed { background-color: #252a0c; color: #b8c040; font-weight: bold; }
+#grid.theme-goblin .cell.flagged  { background-color: #7a7a10; }
 
-/* 4. オークの要塞 - 焦げ茶 */
-#grid.theme-fortress               { background: #180d05; }
-#grid.theme-fortress .cell         { background: #6a3a18; }
-#grid.theme-fortress .cell.revealed{ background: #331a0a; }
-#grid.theme-fortress .cell.flagged { background: #aa5510; }
+/* 4. オークの要塞 - 横レンガ目地 */
+#grid.theme-fortress { background: #180d05; }
+#grid.theme-fortress .cell {
+  background-color: #6a3a18;
+  background-image: repeating-linear-gradient(0deg,rgba(0,0,0,0.20) 0,rgba(0,0,0,0.20) 1px,transparent 1px,transparent 9px);
+  box-shadow: inset 2px 2px 0 rgba(200,120,50,0.22), inset -1px -1px 0 rgba(0,0,0,0.55);
+}
+#grid.theme-fortress .cell.revealed { background-color: #331a0a; color: #e08040; font-weight: bold; }
+#grid.theme-fortress .cell.flagged  { background-color: #aa5510; }
 
-/* 5. スケルトン墓地 - 紫灰 */
-#grid.theme-graveyard                  { background: #100e18; }
-#grid.theme-graveyard .cell            { background: #403850; }
-#grid.theme-graveyard .cell.revealed   { background: #201c30; }
-#grid.theme-graveyard .cell.flagged    { background: #604880; }
+/* 5. スケルトン墓地 - ドット（古い石） */
+#grid.theme-graveyard { background: #100e18; }
+#grid.theme-graveyard .cell {
+  background-color: #403850;
+  background-image: radial-gradient(rgba(160,140,200,0.12) 1px, transparent 1px);
+  background-size: 5px 5px;
+  box-shadow: inset 2px 2px 0 rgba(160,140,200,0.15), inset -1px -1px 0 rgba(0,0,0,0.55);
+}
+#grid.theme-graveyard .cell.revealed { background-color: #201c30; color: #b090e0; font-weight: bold; }
+#grid.theme-graveyard .cell.flagged  { background-color: #604880; }
 
-/* 6. ドラゴンの山脈 - 赤岩 */
-#grid.theme-dragon                 { background: #180505; }
-#grid.theme-dragon .cell           { background: #6a2018; }
-#grid.theme-dragon .cell.revealed  { background: #300a08; }
-#grid.theme-dragon .cell.flagged   { background: #aa2010; }
+/* 6. ドラゴンの山脈 - 炎の筋 */
+#grid.theme-dragon { background: #180505; }
+#grid.theme-dragon .cell {
+  background-color: #6a2018;
+  background-image: repeating-linear-gradient(30deg,rgba(220,80,20,0.10) 0,rgba(220,80,20,0.10) 1px,transparent 1px,transparent 5px);
+  box-shadow: inset 2px 2px 0 rgba(220,100,30,0.25), inset -1px -1px 0 rgba(0,0,0,0.55);
+}
+#grid.theme-dragon .cell.revealed { background-color: #300a08; color: #ff6030; font-weight: bold; }
+#grid.theme-dragon .cell.flagged  { background-color: #aa2010; }
 
-/* 7. 悪魔の領域 - 暗黒紫 */
-#grid.theme-demon                  { background: #12051a; }
-#grid.theme-demon .cell            { background: #581868; }
-#grid.theme-demon .cell.revealed   { background: #2a0835; }
-#grid.theme-demon .cell.flagged    { background: #8820aa; }
+/* 7. 悪魔の領域 - 蜘蛛の巣状六角格子 */
+#grid.theme-demon { background: #12051a; }
+#grid.theme-demon .cell {
+  background-color: #581868;
+  background-image: repeating-linear-gradient(60deg,rgba(180,40,220,0.08) 0,rgba(180,40,220,0.08) 1px,transparent 1px,transparent 7px),
+                    repeating-linear-gradient(-60deg,rgba(180,40,220,0.08) 0,rgba(180,40,220,0.08) 1px,transparent 1px,transparent 7px);
+  box-shadow: inset 2px 2px 0 rgba(180,60,220,0.20), inset -1px -1px 0 rgba(0,0,0,0.60);
+}
+#grid.theme-demon .cell.revealed { background-color: #2a0835; color: #d060ff; font-weight: bold; }
+#grid.theme-demon .cell.flagged  { background-color: #8820aa; }
 
-/* 8. 魔王の城 - 漆黒紅 */
-#grid.theme-castle                 { background: #080003; }
-#grid.theme-castle .cell           { background: #420808; }
-#grid.theme-castle .cell.revealed  { background: #1e0303; }
-#grid.theme-castle .cell.flagged   { background: #880000; }
+/* 8. 魔王の城 - 漆黒の石畳格子 */
+#grid.theme-castle { background: #080003; }
+#grid.theme-castle .cell {
+  background-color: #420808;
+  background-image: repeating-linear-gradient(0deg,rgba(180,0,0,0.12) 0,rgba(180,0,0,0.12) 1px,transparent 1px,transparent 8px),
+                    repeating-linear-gradient(90deg,rgba(180,0,0,0.12) 0,rgba(180,0,0,0.12) 1px,transparent 1px,transparent 8px);
+  box-shadow: inset 2px 2px 0 rgba(200,0,0,0.18), inset -1px -1px 0 rgba(0,0,0,0.70);
+}
+#grid.theme-castle .cell.revealed { background-color: #1e0303; color: #ff2020; font-weight: bold; }
+#grid.theme-castle .cell.flagged  { background-color: #880000; }
 
 /* ダンジョンカードのテーマ：グラデーション背景 + ボーダー */
 .dungeon-card.theme-cave      { border: 1px solid #6a5a40; background: linear-gradient(160deg,#2a2520,#1a1a1a); }
