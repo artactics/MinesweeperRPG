@@ -604,15 +604,25 @@ export class GameController {
       const enemy = this.battle.start(cell);
       this.logUI.add(`${enemy.emoji} ${enemy.name}が現れた！ 危険度:${cell.danger}`);
 
-      this.battleUI.show(enemy, this.player);
+      this.battleUI.show(enemy, this.player, this.battle.battleGrid);
 
-      this.battleUI.onAttack(() => {
-        const { result, playerDmg, enemyDmg } = this.battle.attack();
-        this.battleUI.addLog(`⚔️ ${enemy.name}に ${playerDmg} ダメージ！`, "attack");
+      this.battleUI.onAttack((row, col) => {
+        const attackResult = this.battle.attack(row, col);
+        if (!attackResult) return;
+        const { result, playerDmg, enemyDmg, isMine, gridReset } = attackResult;
+        if (isMine) {
+          this.battleUI.addLog(`💣 地雷！攻撃失敗…`, "damage");
+        } else {
+          this.battleUI.addLog(`⚔️ ${enemy.name}に ${playerDmg} ダメージ！`, "attack");
+        }
         if (enemyDmg > 0) {
           this.battleUI.addLog(`💥 ${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
         }
+        if (gridReset) {
+          this.battleUI.addLog(`🔄 新しいグリッドが出現！`, "normal");
+        }
         this.battleUI.update(enemy, this.player);
+        this.battleUI.renderGrid(this.battle.battleGrid);
         this.updateUI();
 
         if (result === "victory") {

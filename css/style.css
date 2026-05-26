@@ -672,8 +672,69 @@ body {
 
 #battle-window {
   padding: 16px;
-  min-width: 240px;
+  min-width: 200px;
 }
+
+#battle-grid-label {
+  font-size: 0.78rem;
+  color: #aaa;
+  margin: 8px 0 4px;
+}
+
+#battle-grid {
+  display: grid;
+  gap: 3px;
+  background: #0e0e0e;
+  padding: 6px;
+  border-radius: 6px;
+  margin: 0 auto;
+  width: fit-content;
+  border: 1px solid #333;
+}
+
+.battle-cell {
+  width: 40px;
+  height: 40px;
+  background: #3a4a5a;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  user-select: none;
+  transition: background 0.1s, transform 0.08s;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.12), inset -1px -1px 0 rgba(0,0,0,0.4);
+}
+
+.battle-cell:hover:not(.battle-cell-revealed) {
+  background: #5a7a9a;
+  transform: scale(1.08);
+}
+
+.battle-cell:active:not(.battle-cell-revealed) {
+  transform: scale(0.95);
+}
+
+.battle-cell-revealed {
+  background: #1a2230;
+  cursor: default;
+  box-shadow: none;
+}
+
+.battle-cell-mine {
+  background: #3a1010;
+}
+
+.battle-num-1 { color: #80c8ff; }
+.battle-num-2 { color: #80ff80; }
+.battle-num-3 { color: #ff8080; }
+.battle-num-4 { color: #c080ff; }
+.battle-num-5 { color: #ffaa40; }
+.battle-num-6 { color: #40ffee; }
+.battle-num-7 { color: #ff40aa; }
+.battle-num-8 { color: #ffffff; }
 
 #battle-log {
   margin-top: 10px;

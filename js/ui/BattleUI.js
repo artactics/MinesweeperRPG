@@ -2,15 +2,17 @@ export class BattleUI {
   constructor() {
     this.modal = document.getElementById("battle-modal");
     this.text = document.getElementById("battle-text");
+    this.gridEl = document.getElementById("battle-grid");
     this.logEl = document.getElementById("battle-log");
-    this.attackBtn = document.getElementById("attack-btn");
     this.escapeBtn = document.getElementById("escape-btn");
+    this.attackCallback = null;
   }
 
-  show(enemy, player) {
+  show(enemy, player, battleGrid) {
     this.modal.style.display = "flex";
     this.logEl.innerHTML = "";
     this.update(enemy, player);
+    this.renderGrid(battleGrid);
   }
 
   update(enemy, player) {
@@ -19,6 +21,37 @@ export class BattleUI {
       `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
       `敵HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
       `あなたのHP: <strong>${player.hp} / ${player.maxHp}</strong>`;
+  }
+
+  renderGrid(battleGrid) {
+    this.gridEl.innerHTML = "";
+    this.gridEl.style.gridTemplateColumns = `repeat(${battleGrid.size}, 40px)`;
+
+    for (let r = 0; r < battleGrid.size; r++) {
+      for (let c = 0; c < battleGrid.size; c++) {
+        const cell = battleGrid.cells[r][c];
+        const div = document.createElement("div");
+        div.className = "battle-cell";
+
+        if (cell.revealed) {
+          div.classList.add("battle-cell-revealed");
+          if (cell.isMine) {
+            div.classList.add("battle-cell-mine");
+            div.textContent = "💣";
+          } else {
+            if (cell.danger > 0) {
+              div.textContent = cell.danger;
+              div.classList.add(`battle-num-${cell.danger}`);
+            }
+          }
+        } else {
+          div.addEventListener("click", () => {
+            if (this.attackCallback) this.attackCallback(r, c);
+          });
+        }
+        this.gridEl.appendChild(div);
+      }
+    }
   }
 
   addLog(msg, type = "normal") {
@@ -34,7 +67,7 @@ export class BattleUI {
   }
 
   onAttack(callback) {
-    this.attackBtn.onclick = callback;
+    this.attackCallback = callback;
   }
 
   onEscape(callback) {

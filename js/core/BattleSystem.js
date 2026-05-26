@@ -1,5 +1,6 @@
 import { Enemy } from "./Enemy.js";
 import { ENEMY_TYPES } from "./constants.js";
+import { BattleGrid } from "./BattleGrid.js";
 
 export class BattleSystem {
   constructor(player) {
@@ -11,6 +12,7 @@ export class BattleSystem {
     const danger = cell.danger;
     const enemyType = cell.enemyType || this.selectEnemyType(danger);
     this.enemy = new Enemy(enemyType, danger);
+    this.battleGrid = new BattleGrid(danger);
     return this.enemy;
   }
 
@@ -33,21 +35,26 @@ export class BattleSystem {
     return selected;
   }
 
-  attack() {
-    const playerDmg = this.player.atk + (this.player.bonusAtk || 0);
-    this.enemy.hp -= playerDmg;
+  attack(row, col) {
+    const { cell, gridReset } = this.battleGrid.reveal(row, col);
+    if (!cell) return null;
+
+    const isMine = cell.isMine;
+    const playerDmg = isMine ? 0 : (this.player.atk + (this.player.bonusAtk || 0));
+    if (!isMine) this.enemy.hp -= playerDmg;
+
     if (this.enemy.hp <= 0) {
       this.enemy.hp = 0;
-      return { result: "victory", playerDmg, enemyDmg: 0 };
+      return { result: "victory", playerDmg, enemyDmg: 0, isMine, gridReset };
     }
 
     const enemyDmg = this.enemy.atk;
     this.player.hp -= enemyDmg;
     if (this.player.hp <= 0) {
       this.player.hp = 0;
-      return { result: "defeat", playerDmg, enemyDmg };
+      return { result: "defeat", playerDmg, enemyDmg, isMine, gridReset };
     }
 
-    return { result: "continue", playerDmg, enemyDmg };
+    return { result: "continue", playerDmg, enemyDmg, isMine, gridReset };
   }
 }
