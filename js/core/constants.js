@@ -12,8 +12,7 @@ export const GAME_CONFIG = {
   PLAYER_INITIAL_ATK: 6,
   EXP_PER_LEVEL: 10,
   HP_GAIN_PER_LEVEL: 10,
-  ATK_GAIN_PER_LEVEL: 2,
-  ESCAPE_DAMAGE: 4
+  ATK_GAIN_PER_LEVEL: 2
 };
 
 export const DUNGEON_CONFIG = {
@@ -38,9 +37,9 @@ export const ENEMY_TYPES = {
 };
 
 export const ITEM_TYPES = {
-  POTION:       { id: "potion",       name: "回復薬",   emoji: "🧪", description: "HPを10回復", effect: { type: "heal", value: 10 }, buyPrice: 30, sellPrice: 12 },
-  SUPER_POTION: { id: "super_potion", name: "超回復薬", emoji: "💊", description: "HPを20回復", effect: { type: "heal", value: 20 }, buyPrice: 60, sellPrice: 24 },
-  ATTACK_BOOST: { id: "attack_boost", name: "攻撃力UP", emoji: "⚔️", description: "攻撃力+3",   effect: { type: "atk",  value: 3  }, buyPrice: 80, sellPrice: 32 }
+  POTION:       { id: "potion",       name: "回復薬",   emoji: "\u{1F9EA}", minDungeon: 1, description: "HP+10回復", effect: { type: "heal", value: 10 }, healScale: 3, buyPrice: 30, sellPrice: 12 },
+  SUPER_POTION: { id: "super_potion", name: "超回復薬", emoji: "\u{1F48A}", minDungeon: 3, description: "HP+20回復", effect: { type: "heal", value: 20 }, healScale: 5, buyPrice: 60, sellPrice: 24 },
+  ATTACK_BOOST: { id: "attack_boost", name: "攻撃力UP", emoji: "\u2694\uFE0F",  minDungeon: 2, description: "ATK+3",    effect: { type: "atk",  value: 3  }, atkScale:  1, buyPrice: 80, sellPrice: 32 }
 };
 
 export const EQUIPMENT_TYPES = {

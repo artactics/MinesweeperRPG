@@ -1,13 +1,14 @@
 import { DIRECTIONS, ENEMY_TYPES, ITEM_TYPES } from "./constants.js";
 
 export class Grid {
-  constructor(rows, cols, enemyCount, enemyTypes = null, itemChance = 0.1, itemPool = null) {
+  constructor(rows, cols, enemyCount, enemyTypes = null, itemChance = 0.1, itemPool = null, dungeonLevel = 1) {
     this.rows = rows;
     this.cols = cols;
     this.enemyCount = enemyCount;
     this.enemyTypes = enemyTypes || Object.keys(ENEMY_TYPES);
     this.itemChance = itemChance;
     this.itemPool = itemPool;
+    this.dungeonLevel = dungeonLevel;
     this.cells = [];
     this.init();
   }
@@ -71,15 +72,33 @@ export class Grid {
 
   placeItems() {
     const pool = this.itemPool || Object.values(ITEM_TYPES);
-    
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const cell = this.cells[r][c];
         if (!cell.isEnemy && cell.danger === 0 && Math.random() < this.itemChance) {
-          cell.item = pool[Math.floor(Math.random() * pool.length)];
+          cell.item = this._levelItem(pool[Math.floor(Math.random() * pool.length)]);
         }
       }
     }
+  }
+
+  _levelItem(base) {
+    const lv = this.dungeonLevel;
+    const extra = Math.max(0, lv - (base.minDungeon || 1));
+    const leveled = { ...base, level: lv };
+    if (base.category === "equipment") {
+      if (base.atk)   { leveled.atk   = base.atk   + extra;     leveled.description = `ATK+${leveled.atk} Lv${lv}`; }
+      if (base.maxHp) { leveled.maxHp = base.maxHp + extra * 2; leveled.description = `MaxHP+${leveled.maxHp} Lv${lv}`; }
+    } else {
+      const val = base.effect.value
+        + (base.healScale || 0) * extra
+        + (base.atkScale  || 0) * extra;
+      leveled.effect = { ...base.effect, value: val };
+      leveled.description = base.effect.type === "heal"
+        ? `HP+${val}\u56de\u5fa9 Lv${lv}`
+        : `ATK+${val} Lv${lv}`;
+    }
+    return leveled;
   }
 
   calcDanger() {

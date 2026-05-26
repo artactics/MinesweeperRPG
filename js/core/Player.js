@@ -28,10 +28,10 @@ export class Player {
       this.bonusAtk = 0;
       const se = savedData.equipped || {};
       this.equipped = {
-        weapon: se.weapon || null,
-        head:   se.head   || null,
-        body:   se.body   || se.armor || null,
-        legs:   se.legs   || null
+        weapon: this._restoreEquipped(se.weapon),
+        head:   this._restoreEquipped(se.head),
+        body:   this._restoreEquipped(se.body || se.armor),
+        legs:   this._restoreEquipped(se.legs)
       };
       this.equipmentInventory = savedData.equipmentInventory || {};
     } else {
@@ -137,55 +137,44 @@ export class Player {
     }
   }
 
-  _applyEquipmentStats(itemId, multiplier) {
-    const def = Object.values(EQUIPMENT_TYPES).find(e => e.id === itemId);
-    if (!def) return;
-    if (def.atk)   this.atk   += def.atk   * multiplier;
-    if (def.maxHp) {
-      this.maxHp += def.maxHp * multiplier;
-      if (multiplier > 0) {
-        this.hp += def.maxHp;
-      } else {
-        this.hp = Math.min(this.hp, this.maxHp);
-      }
+  _restoreEquipped(val) {
+    if (!val) return null;
+    if (typeof val === "string") return Object.values(EQUIPMENT_TYPES).find(e => e.id === val) || null;
+    return val;
+  }
+
+  _applyEquipmentStats(item, multiplier) {
+    if (!item) return;
+    if (item.atk)   this.atk   += item.atk   * multiplier;
+    if (item.maxHp) {
+      this.maxHp += item.maxHp * multiplier;
+      if (multiplier > 0) this.hp += item.maxHp;
+      else this.hp = Math.min(this.hp, this.maxHp);
     }
   }
 
   equipItem(itemId) {
-    const def = Object.values(EQUIPMENT_TYPES).find(e => e.id === itemId);
-    if (!def) return;
-    const slot = def.slot;
+    const item = this.equipmentInventory[itemId];
+    if (!item) return;
+    const slot = item.slot;
     if (this.equipped[slot]) {
-      this._applyEquipmentStats(this.equipped[slot], -1);
-      const prevDef = Object.values(EQUIPMENT_TYPES).find(e => e.id === this.equipped[slot]);
-      if (prevDef) {
-        if (!this.equipmentInventory[prevDef.id]) {
-          this.equipmentInventory[prevDef.id] = { ...prevDef, count: 1 };
-        } else {
-          this.equipmentInventory[prevDef.id].count++;
-        }
-      }
+      const old = this.equipped[slot];
+      this._applyEquipmentStats(old, -1);
+      if (!this.equipmentInventory[old.id]) this.equipmentInventory[old.id] = { ...old, count: 1 };
+      else this.equipmentInventory[old.id].count++;
     }
-    this._applyEquipmentStats(itemId, 1);
-    this.equipped[slot] = itemId;
-    if (this.equipmentInventory[itemId]) {
-      this.equipmentInventory[itemId].count--;
-      if (this.equipmentInventory[itemId].count <= 0) delete this.equipmentInventory[itemId];
-    }
+    this._applyEquipmentStats(item, 1);
+    this.equipped[slot] = { ...item };
+    this.equipmentInventory[itemId].count--;
+    if (this.equipmentInventory[itemId].count <= 0) delete this.equipmentInventory[itemId];
   }
 
   unequipItem(slot) {
-    const itemId = this.equipped[slot];
-    if (!itemId) return;
-    this._applyEquipmentStats(itemId, -1);
-    const def = Object.values(EQUIPMENT_TYPES).find(e => e.id === itemId);
-    if (def) {
-      if (!this.equipmentInventory[itemId]) {
-        this.equipmentInventory[itemId] = { ...def, count: 1 };
-      } else {
-        this.equipmentInventory[itemId].count++;
-      }
-    }
+    const item = this.equipped[slot];
+    if (!item) return;
+    this._applyEquipmentStats(item, -1);
+    if (!this.equipmentInventory[item.id]) this.equipmentInventory[item.id] = { ...item, count: 1 };
+    else this.equipmentInventory[item.id].count++;
     this.equipped[slot] = null;
   }
 

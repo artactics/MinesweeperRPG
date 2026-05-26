@@ -5,7 +5,6 @@
     this.gridEl = document.getElementById("battle-grid");
     this.labelEl = document.getElementById("battle-grid-label");
     this.logEl = document.getElementById("battle-log");
-    this.escapeBtn = document.getElementById("escape-btn");
     this.attackCallback = null;
   }
 
@@ -75,7 +74,4 @@
     this.attackCallback = callback;
   }
 
-  onEscape(callback) {
-    this.escapeBtn.onclick = callback;
-  }
 }

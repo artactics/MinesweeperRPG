@@ -383,8 +383,7 @@ export class GameController {
     slotsEl.innerHTML = "";
 
     for (const [slotKey, label] of [["weapon", "武器"], ["head", "頭"], ["body", "胴"], ["legs", "脚"]]) {
-      const equippedId = this.player.equipped[slotKey];
-      const def = equippedId ? Object.values(EQUIPMENT_TYPES).find(e => e.id === equippedId) : null;
+      const def = this.player.equipped[slotKey];
       const row = document.createElement("div");
       row.className = "eq-slot";
 
@@ -500,7 +499,8 @@ export class GameController {
       config.enemyCount,
       config.enemyTypes,
       config.itemChance,
-      itemPool
+      itemPool,
+      level
     );
     this.player.bonusAtk = 0;
     this.flagMode = false;
@@ -623,7 +623,7 @@ export class GameController {
     // 敵マス
     if (cell.isEnemy) {
       const enemy = this.battle.start(cell);
-      this.logUI.add(`${enemy.emoji} ${enemy.name}が現れた！ 危険度:${cell.danger}`);
+      this.logUI.add(`${enemy.emoji} ${enemy.name}が現れた！`);
 
       this.battleUI.show(enemy, this.player, this.battle.battleGrid);
 
@@ -684,24 +684,6 @@ export class GameController {
           this.battleUI.hide();
           this.showGameOver();
         }
-      });
-
-      this.battleUI.onEscape(() => {
-        this.player.hp -= GAME_CONFIG.ESCAPE_DAMAGE;
-        if (this.player.hp <= 0) {
-          this.player.hp = 0;
-          this.logUI.add(`逃げたが、${GAME_CONFIG.ESCAPE_DAMAGE}ダメージを受けた…`);
-          this.battleUI.hide();
-          this.showGameOver();
-          return;
-        }
-
-        this.logUI.add(`逃げた！（${GAME_CONFIG.ESCAPE_DAMAGE}ダメージ）`);
-        this.battleUI.hide();
-        this.updateUI();
-
-        cell.revealed = false;
-        this.gridRenderer.updateCell(cell);
       });
 
       return;
