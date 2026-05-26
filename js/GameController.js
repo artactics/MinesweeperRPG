@@ -607,12 +607,17 @@ export class GameController {
       this.battleUI.show(enemy, this.player);
 
       this.battleUI.onAttack(() => {
-        const result = this.battle.attack();
+        const { result, playerDmg, enemyDmg } = this.battle.attack();
+        this.battleUI.addLog(`⚔️ ${enemy.name}に ${playerDmg} ダメージ！`, "attack");
+        if (enemyDmg > 0) {
+          this.battleUI.addLog(`💥 ${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
+        }
         this.battleUI.update(enemy, this.player);
         this.updateUI();
 
         if (result === "victory") {
-          this.logUI.add(`敵を倒した！`);
+          this.battleUI.addLog(`✨ ${enemy.name}を倒した！`, "victory");
+          this.logUI.add(`⚔️ ${enemy.name}を倒した！`);
           this.saveGameData();
 
           // ★ 敵マスを安全マスに変更
@@ -642,7 +647,8 @@ export class GameController {
           this.battleUI.hide();
           this.checkClear();
         } else if (result === "defeat") {
-          this.logUI.add("やられてしまった…");
+          this.battleUI.addLog(`💀 やられてしまった…`, "damage");
+          this.logUI.add("💀 やられてしまった…");
           this.battleUI.hide();
           this.showGameOver();
         }

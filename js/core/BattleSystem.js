@@ -34,17 +34,20 @@ export class BattleSystem {
   }
 
   attack() {
-    this.enemy.hp -= this.player.atk + (this.player.bonusAtk || 0);
+    const playerDmg = this.player.atk + (this.player.bonusAtk || 0);
+    this.enemy.hp -= playerDmg;
     if (this.enemy.hp <= 0) {
-      return "victory";
+      this.enemy.hp = 0;
+      return { result: "victory", playerDmg, enemyDmg: 0 };
     }
 
-    this.player.hp -= this.enemy.atk;
+    const enemyDmg = this.enemy.atk;
+    this.player.hp -= enemyDmg;
     if (this.player.hp <= 0) {
       this.player.hp = 0;
-      return "defeat";
+      return { result: "defeat", playerDmg, enemyDmg };
     }
 
-    return "continue";
+    return { result: "continue", playerDmg, enemyDmg };
   }
 }

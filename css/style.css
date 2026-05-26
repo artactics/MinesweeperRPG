@@ -672,7 +672,27 @@ body {
 
 #battle-window {
   padding: 16px;
+  min-width: 240px;
 }
+
+#battle-log {
+  margin-top: 10px;
+  max-height: 120px;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 0.85rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.battle-log-line { line-height: 1.4; }
+.battle-log-attack  { color: #7ec8ff; }
+.battle-log-damage  { color: #ff7070; }
+.battle-log-victory { color: #ffd700; font-weight: bold; }
 
 button {
   cursor: pointer;
