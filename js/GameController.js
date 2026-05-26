@@ -170,6 +170,7 @@ export class GameController {
 
   setupPlayButtons() {
     document.getElementById("back-to-select-btn").addEventListener("click", () => {
+      this._discardDungeonEquipment();
       this.player.handItems = {};
       this.showDungeonSelect();
     });
@@ -922,6 +923,8 @@ export class GameController {
       }
 
       this.saveGameData(true);
+      const gainedEquipment = [...this.dungeonEquipmentGained];
+      this.dungeonEquipmentGained = [];
       this.showResultScreen({
         dungeonName: config.name,
         expGained: config.clearExp,
@@ -929,7 +932,7 @@ export class GameController {
         prevLevel,
         newLevel: this.player.level,
         gainedItems,
-        gainedEquipment: [...this.dungeonEquipmentGained]
+        gainedEquipment
       });
       return true;
     }
