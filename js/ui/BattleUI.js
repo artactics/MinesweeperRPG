@@ -3,6 +3,7 @@ export class BattleUI {
     this.modal = document.getElementById("battle-modal");
     this.text = document.getElementById("battle-text");
     this.gridEl = document.getElementById("battle-grid");
+    this.labelEl = document.getElementById("battle-grid-label");
     this.logEl = document.getElementById("battle-log");
     this.escapeBtn = document.getElementById("escape-btn");
     this.attackCallback = null;
@@ -24,6 +25,10 @@ export class BattleUI {
   }
 
   renderGrid(battleGrid) {
+    const unrevealed = battleGrid.cells.flat().filter(c => !c.revealed);
+    const minesLeft = unrevealed.filter(c => c.isMine).length;
+    this.labelEl.textContent = `⚠️ 地雷: ${minesLeft}個 ／ 残りマス: ${unrevealed.length}個`;
+
     this.gridEl.innerHTML = "";
     this.gridEl.style.gridTemplateColumns = `repeat(${battleGrid.size}, 40px)`;
 
@@ -37,7 +42,7 @@ export class BattleUI {
           div.classList.add("battle-cell-revealed");
           if (cell.isMine) {
             div.classList.add("battle-cell-mine");
-            div.textContent = "💣";
+            div.textContent = "�";
           } else {
             if (cell.danger > 0) {
               div.textContent = cell.danger;
