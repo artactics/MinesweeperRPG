@@ -93,7 +93,10 @@ export class GridRenderer {
 
     if (cell.revealed) {
       if (cell.item) {
-        el.textContent = cell.item.emoji;
+        const it = cell.item;
+        el.innerHTML = it.iconUrl
+          ? `<img src="${it.iconUrl}" class="gi-icon gi-icon-cell" alt="${it.emoji}" onerror="this.outerHTML='${it.emoji}'">`
+          : it.emoji;
         el.style.background = "#554433";
       } else {
         el.textContent = cell.isEnemy ? "✕" : (cell.danger || "");

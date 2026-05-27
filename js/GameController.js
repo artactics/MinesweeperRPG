@@ -396,7 +396,8 @@ export class GameController {
       if (def) {
         const nameEl = document.createElement("span");
         nameEl.className = "eq-item-name";
-        nameEl.innerHTML = `${def.emoji} ${def.name} <span class="eq-item-stat">${def.description}</span>`;
+        const defIcon = def.iconUrl ? `<img src="${def.iconUrl}" class="gi-icon gi-icon-sm" alt="${def.emoji}">` : def.emoji;
+        nameEl.innerHTML = `${defIcon} ${def.name} <span class="eq-item-stat">${def.description}</span>`;
         row.appendChild(nameEl);
         const btn = document.createElement("button");
         btn.className = "eq-unequip-btn";
@@ -430,7 +431,8 @@ export class GameController {
       row.className = "eq-inventory-item";
       const info = document.createElement("span");
       info.className = "eq-item-info";
-      info.innerHTML = `${item.emoji} ${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` ×${item.count}` : ""}`;
+      const eqIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
+      info.innerHTML = `${eqIcon} ${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` \xd7${item.count}` : ""}`;
       const btn = document.createElement("button");
       btn.className = "eq-equip-btn";
       btn.textContent = "装備";
@@ -535,7 +537,10 @@ export class GameController {
         if (!cell.isEnemy || cell.revealed) continue;
         const t = cell.enemyType;
         const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
-        if (!counts[key]) counts[key] = { label: cell.isElite ? `${t.emoji}${t.name}(\u30a8\u30ea\u30fc\u30c8)` : `${t.emoji}${t.name}`, isElite: cell.isElite, count: 0 };
+        if (!counts[key]) {
+          const icon = t.iconUrl ? `<img src="${t.iconUrl}" class="gi-icon gi-icon-sm" alt="${t.emoji}">` : t.emoji;
+          counts[key] = { label: cell.isElite ? `${icon}${t.name}(\u30a8\u30ea\u30fc\u30c8)` : `${icon}${t.name}`, isElite: cell.isElite, count: 0 };
+        }
         counts[key].count++;
       }
     }
@@ -765,7 +770,8 @@ export class GameController {
         itemDiv.style.marginBottom = "5px";
 
         const itemInfo = document.createElement("span");
-        itemInfo.textContent = `${item.emoji} ${item.name} x${item.count}`;
+        const hiIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
+        itemInfo.innerHTML = `${hiIcon} ${item.name} x${item.count}`;
         itemInfo.style.flex = "1";
 
         const useBtn = document.createElement("button");
@@ -797,7 +803,8 @@ export class GameController {
         itemDiv.style.marginBottom = "5px";
 
         const itemInfo = document.createElement("span");
-        itemInfo.textContent = `${item.emoji} ${item.name} x${item.count}`;
+        const invIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
+        itemInfo.innerHTML = `${invIcon} ${item.name} x${item.count}`;
         itemInfo.style.flex = "1";
 
         const useBtn = document.createElement("button");

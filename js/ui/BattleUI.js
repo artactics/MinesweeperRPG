@@ -16,8 +16,11 @@
   }
 
   update(enemy, player) {
+    const img = enemy.iconUrl
+      ? `<img src="${enemy.iconUrl}" class="gi-icon gi-icon-battle" alt="${enemy.emoji}" onerror="this.outerHTML='<span style=\\'font-size:48px\\'>${enemy.emoji}</span>'">`
+      : `<span style="font-size:48px">${enemy.emoji}</span>`;
     this.text.innerHTML =
-      `<span style="font-size: 32px;">${enemy.emoji}</span><br>` +
+      `${img}<br>` +
       `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
       `\u6575HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
       `\u3042\u306a\u305f\u306eHP: <strong>${player.hp} / ${player.maxHp}</strong>`;
