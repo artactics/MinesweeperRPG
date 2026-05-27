@@ -26,7 +26,8 @@ export const DUNGEON_CONFIG = {
   8: { name: "魔王の城",     emoji: "🏯", themeClass: "theme-castle",   minPlayerLevel: 8, maxPlayerLevel: 99,enemyTypes: ["DEMON"],             enemyCount: 25, gridSize: { rows: 13, cols: 13 }, clearExp: 200, clearGold: 300, itemChance: 0.04 }
 };
 
-const GI = (author, name, color) => `https://game-icons.net/1x1/${author}/${name}/${color}/transparent.svg`;
+//const GI = (author, name, color) => `https://game-icons.net/1x1/${author}/${name}/${color}/transparent.svg`;
+const GI = (author, name, color) =>`https://game-icons.net/icons/${color}/transparent/1x1/${author}/${name}.svg`;
 
 export const ENEMY_TYPES = {
   SLIME:    { name: "スライム",   emoji: "💧", iconUrl: GI("lorc","blob","4caf50"),              baseHp: 8,  baseAtk: 2,  baseExp: 5,  dangerRange: [0, 2], color: "#4CAF50" },
