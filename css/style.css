@@ -479,8 +479,7 @@ body {
   background: #111;
   padding: 4px;
   border-radius: 6px;
-  max-width: 100%;
-  box-sizing: border-box;
+  overflow: auto;
 }
 
 .cell {
@@ -846,15 +845,14 @@ button:hover {
 
   /* グリッドセル */
   .cell {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     font-size: 14px;
   }
 
   /* グリッド横スクロール対応 */
   #grid {
     overflow-x: auto;
-    max-width: 100%;
   }
 
   /* リザルト画面 */

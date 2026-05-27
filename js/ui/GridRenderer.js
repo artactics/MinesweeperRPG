@@ -58,18 +58,10 @@ export class GridRenderer {
     });
   }
 
-  _calcCellSize() {
-    const isMobile = window.innerWidth <= 600;
-    if (!isMobile) return 32;
-    const available = window.innerWidth - 24;
-    return Math.max(24, Math.min(40, Math.floor(available / this.grid.cols) - 2));
-  }
-
   render() {
     this.root.innerHTML = "";
 
-    const cellSize = this._calcCellSize();
-    const fontSize = Math.max(10, Math.min(14, cellSize - 12));
+    const cellSize = 32;
     this.root.style.gridTemplateColumns = `repeat(${this.grid.cols}, ${cellSize}px)`;
     this.root.style.gridTemplateRows    = `repeat(${this.grid.rows}, ${cellSize}px)`;
 
@@ -80,9 +72,8 @@ export class GridRenderer {
         div.className = "cell";
         div.dataset.row = r;
         div.dataset.col = c;
-        div.style.width    = `${cellSize}px`;
-        div.style.height   = `${cellSize}px`;
-        div.style.fontSize = `${fontSize}px`;
+        div.style.width  = `${cellSize}px`;
+        div.style.height = `${cellSize}px`;
         cell.element = div;
         this.root.appendChild(div);
       }
