@@ -831,7 +831,9 @@ button:hover {
   /* プレイ画面 */
   #game-container {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    width: 100%;
+    overflow-x: auto;
   }
 
   #sidebar {
