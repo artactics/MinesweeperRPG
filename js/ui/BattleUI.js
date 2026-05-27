@@ -15,16 +15,25 @@
     this.renderGrid(battleGrid);
   }
 
+//  update(enemy, player) {
+//    const img = enemy.iconUrl
+//      ? `<img src="${enemy.iconUrl}" class="gi-icon gi-icon-battle" alt="${enemy.emoji}" onerror="this.outerHTML='<span style=\\'font-size:48px\\'>${enemy.emoji}</span>'">`
+//      : `<span style="font-size:48px">${enemy.emoji}</span>`;
+//    this.text.innerHTML =
+//      `${img}<br>` +
+//      `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
+//      `\u6575HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
+//      `\u3042\u306a\u305f\u306eHP: <strong>${player.hp} / ${player.maxHp}</strong>`;
+//  }
   update(enemy, player) {
-    const img = enemy.iconUrl
-      ? `<img src="${enemy.iconUrl}" class="gi-icon gi-icon-battle" alt="${enemy.emoji}" onerror="this.outerHTML='<span style=\\'font-size:48px\\'>${enemy.emoji}</span>'">`
-      : `<span style="font-size:48px">${enemy.emoji}</span>`;
-    this.text.innerHTML =
-      `${img}<br>` +
-      `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
-      `\u6575HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
-      `\u3042\u306a\u305f\u306eHP: <strong>${player.hp} / ${player.maxHp}</strong>`;
-  }
+  const img = `<span style="font-size:48px" aria-hidden="true">${enemy.emoji}</span>`;
+  this.text.innerHTML =
+    `${img}<br>` +
+    `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
+    `敵HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
+    `あなたのHP: <strong>${player.hp} / ${player.maxHp}</strong>`;
+}
+
 
   renderGrid(battleGrid) {
     const unrevealed = battleGrid.cells.flat().filter(c => !c.revealed);
