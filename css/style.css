@@ -834,6 +834,7 @@ button:hover {
     align-items: flex-start;
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   #sidebar {
@@ -850,11 +851,6 @@ button:hover {
     width: 32px;
     height: 32px;
     font-size: 14px;
-  }
-
-  /* グリッド横スクロール対応 */
-  #grid {
-    overflow-x: auto;
   }
 
   /* リザルト画面 */

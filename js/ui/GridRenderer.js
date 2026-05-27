@@ -14,15 +14,16 @@ export class GridRenderer {
     let touchStartX = 0;
     let touchStartY = 0;
 
+    this._ignoreNextClick = false;
+
     this.root.addEventListener("touchstart", e => {
-      e.preventDefault();
       const touch = e.touches[0];
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
       touchMoved = false;
       const el = document.elementFromPoint(touch.clientX, touch.clientY);
       touchTarget = (el && el.classList.contains("cell")) ? el : null;
-    }, { passive: false });
+    }, { passive: true });
 
     this.root.addEventListener("touchmove", e => {
       const dx = e.touches[0].clientX - touchStartX;
@@ -32,6 +33,7 @@ export class GridRenderer {
 
     this.root.addEventListener("touchend", () => {
       if (!touchMoved && touchTarget) {
+        this._ignoreNextClick = true;
         const r = parseInt(touchTarget.dataset.row);
         const c = parseInt(touchTarget.dataset.col);
         this.onLeft(this.grid.cells[r][c]);
@@ -41,6 +43,10 @@ export class GridRenderer {
 
     // マウス操作（PC）
     this.root.addEventListener("click", e => {
+      if (this._ignoreNextClick) {
+        this._ignoreNextClick = false;
+        return;
+      }
       const el = e.target.closest(".cell");
       if (!el) return;
       const r = parseInt(el.dataset.row);
