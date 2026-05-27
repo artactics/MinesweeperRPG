@@ -527,28 +527,40 @@ export class GameController {
     this.showDungeonPlay();
   }
 
-  _updateMonsterList() {
-    const el = document.getElementById("monster-list");
-    if (!el) return;
-    const counts = {};
-    for (let r = 0; r < this.grid.rows; r++) {
-      for (let c = 0; c < this.grid.cols; c++) {
-        const cell = this.grid.cells[r][c];
-        if (!cell.isEnemy || cell.revealed) continue;
-        const t = cell.enemyType;
-        const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
-        if (!counts[key]) {
-          const icon = t.iconUrl ? `<img src="${t.iconUrl}" class="gi-icon gi-icon-sm" alt="${t.emoji}">` : t.emoji;
-          counts[key] = { label: cell.isElite ? `${icon}${t.name}(\u30a8\u30ea\u30fc\u30c8)` : `${icon}${t.name}`, isElite: cell.isElite, count: 0 };
-        }
-        counts[key].count++;
+_updateMonsterList() {
+  const el = document.getElementById("monster-list");
+  if (!el) return;
+
+  const counts = {};
+  for (let r = 0; r < this.grid.rows; r++) {
+    for (let c = 0; c < this.grid.cols; c++) {
+      const cell = this.grid.cells[r][c];
+      if (!cell.isEnemy || cell.revealed) continue;
+      const t = cell.enemyType;
+      const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
+      if (!counts[key]) {
+        // ここで画像タグを作らず絵文字だけを使う
+        const icon = t && t.emoji ? `<span aria-hidden="true" style="font-size:16px">${t.emoji}</span> ` : '';
+        counts[key] = {
+          label: cell.isElite ? `${icon}${t ? t.name : '?'}（エリート）` : `${icon}${t ? t.name : '?'}`,
+          isElite: cell.isElite,
+          count: 0
+        };
       }
+      counts[key].count++;
     }
-    el.innerHTML = Object.values(counts)
-      .sort((a, b) => b.isElite - a.isElite)
-      .map(e => `<div class="${e.isElite ? 'monster-elite' : ''}">${e.label} \xd7${e.count}</div>`)
-      .join("") || "<div>\u30af\u30ea\u30a2\uff01</div>";
   }
+
+  const items = Object.values(counts)
+    .sort((a, b) => b.isElite - a.isElite)
+    .map(e => {
+      const cls = e.isElite ? 'monster-elite' : '';
+      return `<div class="${cls}">${e.label} ×${e.count}</div>`;
+    });
+
+  el.innerHTML = items.join('') || `<div>クリア！</div>`;
+}
+
 
   async onUserChanged(user) {
     const logoutBtn = document.getElementById("logout-btn");
