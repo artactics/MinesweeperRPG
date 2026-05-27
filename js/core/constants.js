@@ -26,43 +26,43 @@ export const DUNGEON_CONFIG = {
   8: { name: "魔王の城",     emoji: "🏯", themeClass: "theme-castle",   minPlayerLevel: 8, maxPlayerLevel: 99,enemyTypes: ["DEMON"],             enemyCount: 25, gridSize: { rows: 13, cols: 13 }, clearExp: 200, clearGold: 300, itemChance: 0.04 }
 };
 
-const GI = (author, name, fgColor, bgColor = "000000") => `https://cdn.game-icons.net/1x1/${author}/${name}/${fgColor}/${bgColor}.svg`;
+const GI = (author, name) => `https://raw.githubusercontent.com/game-icons/game-icons.net/master/icons/svg/${author}/${name}.svg`;
 
 export const ENEMY_TYPES = {
-  SLIME:    { name: "スライム",   emoji: "💧", iconUrl: GI("lorc","blob","4caf50","000000"),              baseHp: 8,  baseAtk: 2,  baseExp: 5,  dangerRange: [0, 2], color: "#4CAF50" },
-  GOBLIN:   { name: "ゴブリン",   emoji: "👺", iconUrl: GI("lorc","goblin","8bc34a","000000"),            baseHp: 12, baseAtk: 4,  baseExp: 8,  dangerRange: [1, 4], color: "#8BC34A" },
-  WOLF:     { name: "オオカミ",   emoji: "🐺", iconUrl: GI("lorc","wolf-head","795548","000000"),         baseHp: 15, baseAtk: 5,  baseExp: 10, dangerRange: [2, 5], color: "#795548" },
-  ORC:      { name: "オーク",     emoji: "👹", iconUrl: GI("delapouite","orc-head","ff9800","000000"),    baseHp: 20, baseAtk: 6,  baseExp: 12, dangerRange: [3, 6], color: "#FF9800" },
-  SKELETON: { name: "スケルトン", emoji: "💀", iconUrl: GI("lorc","skeleton-inside","9e9e9e","000000"),   baseHp: 18, baseAtk: 7,  baseExp: 15, dangerRange: [4, 7], color: "#9E9E9E" },
-  DRAGON:   { name: "ドラゴン",   emoji: "🐉", iconUrl: GI("lorc","dragon-head","f44336","000000"),       baseHp: 25, baseAtk: 8,  baseExp: 20, dangerRange: [5, 8], color: "#F44336" },
-  DEMON:    { name: "デーモン",   emoji: "😈", iconUrl: GI("lorc","demon-skull","9c27b0","000000"),       baseHp: 30, baseAtk: 10, baseExp: 25, dangerRange: [6, 8], color: "#9C27B0" }
+  SLIME:    { name: "スライム",   emoji: "💧", iconUrl: GI("lorc","blob"),              baseHp: 8,  baseAtk: 2,  baseExp: 5,  dangerRange: [0, 2], color: "#4CAF50" },
+  GOBLIN:   { name: "ゴブリン",   emoji: "👺", iconUrl: GI("lorc","goblin"),            baseHp: 12, baseAtk: 4,  baseExp: 8,  dangerRange: [1, 4], color: "#8BC34A" },
+  WOLF:     { name: "オオカミ",   emoji: "🐺", iconUrl: GI("lorc","wolf-head"),         baseHp: 15, baseAtk: 5,  baseExp: 10, dangerRange: [2, 5], color: "#795548" },
+  ORC:      { name: "オーク",     emoji: "👹", iconUrl: GI("delapouite","orc-head"),    baseHp: 20, baseAtk: 6,  baseExp: 12, dangerRange: [3, 6], color: "#FF9800" },
+  SKELETON: { name: "スケルトン", emoji: "💀", iconUrl: GI("lorc","skeleton-inside"),   baseHp: 18, baseAtk: 7,  baseExp: 15, dangerRange: [4, 7], color: "#9E9E9E" },
+  DRAGON:   { name: "ドラゴン",   emoji: "🐉", iconUrl: GI("lorc","dragon-head"),       baseHp: 25, baseAtk: 8,  baseExp: 20, dangerRange: [5, 8], color: "#F44336" },
+  DEMON:    { name: "デーモン",   emoji: "😈", iconUrl: GI("lorc","demon-skull"),       baseHp: 30, baseAtk: 10, baseExp: 25, dangerRange: [6, 8], color: "#9C27B0" }
 };
 
 export const ITEM_TYPES = {
-  POTION:       { id: "potion",       name: "回復薬",   emoji: "\u{1F9EA}", iconUrl: GI("lorc","potion-ball","4fc3f7","000000"),      minDungeon: 1, description: "HP+10回復", effect: { type: "heal", value: 10 }, healScale: 3, buyPrice: 30, sellPrice: 12 },
-  SUPER_POTION: { id: "super_potion", name: "超回復薬", emoji: "\u{1F48A}", iconUrl: GI("lorc","bubbling-potion","e91e63","000000"), minDungeon: 3, description: "HP+20回復", effect: { type: "heal", value: 20 }, healScale: 5, buyPrice: 60, sellPrice: 24 },
-  ATTACK_BOOST: { id: "attack_boost", name: "攻撃力UP", emoji: "\u2694\uFE0F", iconUrl: GI("lorc","crossed-swords","ffd740","000000"),  minDungeon: 2, description: "ATK+3",    effect: { type: "atk",  value: 3  }, atkScale:  1, buyPrice: 80, sellPrice: 32 }
+  POTION:       { id: "potion",       name: "回復薬",   emoji: "\u{1F9EA}", iconUrl: GI("lorc","potion-ball"),      minDungeon: 1, description: "HP+10回復", effect: { type: "heal", value: 10 }, healScale: 3, buyPrice: 30, sellPrice: 12 },
+  SUPER_POTION: { id: "super_potion", name: "超回復薬", emoji: "\u{1F48A}", iconUrl: GI("lorc","bubbling-potion"), minDungeon: 3, description: "HP+20回復", effect: { type: "heal", value: 20 }, healScale: 5, buyPrice: 60, sellPrice: 24 },
+  ATTACK_BOOST: { id: "attack_boost", name: "攻撃力UP", emoji: "\u2694\uFE0F", iconUrl: GI("lorc","crossed-swords"),  minDungeon: 2, description: "ATK+3",    effect: { type: "atk",  value: 3  }, atkScale:  1, buyPrice: 80, sellPrice: 32 }
 };
 
 export const EQUIPMENT_TYPES = {
   // 武器
-  WOODEN_STICK:    { id: "wooden_stick",    name: "木の棒",           emoji: "🪵", iconUrl: GI("delapouite","bo","8d6e63","000000"),            slot: "weapon", category: "equipment", atk: 2,    description: "ATK+2",    minDungeon: 1, sellPrice: 15  },
-  IRON_SWORD:      { id: "iron_sword",      name: "鉄の剣",           emoji: "🗡️", iconUrl: GI("lorc","sword","90a4ae","000000"),               slot: "weapon", category: "equipment", atk: 5,    description: "ATK+5",    minDungeon: 2, sellPrice: 40  },
-  STEEL_SWORD:     { id: "steel_sword",     name: "鋼の剣",           emoji: "⚔️", iconUrl: GI("lorc","broadsword","546e7a","000000"),          slot: "weapon", category: "equipment", atk: 9,    description: "ATK+9",    minDungeon: 4, sellPrice: 70  },
-  DRAGON_BLADE:    { id: "dragon_blade",    name: "竜の剣",           emoji: "🔥", iconUrl: GI("lorc","flaming-sword","ff5722","000000"),       slot: "weapon", category: "equipment", atk: 15,   description: "ATK+15",   minDungeon: 6, sellPrice: 120 },
+  WOODEN_STICK:    { id: "wooden_stick",    name: "木の棒",           emoji: "🪵", iconUrl: GI("delapouite","bo"),            slot: "weapon", category: "equipment", atk: 2,    description: "ATK+2",    minDungeon: 1, sellPrice: 15  },
+  IRON_SWORD:      { id: "iron_sword",      name: "鉄の剣",           emoji: "🗡️", iconUrl: GI("lorc","sword"),               slot: "weapon", category: "equipment", atk: 5,    description: "ATK+5",    minDungeon: 2, sellPrice: 40  },
+  STEEL_SWORD:     { id: "steel_sword",     name: "鋼の剣",           emoji: "⚔️", iconUrl: GI("lorc","broadsword"),          slot: "weapon", category: "equipment", atk: 9,    description: "ATK+9",    minDungeon: 4, sellPrice: 70  },
+  DRAGON_BLADE:    { id: "dragon_blade",    name: "竜の剣",           emoji: "🔥", iconUrl: GI("lorc","flaming-sword"),       slot: "weapon", category: "equipment", atk: 15,   description: "ATK+15",   minDungeon: 6, sellPrice: 120 },
   // 頭防具
-  LEATHER_HELM:    { id: "leather_helm",    name: "革の兜",           emoji: "🪖", iconUrl: GI("lorc","barbute","8d6e63","000000"),             slot: "head",   category: "equipment", maxHp: 5,  description: "MaxHP+5",  minDungeon: 1, sellPrice: 15  },
-  IRON_HELM:       { id: "iron_helm",       name: "鉄兜",             emoji: "⛑️", iconUrl: GI("lorc","visored-helm","90a4ae","000000"),        slot: "head",   category: "equipment", maxHp: 10, description: "MaxHP+10", minDungeon: 2, sellPrice: 30  },
-  STEEL_HELM:      { id: "steel_helm",      name: "鋼の兜",           emoji: "🔵", iconUrl: GI("lorc","full-helm","546e7a","000000"),           slot: "head",   category: "equipment", maxHp: 18, description: "MaxHP+18", minDungeon: 4, sellPrice: 55  },
-  DRAGON_HELM:     { id: "dragon_helm",     name: "竜の兜",           emoji: "👑", iconUrl: GI("lorc","dragon-head","ff5722","000000"),         slot: "head",   category: "equipment", maxHp: 28, description: "MaxHP+28", minDungeon: 6, sellPrice: 85  },
+  LEATHER_HELM:    { id: "leather_helm",    name: "革の兜",           emoji: "🪖", iconUrl: GI("lorc","barbute"),             slot: "head",   category: "equipment", maxHp: 5,  description: "MaxHP+5",  minDungeon: 1, sellPrice: 15  },
+  IRON_HELM:       { id: "iron_helm",       name: "鉄兜",             emoji: "⛑️", iconUrl: GI("lorc","visored-helm"),        slot: "head",   category: "equipment", maxHp: 10, description: "MaxHP+10", minDungeon: 2, sellPrice: 30  },
+  STEEL_HELM:      { id: "steel_helm",      name: "鋼の兜",           emoji: "🔵", iconUrl: GI("lorc","full-helm"),           slot: "head",   category: "equipment", maxHp: 18, description: "MaxHP+18", minDungeon: 4, sellPrice: 55  },
+  DRAGON_HELM:     { id: "dragon_helm",     name: "竜の兜",           emoji: "👑", iconUrl: GI("lorc","dragon-head"),         slot: "head",   category: "equipment", maxHp: 28, description: "MaxHP+28", minDungeon: 6, sellPrice: 85  },
   // 胴防具
-  LEATHER_ARMOR:   { id: "leather_armor",   name: "革鎧",             emoji: "🧥", iconUrl: GI("lorc","leather-vest","8d6e63","000000"),        slot: "body",   category: "equipment", maxHp: 8,  description: "MaxHP+8",  minDungeon: 1, sellPrice: 25  },
-  CHAIN_MAIL:      { id: "chain_mail",      name: "鎖帷子",           emoji: "🛡️", iconUrl: GI("lorc","chain-mail","90a4ae","000000"),          slot: "body",   category: "equipment", maxHp: 15, description: "MaxHP+15", minDungeon: 3, sellPrice: 45  },
-  PLATE_ARMOR:     { id: "plate_armor",     name: "プレートアーマー", emoji: "🔰", iconUrl: GI("lorc","breastplate","546e7a","000000"),         slot: "body",   category: "equipment", maxHp: 25, description: "MaxHP+25", minDungeon: 5, sellPrice: 75  },
-  DRAGON_SCALE:    { id: "dragon_scale",    name: "竜鱗鎧",           emoji: "🐲", iconUrl: GI("lorc","dragon-scales","ff5722","000000"),       slot: "body",   category: "equipment", maxHp: 38, description: "MaxHP+38", minDungeon: 7, sellPrice: 115 },
+  LEATHER_ARMOR:   { id: "leather_armor",   name: "革鎧",             emoji: "🧥", iconUrl: GI("lorc","leather-vest"),        slot: "body",   category: "equipment", maxHp: 8,  description: "MaxHP+8",  minDungeon: 1, sellPrice: 25  },
+  CHAIN_MAIL:      { id: "chain_mail",      name: "鎖帷子",           emoji: "🛡️", iconUrl: GI("lorc","chain-mail"),          slot: "body",   category: "equipment", maxHp: 15, description: "MaxHP+15", minDungeon: 3, sellPrice: 45  },
+  PLATE_ARMOR:     { id: "plate_armor",     name: "プレートアーマー", emoji: "🔰", iconUrl: GI("lorc","breastplate"),         slot: "body",   category: "equipment", maxHp: 25, description: "MaxHP+25", minDungeon: 5, sellPrice: 75  },
+  DRAGON_SCALE:    { id: "dragon_scale",    name: "竜鱗鎧",           emoji: "🐲", iconUrl: GI("lorc","dragon-scales"),       slot: "body",   category: "equipment", maxHp: 38, description: "MaxHP+38", minDungeon: 7, sellPrice: 115 },
   // 脚防具
-  LEATHER_BOOTS:   { id: "leather_boots",   name: "革のブーツ",       emoji: "👟", iconUrl: GI("lorc","boots","8d6e63","000000"),               slot: "legs",   category: "equipment", maxHp: 4,  description: "MaxHP+4",  minDungeon: 1, sellPrice: 12  },
-  IRON_GREAVES:    { id: "iron_greaves",    name: "鉄の脚当て",       emoji: "🦵", iconUrl: GI("lorc","greaves","90a4ae","000000"),             slot: "legs",   category: "equipment", maxHp: 8,  description: "MaxHP+8",  minDungeon: 2, sellPrice: 25  },
-  STEEL_GREAVES:   { id: "steel_greaves",   name: "鋼の脚当て",       emoji: "⚙️", iconUrl: GI("lorc","leg-armor","546e7a","000000"),           slot: "legs",   category: "equipment", maxHp: 14, description: "MaxHP+14", minDungeon: 4, sellPrice: 42  },
-  DRAGON_GREAVES:  { id: "dragon_greaves",  name: "竜の脚当て",       emoji: "🦾", iconUrl: GI("lorc","sabatons","ff5722","000000"),            slot: "legs",   category: "equipment", maxHp: 22, description: "MaxHP+22", minDungeon: 6, sellPrice: 65  }
+  LEATHER_BOOTS:   { id: "leather_boots",   name: "革のブーツ",       emoji: "👟", iconUrl: GI("lorc","boots"),               slot: "legs",   category: "equipment", maxHp: 4,  description: "MaxHP+4",  minDungeon: 1, sellPrice: 12  },
+  IRON_GREAVES:    { id: "iron_greaves",    name: "鉄の脚当て",       emoji: "🦵", iconUrl: GI("lorc","greaves"),             slot: "legs",   category: "equipment", maxHp: 8,  description: "MaxHP+8",  minDungeon: 2, sellPrice: 25  },
+  STEEL_GREAVES:   { id: "steel_greaves",   name: "鋼の脚当て",       emoji: "⚙️", iconUrl: GI("lorc","leg-armor"),           slot: "legs",   category: "equipment", maxHp: 14, description: "MaxHP+14", minDungeon: 4, sellPrice: 42  },
+  DRAGON_GREAVES:  { id: "dragon_greaves",  name: "竜の脚当て",       emoji: "🦾", iconUrl: GI("lorc","sabatons"),            slot: "legs",   category: "equipment", maxHp: 22, description: "MaxHP+22", minDungeon: 6, sellPrice: 65  }
 };
