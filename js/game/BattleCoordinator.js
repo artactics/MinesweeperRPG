@@ -56,7 +56,7 @@ export class BattleCoordinator {
     const grid = session.grid;
 
     const enemy = battle.start(cell);
-    this.logUI.add(`${enemy.emoji} ${enemy.name}が現れた！`);
+    this.logUI.add(`${enemy.name}が現れた！`);
     this.battleUI.show(enemy, player, battle.battleGrid);
 
     this.battleUI.onAttack((row, col) => {

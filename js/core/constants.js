@@ -28,14 +28,17 @@ export const DUNGEON_CONFIG = {
 
 const GI = (author, name) => `https://raw.githubusercontent.com/game-icons/game-icons.net/master/icons/svg/${author}/${name}.svg`;
 
+/** 敵画像（asset/images/*.svg）のパス */
+const ENEMY_IMG = (file) => `asset/images/${file}`;
+
 export const ENEMY_TYPES = {
-  SLIME:    { name: "スライム",   emoji: "💧", iconUrl: GI("lorc","blob"),              baseHp: 8,  baseAtk: 2,  baseExp: 5,  dangerRange: [0, 2], color: "#4CAF50" },
-  GOBLIN:   { name: "ゴブリン",   emoji: "👺", iconUrl: GI("lorc","goblin"),            baseHp: 12, baseAtk: 4,  baseExp: 8,  dangerRange: [1, 4], color: "#8BC34A" },
-  WOLF:     { name: "オオカミ",   emoji: "🐺", iconUrl: GI("lorc","wolf-head"),         baseHp: 15, baseAtk: 5,  baseExp: 10, dangerRange: [2, 5], color: "#795548" },
-  ORC:      { name: "オーク",     emoji: "👹", iconUrl: GI("delapouite","orc-head"),    baseHp: 20, baseAtk: 6,  baseExp: 12, dangerRange: [3, 6], color: "#FF9800" },
-  SKELETON: { name: "スケルトン", emoji: "💀", iconUrl: GI("lorc","skeleton-inside"),   baseHp: 18, baseAtk: 7,  baseExp: 15, dangerRange: [4, 7], color: "#9E9E9E" },
-  DRAGON:   { name: "ドラゴン",   emoji: "🐉", iconUrl: GI("lorc","dragon-head"),       baseHp: 25, baseAtk: 8,  baseExp: 20, dangerRange: [5, 8], color: "#F44336" },
-  DEMON:    { name: "デーモン",   emoji: "😈", iconUrl: GI("lorc","demon-skull"),       baseHp: 30, baseAtk: 10, baseExp: 25, dangerRange: [6, 8], color: "#9C27B0" }
+  SLIME:    { name: "スライム",   emoji: "💧", iconUrl: ENEMY_IMG("slime.svg"),    baseHp: 8,  baseAtk: 2,  baseExp: 5,  dangerRange: [0, 2], color: "#4CAF50" },
+  GOBLIN:   { name: "ゴブリン",   emoji: "👺", iconUrl: ENEMY_IMG("goblin.svg"),   baseHp: 12, baseAtk: 4,  baseExp: 8,  dangerRange: [1, 4], color: "#8BC34A" },
+  WOLF:     { name: "オオカミ",   emoji: "🐺", iconUrl: ENEMY_IMG("wolf.svg"),     baseHp: 15, baseAtk: 5,  baseExp: 10, dangerRange: [2, 5], color: "#795548" },
+  ORC:      { name: "オーク",     emoji: "👹", iconUrl: ENEMY_IMG("orc.svg"),      baseHp: 20, baseAtk: 6,  baseExp: 12, dangerRange: [3, 6], color: "#FF9800" },
+  SKELETON: { name: "スケルトン", emoji: "💀", iconUrl: ENEMY_IMG("skeleton.svg"), baseHp: 18, baseAtk: 7,  baseExp: 15, dangerRange: [4, 7], color: "#9E9E9E" },
+  DRAGON:   { name: "ドラゴン",   emoji: "🐉", iconUrl: ENEMY_IMG("dragon.svg"),   baseHp: 25, baseAtk: 8,  baseExp: 20, dangerRange: [5, 8], color: "#F44336" },
+  DEMON:    { name: "デーモン",   emoji: "😈", iconUrl: ENEMY_IMG("demon.svg"),    baseHp: 30, baseAtk: 10, baseExp: 25, dangerRange: [6, 8], color: "#9C27B0" }
 };
 
 export const ITEM_TYPES = {

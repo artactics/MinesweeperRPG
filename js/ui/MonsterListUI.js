@@ -1,3 +1,5 @@
+import { renderEnemyIconHtml } from "./enemyIcon.js";
+
 /**
  * 攻略中画面の「残り敵一覧」表示を担当するクラス
  */
@@ -19,9 +21,10 @@ export class MonsterListUI {
         const t = cell.enemyType;
         const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
         if (!counts[key]) {
-          const icon = t && t.emoji ? `<span aria-hidden="true" style="font-size:16px">${t.emoji}</span> ` : "";
+          const icon = t ? `${renderEnemyIconHtml(t, "gi-icon-sm")} ` : "";
+          const enemyName = t ? t.name : "?";
           counts[key] = {
-            label: cell.isElite ? `${icon}${t ? t.name : "?"}（エリート）` : `${icon}${t ? t.name : "?"}`,
+            label: cell.isElite ? `${icon}${enemyName}（エリート）` : `${icon}${enemyName}`,
             isElite: cell.isElite,
             count: 0
           };

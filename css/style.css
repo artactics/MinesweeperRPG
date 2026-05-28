@@ -886,6 +886,12 @@ button:hover {
   margin: 0 auto 4px;
 }
 
+/* 残り敵一覧のアイコン */
+#monster-list .gi-icon {
+  vertical-align: text-bottom;
+  margin-right: 2px;
+}
+
 /* attribution */
 #gi-credit {
   text-align: center;
