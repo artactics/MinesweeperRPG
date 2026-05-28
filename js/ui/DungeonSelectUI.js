@@ -1,4 +1,5 @@
 import { DUNGEON_CONFIG } from "../core/constants.js";
+import { renderIconHtml } from "./iconHtml.js";
 
 /**
  * ダンジョン選択画面の描画を担当するクラス
@@ -31,7 +32,7 @@ export class DungeonSelectUI {
 
       const bannerEl = document.createElement("div");
       bannerEl.className = "dungeon-card-banner";
-      bannerEl.textContent = config.emoji;
+      bannerEl.innerHTML = renderIconHtml(config, "gi-icon-dungeon");
       card.appendChild(bannerEl);
 
       const bodyEl = document.createElement("div");

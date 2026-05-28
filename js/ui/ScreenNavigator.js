@@ -1,3 +1,5 @@
+import { renderIconHtml } from "./iconHtml.js";
+
 /**
  * 画面の表示切替を担当するクラス
  * DOM の display プロパティのみを操作し、ゲームロジックは持たない
@@ -43,10 +45,10 @@ export class ScreenNavigator {
     const details = document.getElementById("result-details");
     details.innerHTML = "";
 
-    const addRow = (label, value, cls = "") => {
+    const addRow = (labelHtml, value, cls = "") => {
       const row = document.createElement("div");
       row.className = "result-row" + (cls ? " " + cls : "");
-      row.innerHTML = `<span>${label}</span><span>${value}</span>`;
+      row.innerHTML = `<span>${labelHtml}</span><span>${value}</span>`;
       details.appendChild(row);
     };
 
@@ -67,7 +69,7 @@ export class ScreenNavigator {
       details.appendChild(titleEl);
       for (const itemId of itemIds) {
         const item = data.gainedItems[itemId];
-        addRow(`${item.emoji} ${item.name}`, `×${item.count}`);
+        addRow(`${renderIconHtml(item, "gi-icon-sm")} ${item.name}`, `×${item.count}`);
       }
     }
 
@@ -77,7 +79,7 @@ export class ScreenNavigator {
       eqTitle.textContent = "入手装備品";
       details.appendChild(eqTitle);
       for (const item of data.gainedEquipment) {
-        addRow(`${item.emoji} ${item.name}`, item.description);
+        addRow(`${renderIconHtml(item, "gi-icon-sm")} ${item.name}`, item.description);
       }
     }
   }

@@ -31,16 +31,16 @@ export class ItemUsageService {
     switch (effect.type) {
       case "heal":
         player.hp = Math.min(player.hp + effect.value, player.maxHp);
-        this.logUI.add(`${item.emoji} ${item.name}を使用！ HPを${effect.value}回復`);
+        this.logUI.add(`${item.name}を使用！ HPを${effect.value}回復`);
         break;
       case "atk":
         player.bonusAtk += effect.value;
-        this.logUI.add(`${item.emoji} ${item.name}を使用！ 攻撃力+${effect.value}（このダンジョンのみ）`);
+        this.logUI.add(`${item.name}を使用！ 攻撃力+${effect.value}（このダンジョンのみ）`);
         break;
       case "maxHp":
         player.maxHp += effect.value;
         player.hp += effect.value;
-        this.logUI.add(`${item.emoji} ${item.name}を使用！ 最大HP+${effect.value}`);
+        this.logUI.add(`${item.name}を使用！ 最大HP+${effect.value}`);
         break;
     }
 

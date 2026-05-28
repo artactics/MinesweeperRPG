@@ -1,4 +1,5 @@
 import { ITEM_TYPES } from "../core/constants.js";
+import { renderIconHtml } from "./iconHtml.js";
 
 /**
  * ショップモーダル（購入・売却）の描画と操作を担当するクラス
@@ -57,7 +58,7 @@ export class ShopUI {
       row.className = "shop-row";
       const info = document.createElement("span");
       info.className = "shop-item-info";
-      info.innerHTML = `${item.emoji} ${item.name} <span style="color:#aaa;font-size:0.78rem">${item.description}</span>`;
+      info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#aaa;font-size:0.78rem">${item.description}</span>`;
       const price = document.createElement("span");
       price.className = "shop-item-price";
       price.textContent = `${item.buyPrice}G`;
@@ -94,7 +95,7 @@ export class ShopUI {
         row.className = "shop-row";
         const info = document.createElement("span");
         info.className = "shop-item-info";
-        info.innerHTML = `${item.emoji} ${item.name} <span style="color:#aaa">×${item.count}</span>`;
+        info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#aaa">×${item.count}</span>`;
         const price = document.createElement("span");
         price.className = "shop-item-price";
         price.textContent = `${item.sellPrice}G/個`;
@@ -129,7 +130,7 @@ export class ShopUI {
         row.className = "shop-row";
         const info = document.createElement("span");
         info.className = "shop-item-info";
-        info.innerHTML = `${item.emoji} ${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${countSuffix}`;
+        info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${countSuffix}`;
         const price = document.createElement("span");
         price.className = "shop-item-price";
         price.textContent = `${item.sellPrice}G`;

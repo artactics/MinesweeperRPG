@@ -1,4 +1,4 @@
-﻿import { renderEnemyIconHtml } from "./enemyIcon.js";
+﻿import { renderIconHtml } from "./iconHtml.js";
 
 export class BattleUI {
   constructor() {
@@ -18,7 +18,7 @@ export class BattleUI {
   }
 
   update(enemy, player) {
-    const img = renderEnemyIconHtml(enemy, "gi-icon-battle");
+    const img = renderIconHtml(enemy, "gi-icon-battle");
     this.text.innerHTML =
       `${img}<br>` +
       `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +

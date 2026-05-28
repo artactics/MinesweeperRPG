@@ -1,3 +1,5 @@
+import { renderIconHtml } from "./iconHtml.js";
+
 /**
  * 倉庫モーダル（閲覧専用）の描画を担当するクラス
  */
@@ -36,12 +38,12 @@ export class InventoryUI {
       content.appendChild(el);
     };
 
-    const addRow = (emoji, name, sub, badge) => {
+    const addRow = (item, sub, badge) => {
       const row = document.createElement("div");
       row.className = "shop-row";
       const info = document.createElement("span");
       info.className = "shop-item-info";
-      info.innerHTML = `${emoji} ${name} <span style="color:#aaa;font-size:0.8rem">${sub}</span>`;
+      info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#aaa;font-size:0.8rem">${sub}</span>`;
       const b = document.createElement("span");
       b.className = "inv-badge";
       b.textContent = badge;
@@ -55,7 +57,7 @@ export class InventoryUI {
       addSection("消費アイテム");
       for (const id of invIds) {
         const item = player.inventory[id];
-        addRow(item.emoji, item.name, item.description, `×${item.count}`);
+        addRow(item, item.description, `×${item.count}`);
       }
     }
 
@@ -64,7 +66,7 @@ export class InventoryUI {
       addSection("装備品");
       for (const id of eqIds) {
         const item = player.equipmentInventory[id];
-        addRow(item.emoji, item.name, item.description, item.count > 1 ? `×${item.count}` : "");
+        addRow(item, item.description, item.count > 1 ? `×${item.count}` : "");
       }
     }
 

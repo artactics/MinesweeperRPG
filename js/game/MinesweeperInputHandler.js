@@ -125,10 +125,10 @@ export class MinesweeperInputHandler {
 
     if (item.category === "equipment") {
       session.trackEquipmentPickup(item);
-      this.logUI.add(`${item.emoji} ${item.name}を入手した！（装備品）`);
+      this.logUI.add(`${item.name}を入手した！（装備品）`);
     } else {
       player.addItem(item);
-      this.logUI.add(`${item.emoji} ${item.name}を手に入れた！`);
+      this.logUI.add(`${item.name}を手に入れた！`);
     }
 
     cell.item = null;

@@ -1,3 +1,5 @@
+import { renderIconHtml } from "./iconHtml.js";
+
 /**
  * 攻略中のプレイヤーHUD（手持ち・倉庫アイテム一覧）を担当するクラス
  */
@@ -45,10 +47,7 @@ export class PlayerHudUI {
       itemDiv.style.marginBottom = "5px";
 
       const itemInfo = document.createElement("span");
-      const icon = item.iconUrl
-        ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">`
-        : item.emoji;
-      itemInfo.innerHTML = `${icon} ${item.name} x${item.count}`;
+      itemInfo.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} x${item.count}`;
       itemInfo.style.flex = "1";
 
       const useBtn = document.createElement("button");

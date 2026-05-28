@@ -75,7 +75,7 @@ export class DungeonSession {
     this.gridRenderer.render();
 
     this.logUI.clear();
-    this.logUI.add(`${config.emoji} ${config.name}に入場しました`);
+    this.logUI.add(`${config.name}に入場しました`);
 
     return true;
   }

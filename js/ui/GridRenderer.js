@@ -1,3 +1,5 @@
+import { renderIconHtml } from "./iconHtml.js";
+
 export class GridRenderer {
   constructor(grid, root, onLeft, onRight) {
     this.grid = grid;
@@ -93,10 +95,7 @@ export class GridRenderer {
 
     if (cell.revealed) {
       if (cell.item) {
-        const it = cell.item;
-        el.innerHTML = it.iconUrl
-          ? `<img src="${it.iconUrl}" class="gi-icon gi-icon-cell" alt="${it.emoji}" onerror="this.outerHTML='${it.emoji}'">`
-          : it.emoji;
+        el.innerHTML = renderIconHtml(cell.item, "gi-icon-cell");
         el.style.background = "#554433";
       } else {
         el.textContent = cell.isEnemy ? "✕" : (cell.danger || "");

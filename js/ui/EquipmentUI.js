@@ -1,3 +1,5 @@
+import { renderIconHtml } from "./iconHtml.js";
+
 /**
  * 装備モーダルの描画と装備・外す操作を担当するクラス
  */
@@ -43,8 +45,7 @@ export class EquipmentUI {
       if (def) {
         const nameEl = document.createElement("span");
         nameEl.className = "eq-item-name";
-        const defIcon = def.iconUrl ? `<img src="${def.iconUrl}" class="gi-icon gi-icon-sm" alt="${def.emoji}">` : def.emoji;
-        nameEl.innerHTML = `${defIcon} ${def.name} <span class="eq-item-stat">${def.description}</span>`;
+        nameEl.innerHTML = `${renderIconHtml(def, "gi-icon-sm")} ${def.name} <span class="eq-item-stat">${def.description}</span>`;
         row.appendChild(nameEl);
         const btn = document.createElement("button");
         btn.className = "eq-unequip-btn";
@@ -77,8 +78,7 @@ export class EquipmentUI {
       row.className = "eq-inventory-item";
       const info = document.createElement("span");
       info.className = "eq-item-info";
-      const eqIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
-      info.innerHTML = `${eqIcon} ${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` ×${item.count}` : ""}`;
+      info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` ×${item.count}` : ""}`;
       const btn = document.createElement("button");
       btn.className = "eq-equip-btn";
       btn.textContent = "装備";
