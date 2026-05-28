@@ -1,4 +1,4 @@
-import { GAME_CONFIG, EQUIPMENT_TYPES } from "./constants.js";
+import { GAME_CONFIG, ITEM_TYPES, EQUIPMENT_TYPES } from "./constants.js";
 
 export class Player {
   constructor(savedData = null) {
@@ -20,9 +20,9 @@ export class Player {
           }
         }
       } else {
-        this.inventory = savedData.inventory || {};
+        this.inventory = this._rehydrateStash(savedData.inventory || {});
       }
-      
+
       this.handItems = {};
       this.gold = savedData.gold || 0;
       this.bonusAtk = 0;
@@ -33,7 +33,7 @@ export class Player {
         body:   this._restoreEquipped(se.body || se.armor),
         legs:   this._restoreEquipped(se.legs)
       };
-      this.equipmentInventory = savedData.equipmentInventory || {};
+      this.equipmentInventory = this._rehydrateStash(savedData.equipmentInventory || {});
     } else {
       this.level = 1;
       this.maxHp = GAME_CONFIG.PLAYER_INITIAL_HP;
@@ -139,8 +139,19 @@ export class Player {
 
   _restoreEquipped(val) {
     if (!val) return null;
-    if (typeof val === "string") return Object.values(EQUIPMENT_TYPES).find(e => e.id === val) || null;
-    return val;
+    const id = typeof val === "string" ? val : val.id;
+    return Object.values(EQUIPMENT_TYPES).find(e => e.id === id) || null;
+  }
+
+  /** セーブデータのアイテムに iconUrl / iconColor を最新定義で補完 */
+  _rehydrateStash(stash) {
+    const catalog = [...Object.values(ITEM_TYPES), ...Object.values(EQUIPMENT_TYPES)];
+    const result = {};
+    for (const [id, stored] of Object.entries(stash)) {
+      const def = catalog.find(entry => entry.id === id);
+      result[id] = def ? { ...def, count: stored.count } : stored;
+    }
+    return result;
   }
 
   _applyEquipmentStats(item, multiplier) {

@@ -15,7 +15,7 @@ export const GAME_CONFIG = {
   ATK_GAIN_PER_LEVEL: 2
 };
 
-const ASSET = (dir, file) => `asset/image/${dir}/${file}`;
+const ASSET = (dir, file) => `./asset/image/${dir}/${file}`;
 const DUNGEON_IMG = (themeClass) => ASSET("dungeon", `${themeClass}.svg`);
 const ENEMY_IMG = (file) => ASSET("enemy", file);
 const ITEM_IMG = (file) => ASSET("item", file);
