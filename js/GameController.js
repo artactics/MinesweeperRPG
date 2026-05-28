@@ -1,4 +1,3 @@
-import { Grid } from "./core/Grid.js";
 import { Player } from "./core/Player.js";
 import { BattleSystem } from "./core/BattleSystem.js";
 import { GridRenderer } from "./ui/GridRenderer.js";
@@ -6,961 +5,208 @@ import { BattleUI } from "./ui/BattleUI.js";
 import { LogUI } from "./ui/LogUI.js";
 import { ModalUI } from "./ui/ModalUI.js";
 import { FirebaseManager } from "./core/FirebaseManager.js";
-import { DIRECTIONS, GAME_CONFIG, ITEM_TYPES, EQUIPMENT_TYPES, DUNGEON_CONFIG } from "./core/constants.js";
+import { ScreenNavigator } from "./ui/ScreenNavigator.js";
+import { DungeonSelectUI } from "./ui/DungeonSelectUI.js";
+import { MonsterListUI } from "./ui/MonsterListUI.js";
+import { ShopUI } from "./ui/ShopUI.js";
+import { InventoryUI } from "./ui/InventoryUI.js";
+import { EquipmentUI } from "./ui/EquipmentUI.js";
+import { PlayerHudUI } from "./ui/PlayerHudUI.js";
+import { DungeonSession } from "./game/DungeonSession.js";
+import { SaveService } from "./game/SaveService.js";
+import { ItemUsageService } from "./game/ItemUsageService.js";
+import { MinesweeperInputHandler } from "./game/MinesweeperInputHandler.js";
+import { BattleCoordinator } from "./game/BattleCoordinator.js";
+import { AuthFlow } from "./game/AuthFlow.js";
 
-
+/**
+ * ゲーム全体のオーケストレータ（ファサード）
+ * 各サブシステムの組み立てと画面フローの接続のみを行う
+ */
 export class GameController {
 
   constructor() {
-    this.currentDungeonLevel = 1;
-    this.grid = null;
+    // --- コア状態 ---
     this.player = new Player();
     this.battle = new BattleSystem(this.player);
 
+    // --- UI ---
+    this.logUI = new LogUI();
+    this.battleUI = new BattleUI();
+    this.modalUI = new ModalUI();
+    this.screenNavigator = new ScreenNavigator();
+    this.monsterListUI = new MonsterListUI();
+
+    // 盤面描画（入力は MinesweeperInputHandler へ委譲）
     this.gridRenderer = new GridRenderer(
       null,
       document.getElementById("grid"),
-      cell => this.onLeft(cell),
-      cell => this.onRight(cell)
+      cell => this._onGridLeft(cell),
+      cell => this._onGridRight(cell)
     );
 
-    this.battleUI = new BattleUI();
-    this.logUI = new LogUI();
-    this.modalUI = new ModalUI();
+    // --- ダンジョンセッション ---
+    this.dungeonSession = new DungeonSession({
+      getPlayer: () => this.player,
+      logUI: this.logUI,
+      gridRenderer: this.gridRenderer,
+      onBattleCreated: battle => { this.battle = battle; }
+    });
 
+    // --- 永続化 ---
     this.firebaseManager = new FirebaseManager(window.firebaseAuth, window.firebaseDB);
-    this.firebaseManager.init((user) => this.onUserChanged(user));
+    this.saveService = new SaveService({
+      firebaseManager: this.firebaseManager,
+      getPlayer: () => this.player,
+      getDungeonEquipmentGained: () => this.dungeonSession.dungeonEquipmentGained
+    });
 
-    this.dungeonEquipmentGained = [];
-    this.flagMode = false;
+    // --- ゲームプレイ ---
+    this.battleCoordinator = new BattleCoordinator({
+      getBattle: () => this.battle,
+      getPlayer: () => this.player,
+      getSession: () => this.dungeonSession,
+      battleUI: this.battleUI,
+      logUI: this.logUI,
+      gridRenderer: this.gridRenderer,
+      onUpdateUI: () => this.updateUI(),
+      onSave: () => this.saveGameData(),
+      onMonsterListUpdate: () => this._updateMonsterList(),
+      onCheckClear: () => this._handleCheckClear(),
+      onGameOver: () => this.showGameOver()
+    });
 
-    this.setupAuthButtons();
-    this.setupPlayButtons();
-    this.setupEquipmentModal();
-    this.setupShopModal();
-    this.setupInventoryModal();
+    this.minesweeperInput = new MinesweeperInputHandler({
+      getSession: () => this.dungeonSession,
+      gridRenderer: this.gridRenderer,
+      battleCoordinator: this.battleCoordinator,
+      getPlayer: () => this.player,
+      logUI: this.logUI,
+      onUpdateUI: () => this.updateUI(),
+      onSave: () => this.saveGameData(),
+      onCheckClear: () => this._handleCheckClear()
+    });
 
+    this.itemUsage = new ItemUsageService({
+      getPlayer: () => this.player,
+      logUI: this.logUI,
+      onAfterUse: () => {
+        this.updateUI();
+        this.saveGameData();
+      }
+    });
+
+    // --- メタ画面 UI ---
+    this.dungeonSelectUI = new DungeonSelectUI({
+      getPlayer: () => this.player,
+      onEnterDungeon: level => this.enterDungeon(level)
+    });
+
+    const onMetaTransaction = () => {
+      this.saveGameData();
+      this.dungeonSelectUI.render();
+    };
+
+    this.shopUI = new ShopUI({
+      getPlayer: () => this.player,
+      onTransaction: onMetaTransaction
+    });
+
+    this.inventoryUI = new InventoryUI({ getPlayer: () => this.player });
+
+    this.equipmentUI = new EquipmentUI({
+      getPlayer: () => this.player,
+      onChanged: () => {
+        this.updateUI();
+        this.saveGameData();
+      }
+    });
+
+    this.playerHudUI = new PlayerHudUI({
+      getPlayer: () => this.player,
+      onUseItem: (itemId, fromHand) => this.itemUsage.useItem(itemId, fromHand)
+    });
+
+    // --- 認証 ---
+    this.authFlow = new AuthFlow({
+      firebaseManager: this.firebaseManager,
+      logUI: this.logUI,
+      screenNavigator: this.screenNavigator,
+      onPlayerLoaded: (player, battle) => {
+        this._setPlayer(player, battle);
+        this.screenNavigator.showGameScreen();
+        this.screenNavigator.showDungeonSelect();
+      },
+      onLoggedOut: (player, battle) => {
+        this._setPlayer(player, battle);
+        this.updateUI();
+        this.screenNavigator.showHomeScreen();
+      },
+      onGuestPlay: () => this.showDungeonSelect()
+    });
+
+    this.firebaseManager.init(user => this.authFlow.onUserChanged(user));
+
+    this._setupPlayButtons();
+    this.authFlow.setupButtons();
     this.updateUI();
   }
 
-  showHomeScreen() {
-    document.getElementById("home-screen").style.display = "flex";
-    document.getElementById("game-screen").style.display = "none";
+  // --- 盤面入力（初期化順のためラッパー） ---
+
+  _onGridLeft(cell) {
+    this.minesweeperInput.onLeft(cell);
   }
 
-  showGameScreen() {
-    document.getElementById("home-screen").style.display = "none";
-    document.getElementById("game-screen").style.display = "block";
-    this.showDungeonSelect();
+  _onGridRight(cell) {
+    this.minesweeperInput.onRight(cell);
   }
+
+  // --- 画面遷移 ---
 
   showDungeonSelect() {
-    document.getElementById("dungeon-select-screen").style.display = "block";
-    document.getElementById("dungeon-play-screen").style.display = "none";
-    document.getElementById("result-screen").style.display = "none";
-    this.renderDungeonSelect();
-  }
-
-  showDungeonPlay() {
-    document.getElementById("dungeon-select-screen").style.display = "none";
-    document.getElementById("dungeon-play-screen").style.display = "block";
-    document.getElementById("result-screen").style.display = "none";
-  }
-
-  showResultScreen(data) {
-    document.getElementById("dungeon-play-screen").style.display = "none";
-    document.getElementById("result-screen").style.display = "flex";
-
-    document.getElementById("result-dungeon-name").textContent = data.dungeonName;
-
-    const details = document.getElementById("result-details");
-    details.innerHTML = "";
-
-    const addRow = (label, value, cls = "") => {
-      const row = document.createElement("div");
-      row.className = "result-row" + (cls ? " " + cls : "");
-      row.innerHTML = `<span>${label}</span><span>${value}</span>`;
-      details.appendChild(row);
-    };
-
-    addRow("獲得EXP", `+${data.expGained}`);
-
-    if (data.newLevel > data.prevLevel) {
-      addRow(`レベルアップ！`, `Lv ${data.prevLevel} → Lv ${data.newLevel}`, "result-levelup");
-    }
-
-    addRow("獲得G", `+${data.clearGold}G`);
-    addRow("HP", "全回復");
-
-    const itemIds = Object.keys(data.gainedItems);
-    if (itemIds.length > 0) {
-      const titleEl = document.createElement("div");
-      titleEl.className = "result-section-title";
-      titleEl.textContent = "入手アイテム（倉庫へ）";
-      details.appendChild(titleEl);
-      for (const itemId of itemIds) {
-        const item = data.gainedItems[itemId];
-        addRow(`${item.emoji} ${item.name}`, `×${item.count}`);
-      }
-    }
-
-    if (data.gainedEquipment && data.gainedEquipment.length > 0) {
-      const eqTitle = document.createElement("div");
-      eqTitle.className = "result-section-title";
-      eqTitle.textContent = "入手装備品";
-      details.appendChild(eqTitle);
-      for (const item of data.gainedEquipment) {
-        addRow(`${item.emoji} ${item.name}`, item.description);
-      }
-    }
-  }
-
-  renderDungeonSelect() {
-    const statsEl = document.getElementById("ds-player-stats");
-    statsEl.innerHTML = `Lv <strong>${this.player.level}</strong> &nbsp; HP ${this.player.hp}/${this.player.maxHp} &nbsp; ATK ${this.player.atk} &nbsp; 💰 ${this.player.gold}G`;
-
-    const container = document.getElementById("dungeon-cards");
-    container.innerHTML = "";
-
-    for (const [level, config] of Object.entries(DUNGEON_CONFIG)) {
-      const locked = this.player.level < config.minPlayerLevel;
-      const card = document.createElement("div");
-      card.className = `dungeon-card ${config.themeClass}` + (locked ? " dungeon-card-locked" : "");
-
-      const bannerEl = document.createElement("div");
-      bannerEl.className = "dungeon-card-banner";
-      bannerEl.textContent = config.emoji;
-      card.appendChild(bannerEl);
-
-      const bodyEl = document.createElement("div");
-      bodyEl.className = "dungeon-card-body";
-
-      const nameEl = document.createElement("div");
-      nameEl.className = "dungeon-card-name";
-      nameEl.textContent = `Lv${level}: ${config.name}`;
-
-      const detailsEl = document.createElement("div");
-      detailsEl.className = "dungeon-card-details";
-      detailsEl.innerHTML = `
-        <span>必要Lv: ${config.minPlayerLevel}</span>
-        <span>グリッド: ${config.gridSize.rows}×${config.gridSize.cols} &nbsp; 敵: ${config.enemyCount}</span>
-        <span>クリアEXP: +${config.clearExp} &nbsp; クリアG: +${config.clearGold}</span>
-      `;
-
-      bodyEl.appendChild(nameEl);
-      bodyEl.appendChild(detailsEl);
-
-      if (locked) {
-        const lockEl = document.createElement("div");
-        lockEl.className = "dungeon-card-lock";
-        lockEl.textContent = `🔒 Lv${config.minPlayerLevel}以上で解放`;
-        bodyEl.appendChild(lockEl);
-      } else {
-        const btn = document.createElement("button");
-        btn.className = "dungeon-enter-btn";
-        btn.textContent = "入場する";
-        btn.addEventListener("click", () => this.enterDungeon(parseInt(level)));
-        bodyEl.appendChild(btn);
-      }
-
-      card.appendChild(bodyEl);
-      container.appendChild(card);
-    }
-  }
-
-  setupPlayButtons() {
-    document.getElementById("back-to-select-btn").addEventListener("click", () => {
-      this._discardDungeonEquipment();
-      this.player.handItems = {};
-      this.showDungeonSelect();
-    });
-    document.getElementById("result-ok-btn").addEventListener("click", () => {
-      this.showDungeonSelect();
-    });
-    document.getElementById("flag-mode-btn").addEventListener("click", () => {
-      this.flagMode = !this.flagMode;
-      const btn = document.getElementById("flag-mode-btn");
-      btn.classList.toggle("flag-mode-on", this.flagMode);
-      btn.classList.toggle("flag-mode-off", !this.flagMode);
-      btn.textContent = this.flagMode ? "⚑ 旗モード ON" : "⚑ 旗モード";
-    });
-  }
-
-  setupEquipmentModal() {
-    document.getElementById("equipment-btn").addEventListener("click", () => {
-      this.renderEquipmentUI();
-      document.getElementById("equipment-modal").style.display = "flex";
-    });
-    document.getElementById("equipment-close-btn").addEventListener("click", () => {
-      document.getElementById("equipment-modal").style.display = "none";
-    });
-  }
-
-  setupInventoryModal() {
-    document.getElementById("inventory-btn").addEventListener("click", () => {
-      this.renderInventoryUI();
-      document.getElementById("inventory-modal").style.display = "flex";
-    });
-    document.getElementById("inventory-close-btn").addEventListener("click", () => {
-      document.getElementById("inventory-modal").style.display = "none";
-    });
-  }
-
-  renderInventoryUI() {
-    const content = document.getElementById("inventory-content");
-    content.innerHTML = "";
-
-    const addSection = (title) => {
-      const el = document.createElement("div");
-      el.className = "shop-section-title";
-      el.textContent = title;
-      content.appendChild(el);
-    };
-
-    const addRow = (emoji, name, sub, badge) => {
-      const row = document.createElement("div");
-      row.className = "shop-row";
-      const info = document.createElement("span");
-      info.className = "shop-item-info";
-      info.innerHTML = `${emoji} ${name} <span style="color:#aaa;font-size:0.8rem">${sub}</span>`;
-      const b = document.createElement("span");
-      b.className = "inv-badge";
-      b.textContent = badge;
-      row.appendChild(info);
-      row.appendChild(b);
-      content.appendChild(row);
-    };
-
-    const invIds = Object.keys(this.player.inventory);
-    if (invIds.length > 0) {
-      addSection("消費アイテム");
-      for (const id of invIds) {
-        const item = this.player.inventory[id];
-        addRow(item.emoji, item.name, item.description, `×${item.count}`);
-      }
-    }
-
-    const eqIds = Object.keys(this.player.equipmentInventory);
-    if (eqIds.length > 0) {
-      addSection("装備品");
-      for (const id of eqIds) {
-        const item = this.player.equipmentInventory[id];
-        addRow(item.emoji, item.name, item.description, item.count > 1 ? `×${item.count}` : "");
-      }
-    }
-
-    if (invIds.length === 0 && eqIds.length === 0) {
-      content.innerHTML = "<div style='color:#555;padding:12px 0;text-align:center'>倉庫は空です</div>";
-    }
-  }
-
-  setupShopModal() {
-    document.getElementById("shop-btn").addEventListener("click", () => {
-      this.renderShopUI("buy");
-      document.getElementById("shop-modal").style.display = "flex";
-    });
-    document.getElementById("shop-close-btn").addEventListener("click", () => {
-      document.getElementById("shop-modal").style.display = "none";
-    });
-    document.getElementById("shop-tab-buy").addEventListener("click", () => this.renderShopUI("buy"));
-    document.getElementById("shop-tab-sell").addEventListener("click", () => this.renderShopUI("sell"));
-  }
-
-  renderShopUI(tab) {
-    document.getElementById("shop-gold-display").textContent = `💰 所持金: ${this.player.gold}G`;
-    document.getElementById("shop-tab-buy").classList.toggle("active", tab === "buy");
-    document.getElementById("shop-tab-sell").classList.toggle("active", tab === "sell");
-
-    const content = document.getElementById("shop-content");
-    content.innerHTML = "";
-
-    if (tab === "buy") {
-      for (const item of Object.values(ITEM_TYPES)) {
-        if (!item.buyPrice) continue;
-        const row = document.createElement("div");
-        row.className = "shop-row";
-        const info = document.createElement("span");
-        info.className = "shop-item-info";
-        info.innerHTML = `${item.emoji} ${item.name} <span style="color:#aaa;font-size:0.78rem">${item.description}</span>`;
-        const price = document.createElement("span");
-        price.className = "shop-item-price";
-        price.textContent = `${item.buyPrice}G`;
-        const btn = document.createElement("button");
-        btn.className = "shop-buy-btn";
-        btn.textContent = "購入";
-        btn.disabled = this.player.gold < item.buyPrice;
-        btn.addEventListener("click", () => {
-          if (this.player.spendGold(item.buyPrice)) {
-            this.player.addToInventory(item);
-            this.saveGameData();
-            this.renderShopUI("buy");
-            this.renderDungeonSelect();
-          }
-        });
-        row.appendChild(info);
-        row.appendChild(price);
-        row.appendChild(btn);
-        content.appendChild(row);
-      }
-    } else {
-      const invIds = Object.keys(this.player.inventory);
-      if (invIds.length > 0) {
-        const t = document.createElement("div");
-        t.className = "shop-section-title";
-        t.textContent = "アイテム";
-        content.appendChild(t);
-        for (const id of invIds) {
-          const item = this.player.inventory[id];
-          if (!item.sellPrice) continue;
-          const row = document.createElement("div");
-          row.className = "shop-row";
-          const info = document.createElement("span");
-          info.className = "shop-item-info";
-          info.innerHTML = `${item.emoji} ${item.name} <span style="color:#aaa">×${item.count}</span>`;
-          const price = document.createElement("span");
-          price.className = "shop-item-price";
-          price.textContent = `${item.sellPrice}G/個`;
-          const btn = document.createElement("button");
-          btn.className = "shop-sell-btn";
-          btn.textContent = "売却";
-          btn.addEventListener("click", () => {
-            this.player.addGold(item.sellPrice);
-            this.player.inventory[id].count--;
-            if (this.player.inventory[id].count <= 0) delete this.player.inventory[id];
-            this.saveGameData();
-            this.renderShopUI("sell");
-            this.renderDungeonSelect();
-          });
-          row.appendChild(info);
-          row.appendChild(price);
-          row.appendChild(btn);
-          content.appendChild(row);
-        }
-      }
-
-      const eqIds = Object.keys(this.player.equipmentInventory);
-      if (eqIds.length > 0) {
-        const t = document.createElement("div");
-        t.className = "shop-section-title";
-        t.textContent = "装備品";
-        content.appendChild(t);
-        for (const id of eqIds) {
-          const item = this.player.equipmentInventory[id];
-          if (!item.sellPrice) continue;
-          const row = document.createElement("div");
-          row.className = "shop-row";
-          const info = document.createElement("span");
-          info.className = "shop-item-info";
-          info.innerHTML = `${item.emoji} ${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${item.count > 1 ? ` <span style="color:#aaa">×${item.count}</span>` : ""}`;
-          const price = document.createElement("span");
-          price.className = "shop-item-price";
-          price.textContent = `${item.sellPrice}G`;
-          const btn = document.createElement("button");
-          btn.className = "shop-sell-btn";
-          btn.textContent = "売却";
-          btn.addEventListener("click", () => {
-            this.player.addGold(item.sellPrice);
-            this.player.equipmentInventory[id].count--;
-            if (this.player.equipmentInventory[id].count <= 0) delete this.player.equipmentInventory[id];
-            this.saveGameData();
-            this.renderShopUI("sell");
-            this.renderDungeonSelect();
-          });
-          row.appendChild(info);
-          row.appendChild(price);
-          row.appendChild(btn);
-          content.appendChild(row);
-        }
-      }
-
-      if (invIds.length === 0 && eqIds.length === 0) {
-        content.innerHTML = "<div style='color:#555;padding:8px 0'>売却できるアイテムなし</div>";
-      }
-    }
-  }
-
-  renderEquipmentUI() {
-    const slotsEl = document.getElementById("equipment-slots");
-    slotsEl.innerHTML = "";
-
-    for (const [slotKey, label] of [["weapon", "武器"], ["head", "頭"], ["body", "胴"], ["legs", "脚"]]) {
-      const def = this.player.equipped[slotKey];
-      const row = document.createElement("div");
-      row.className = "eq-slot";
-
-      const labelEl = document.createElement("span");
-      labelEl.className = "eq-slot-label";
-      labelEl.textContent = label;
-      row.appendChild(labelEl);
-
-      if (def) {
-        const nameEl = document.createElement("span");
-        nameEl.className = "eq-item-name";
-        const defIcon = def.iconUrl ? `<img src="${def.iconUrl}" class="gi-icon gi-icon-sm" alt="${def.emoji}">` : def.emoji;
-        nameEl.innerHTML = `${defIcon} ${def.name} <span class="eq-item-stat">${def.description}</span>`;
-        row.appendChild(nameEl);
-        const btn = document.createElement("button");
-        btn.className = "eq-unequip-btn";
-        btn.textContent = "外す";
-        btn.addEventListener("click", () => {
-          this.player.unequipItem(slotKey);
-          this.updateUI();
-          this.saveGameData();
-          this.renderEquipmentUI();
-        });
-        row.appendChild(btn);
-      } else {
-        const emptyEl = document.createElement("span");
-        emptyEl.className = "eq-empty";
-        emptyEl.textContent = "なし";
-        row.appendChild(emptyEl);
-      }
-      slotsEl.appendChild(row);
-    }
-
-    const listEl = document.getElementById("equipment-inventory-list");
-    listEl.innerHTML = "";
-    const itemIds = Object.keys(this.player.equipmentInventory);
-    if (itemIds.length === 0) {
-      listEl.innerHTML = "<div style='color:#555;font-size:0.85rem;padding:8px 0'>装備品なし</div>";
-      return;
-    }
-    for (const itemId of itemIds) {
-      const item = this.player.equipmentInventory[itemId];
-      const row = document.createElement("div");
-      row.className = "eq-inventory-item";
-      const info = document.createElement("span");
-      info.className = "eq-item-info";
-      const eqIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
-      info.innerHTML = `${eqIcon} ${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` \xd7${item.count}` : ""}`;
-      const btn = document.createElement("button");
-      btn.className = "eq-equip-btn";
-      btn.textContent = "装備";
-      btn.addEventListener("click", () => {
-        this.player.equipItem(itemId);
-        this.updateUI();
-        this.saveGameData();
-        this.renderEquipmentUI();
-      });
-      row.appendChild(info);
-      row.appendChild(btn);
-      listEl.appendChild(row);
-    }
-  }
-
-  setupAuthButtons() {
-    const homeLoginBtn = document.getElementById("home-login-btn");
-    const homeGuestBtn = document.getElementById("home-guest-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-    const dsLoginBtn = document.getElementById("ds-login-btn");
-
-    const doLogin = async () => {
-      try {
-        await this.firebaseManager.signInWithGoogle();
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    homeLoginBtn.addEventListener("click", doLogin);
-    dsLoginBtn.addEventListener("click", doLogin);
-
-    homeGuestBtn.addEventListener("click", () => {
-      this.showGameScreen();
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      try {
-        await this.firebaseManager.signOut();
-      } catch (error) {
-        this.logUI.add("ログアウトに失敗しました");
-        console.error(error);
-      }
-    });
+    this.screenNavigator.showGameScreen();
+    this.screenNavigator.showDungeonSelect();
+    this.dungeonSelectUI.render();
   }
 
   enterDungeon(level) {
-    const config = DUNGEON_CONFIG[level];
-    if (!config) return;
-
-    if (this.player.level < config.minPlayerLevel) {
-      this.logUI.add(`このダンジョンはLv${config.minPlayerLevel}以上で入場可能です`);
-      return;
-    }
-
-    this._discardDungeonEquipment();
-    this.player.handItems = {};
-    this.dungeonEquipmentGained = [];
-
-    this.currentDungeonLevel = level;
-    const itemPool = [
-      ...Object.values(ITEM_TYPES),
-      ...Object.values(EQUIPMENT_TYPES).filter(e => e.minDungeon <= level)
-    ];
-    this.grid = new Grid(
-      config.gridSize.rows,
-      config.gridSize.cols,
-      config.enemyCount,
-      config.enemyTypes,
-      config.itemChance,
-      itemPool,
-      level
-    );
-    this.player.bonusAtk = 0;
-    this.flagMode = false;
-    const flagBtn = document.getElementById("flag-mode-btn");
-    flagBtn.classList.replace("flag-mode-on", "flag-mode-off");
-    flagBtn.textContent = "⚑ 旗モード";
-    this.battle = new BattleSystem(this.player);
-
-    const gridEl = document.getElementById("grid");
-    gridEl.className = config.themeClass || "";
-    const playEl = document.getElementById("dungeon-play-screen");
-    playEl.className = config.themeClass || "";
-
-    this.gridRenderer.grid = this.grid;
-    this.gridRenderer.render();
-    this.logUI.clear();
-    this.logUI.add(`${config.emoji} ${config.name}に入場しました`);
+    if (!this.dungeonSession.enter(level)) return;
     this._updateMonsterList();
     this.updateUI();
-    this.showDungeonPlay();
+    this.screenNavigator.showDungeonPlay();
   }
 
-_updateMonsterList() {
-  const el = document.getElementById("monster-list");
-  if (!el) return;
-
-  const counts = {};
-  for (let r = 0; r < this.grid.rows; r++) {
-    for (let c = 0; c < this.grid.cols; c++) {
-      const cell = this.grid.cells[r][c];
-      if (!cell.isEnemy || cell.revealed) continue;
-      const t = cell.enemyType;
-      const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
-      if (!counts[key]) {
-        // ここで画像タグを作らず絵文字だけを使う
-        const icon = t && t.emoji ? `<span aria-hidden="true" style="font-size:16px">${t.emoji}</span> ` : '';
-        counts[key] = {
-          label: cell.isElite ? `${icon}${t ? t.name : '?'}（エリート）` : `${icon}${t ? t.name : '?'}`,
-          isElite: cell.isElite,
-          count: 0
-        };
-      }
-      counts[key].count++;
-    }
-  }
-
-  const items = Object.values(counts)
-    .sort((a, b) => b.isElite - a.isElite)
-    .map(e => {
-      const cls = e.isElite ? 'monster-elite' : '';
-      return `<div class="${cls}">${e.label} ×${e.count}</div>`;
-    });
-
-  el.innerHTML = items.join('') || `<div>クリア！</div>`;
-}
-
-
-  async onUserChanged(user) {
-    const logoutBtn = document.getElementById("logout-btn");
-
-    const dsLoginBtn = document.getElementById("ds-login-btn");
-    if (user) {
-      logoutBtn.style.display = "block";
-      dsLoginBtn.style.display = "none";
-      this.showGameScreen();
-      this.logUI.add(`ログイン: ${user.displayName || user.email}`);
-      const savedData = await this.firebaseManager.loadUserData();
-      if (savedData) {
-        this.player = new Player(savedData);
-        this.battle = new BattleSystem(this.player);
-        this.updateUI();
-        this.renderDungeonSelect();
-        this.logUI.add("セーブデータを読み込みました");
-      }
-    } else {
-      logoutBtn.style.display = "none";
-      dsLoginBtn.style.display = "block";
-      this.player = new Player();
-      this.battle = new BattleSystem(this.player);
-      this.updateUI();
-      this.showHomeScreen();
-    }
-  }
-
-  async saveGameData(dungeonClear = false) {
-    if (!this.firebaseManager.getCurrentUser()) return;
-    let data = this.player.toJSON();
-    if (!dungeonClear && this.dungeonEquipmentGained && this.dungeonEquipmentGained.length > 0) {
-      data = { ...data };
-      data.equipmentInventory = { ...data.equipmentInventory };
-      data.equipped = { ...data.equipped };
-      for (const item of this.dungeonEquipmentGained) {
-        if (data.equipmentInventory[item.id]) {
-          const cnt = data.equipmentInventory[item.id].count - 1;
-          if (cnt <= 0) delete data.equipmentInventory[item.id];
-          else data.equipmentInventory[item.id] = { ...data.equipmentInventory[item.id], count: cnt };
-        }
-        for (const slot of ["weapon", "head", "body", "legs"]) {
-          if (data.equipped[slot] && data.equipped[slot].id === item.id) data.equipped[slot] = null;
-        }
-      }
-    }
-    await this.firebaseManager.saveUserData(data);
-  }
-
-  _discardDungeonEquipment() {
-    for (const item of (this.dungeonEquipmentGained || [])) {
-      for (const slot of ["weapon", "head", "body", "legs"]) {
-        if (this.player.equipped[slot] && this.player.equipped[slot].id === item.id) {
-          this.player._applyEquipmentStats(this.player.equipped[slot], -1);
-          this.player.equipped[slot] = null;
-        }
-      }
-      if (this.player.equipmentInventory[item.id]) {
-        this.player.equipmentInventory[item.id].count--;
-        if (this.player.equipmentInventory[item.id].count <= 0) delete this.player.equipmentInventory[item.id];
-      }
-    }
-    this.dungeonEquipmentGained = [];
-  }
-
-  onLeft(cell) {
-    if (this.flagMode) { this.onRight(cell); return; }
-    if (cell.flagged) return;
-
-    // 開いたマスでアイテムがある場合
-    if (cell.revealed && cell.item) {
-      const item = cell.item;
-      if (item.category === "equipment") {
-        this.player.addEquipment(item);
-        this.dungeonEquipmentGained.push(item);
-        this.logUI.add(`${item.emoji} ${item.name}を入手した！（装備品）`);
-      } else {
-        this.player.addItem(item);
-        this.logUI.add(`${item.emoji} ${item.name}を手に入れた！`);
-      }
-      cell.item = null;
-      this.gridRenderer.updateCell(cell);
-      this.updateUI();
-      this.saveGameData();
-      return;
-    }
-
-    if (cell.revealed) {
-      // コード開き：旗の数が danger と一致すれば未開封・無旗マスを一括開封
-      if (cell.danger > 0) {
-        const neighbors = this.grid.getNeighbors(cell);
-        const flagCount = neighbors.filter(n => n.flagged).length;
-        if (flagCount === cell.danger) {
-          for (const n of neighbors.filter(n => !n.flagged && !n.revealed)) {
-            this.onLeft(n);
-          }
-        }
-      }
-      return;
-    }
-
-    cell.revealed = true;
-    this.gridRenderer.updateCell(cell);
-
-    // アイテムマスの場合（開いた直後にアイテムがある場合）
-    if (cell.item) {
-      return; // アイテムを表示した状態で止める
-    }
-
-    // 敵マス
-    if (cell.isEnemy) {
-      const enemy = this.battle.start(cell);
-      this.logUI.add(`${enemy.emoji} ${enemy.name}が現れた！`);
-
-      this.battleUI.show(enemy, this.player, this.battle.battleGrid);
-
-      this.battleUI.onAttack((row, col) => {
-        const attackResult = this.battle.attack(row, col);
-        if (!attackResult) return;
-        const { result, playerDmg, enemyDmg, isMine, gridReset } = attackResult;
-        if (isMine) {
-          this.battleUI.addLog(`💣 地雷！攻撃失敗…`, "damage");
-        } else {
-          this.battleUI.addLog(`⚔️ ${enemy.name}に ${playerDmg} ダメージ！`, "attack");
-        }
-        if (enemyDmg > 0) {
-          this.battleUI.addLog(`💥 ${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
-        }
-        if (gridReset) {
-          this.battleUI.addLog(`🔄 新しいグリッドが出現！`, "normal");
-        }
-        this.battleUI.update(enemy, this.player);
-        this.battleUI.renderGrid(this.battle.battleGrid);
-        this.updateUI();
-
-        if (result === "victory") {
-          this.battleUI.addLog(`✨ ${enemy.name}を倒した！`, "victory");
-          this.logUI.add(`⚔️ ${enemy.name}を倒した！`);
-          this.saveGameData();
-
-          // ★ 敵マスを安全マスに変更
-          cell.isEnemy = false;
-          cell.revealed = true;
-
-          // ★ このマス自身の danger を再計算
-          cell.danger = this.grid.countDanger(cell.row, cell.col);
-          this.gridRenderer.updateCell(cell);
-
-          // ★ 周囲 8 マスの danger も再計算
-          for (const [dr, dc] of DIRECTIONS) {
-            const nr = cell.row + dr;
-            const nc = cell.col + dc;
-
-            if (nr < 0 || nr >= this.grid.rows || nc < 0 || nc >= this.grid.cols) continue;
-
-            const neighbor = this.grid.cells[nr][nc];
-
-            // 敵じゃないマスだけ danger 再計算
-            if (!neighbor.isEnemy) {
-              neighbor.danger = this.grid.countDanger(nr, nc);
-              this.gridRenderer.updateCell(neighbor);
-            }
-          }
-
-          this._updateMonsterList();
-          this.battleUI.hide();
-          this.checkClear();
-        } else if (result === "defeat") {
-          this.battleUI.addLog(`💀 やられてしまった…`, "damage");
-          this.logUI.add("💀 やられてしまった…");
-          this.battleUI.hide();
-          this.showGameOver();
-        }
-      });
-
-      return;
-    }
-
-    // ★ 通常マスの処理（敵マスの外）
-    if (cell.danger > 0) {
-      cell.element.textContent = cell.danger;
-    } else {
-      this.floodReveal(cell.row, cell.col);
-    }
-
-    // ★ クリア判定（ここで呼ぶ）
-    this.checkClear();
-  }
-
-
-
-  onRight(cell) {
-    if (cell.revealed) return;
-    cell.flagged = !cell.flagged;
-    this.gridRenderer.updateCell(cell);
-  }
-
+  // --- UI 更新 ---
 
   updateUI() {
     this.logUI.updatePlayer(this.player);
-    this.updateItemsUI();
+    this.playerHudUI.renderItems();
   }
 
-  updateItemsUI() {
-    // 手持ちアイテム
-    const handItemsList = document.getElementById("hand-items-list");
-    handItemsList.innerHTML = "";
-
-    const handItemIds = Object.keys(this.player.handItems);
-
-    if (handItemIds.length === 0) {
-      handItemsList.innerHTML = "<div>アイテムなし</div>";
-    } else {
-      for (const itemId of handItemIds) {
-        const item = this.player.handItems[itemId];
-        const itemDiv = document.createElement("div");
-        itemDiv.style.display = "flex";
-        itemDiv.style.alignItems = "center";
-        itemDiv.style.marginBottom = "5px";
-
-        const itemInfo = document.createElement("span");
-        const hiIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
-        itemInfo.innerHTML = `${hiIcon} ${item.name} x${item.count}`;
-        itemInfo.style.flex = "1";
-
-        const useBtn = document.createElement("button");
-        useBtn.textContent = "使用";
-        useBtn.style.marginLeft = "5px";
-        useBtn.style.padding = "2px 8px";
-        useBtn.onclick = () => this.useItem(itemId, true);
-
-        itemDiv.appendChild(itemInfo);
-        itemDiv.appendChild(useBtn);
-        handItemsList.appendChild(itemDiv);
-      }
-    }
-
-    // 倉庫
-    const inventoryList = document.getElementById("inventory-list");
-    inventoryList.innerHTML = "";
-
-    const inventoryItemIds = Object.keys(this.player.inventory);
-
-    if (inventoryItemIds.length === 0) {
-      inventoryList.innerHTML = "<div>アイテムなし</div>";
-    } else {
-      for (const itemId of inventoryItemIds) {
-        const item = this.player.inventory[itemId];
-        const itemDiv = document.createElement("div");
-        itemDiv.style.display = "flex";
-        itemDiv.style.alignItems = "center";
-        itemDiv.style.marginBottom = "5px";
-
-        const itemInfo = document.createElement("span");
-        const invIcon = item.iconUrl ? `<img src="${item.iconUrl}" class="gi-icon gi-icon-sm" alt="${item.emoji}">` : item.emoji;
-        itemInfo.innerHTML = `${invIcon} ${item.name} x${item.count}`;
-        itemInfo.style.flex = "1";
-
-        const useBtn = document.createElement("button");
-        useBtn.textContent = "使用";
-        useBtn.style.marginLeft = "5px";
-        useBtn.style.padding = "2px 8px";
-        useBtn.onclick = () => this.useItem(itemId, false);
-
-        itemDiv.appendChild(itemInfo);
-        itemDiv.appendChild(useBtn);
-        inventoryList.appendChild(itemDiv);
-      }
-    }
+  _updateMonsterList() {
+    this.monsterListUI.render(this.dungeonSession.grid);
   }
 
-  useItem(itemId, fromHand = true) {
-    const items = fromHand ? this.player.handItems : this.player.inventory;
-    const item = items[itemId];
-    if (!item) return;
+  // --- セーブ ---
 
-    const effect = item.effect;
-
-    switch (effect.type) {
-      case "heal":
-        this.player.hp = Math.min(this.player.hp + effect.value, this.player.maxHp);
-        this.logUI.add(`${item.emoji} ${item.name}を使用！ HPを${effect.value}回復`);
-        break;
-      case "atk":
-        this.player.bonusAtk += effect.value;
-        this.logUI.add(`${item.emoji} ${item.name}を使用！ 攻撃力+${effect.value}（このダンジョンのみ）`);
-        break;
-      case "maxHp":
-        this.player.maxHp += effect.value;
-        this.player.hp += effect.value;
-        this.logUI.add(`${item.emoji} ${item.name}を使用！ 最大HP+${effect.value}`);
-        break;
-    }
-
-    this.player.removeItem(itemId, fromHand);
-    this.updateUI();
-    this.saveGameData();
+  async saveGameData(dungeonClear = false) {
+    await this.saveService.save(dungeonClear);
   }
 
-  moveToInventory(itemId) {
-    this.player.moveToInventory(itemId);
-    this.updateUI();
-    this.saveGameData();
-  }
+  // --- クリア・ゲームオーバー ---
 
-  moveToHand(itemId) {
-    this.player.moveToHand(itemId);
-    this.updateUI();
-    this.saveGameData();
-  }
+  _handleCheckClear() {
+    const result = this.dungeonSession.tryClear();
+    if (!result) return false;
 
-  floodReveal(r, c) {
-    for (const [dr, dc] of DIRECTIONS) {
-      const nr = r + dr;
-      const nc = c + dc;
-
-      // 範囲外は無視
-      if (nr < 0 || nr >= this.grid.rows || nc < 0 || nc >= this.grid.cols) continue;
-
-      const cell = this.grid.cells[nr][nc];
-
-      // すでに開いている or 敵マスは無視
-      if (cell.revealed || cell.isEnemy) continue;
-
-      // 開く
-      cell.revealed = true;
-      this.gridRenderer.updateCell(cell);
-
-      // danger=0 ならさらに周囲を開く
-      if (cell.danger === 0) {
-        this.floodReveal(nr, nc);
-      }
-    }
-  }
-
-  checkClear() {
-    let totalSafeCells = 0;
-    let revealedSafeCells = 0;
-
-    for (let r = 0; r < this.grid.rows; r++) {
-      for (let c = 0; c < this.grid.cols; c++) {
-        const cell = this.grid.cells[r][c];
-        if (!cell.isEnemy) {
-          totalSafeCells++;
-          if (cell.revealed) {
-            revealedSafeCells++;
-          }
-        }
-      }
-    }
-
-    if (revealedSafeCells === totalSafeCells && totalSafeCells > 0) {
-      const config = DUNGEON_CONFIG[this.currentDungeonLevel];
-      const prevLevel = this.player.level;
-
-      this.player.gainExp(config.clearExp);
-      this.player.addGold(config.clearGold || 0);
-      this.player.hp = this.player.maxHp;
-
-      // グリッド上の未取得アイテムを自動回収
-      for (let r = 0; r < this.grid.rows; r++) {
-        for (let c = 0; c < this.grid.cols; c++) {
-          const cell = this.grid.cells[r][c];
-          if (cell.item) {
-            if (cell.item.category === "equipment") {
-              this.player.addEquipment(cell.item);
-              this.dungeonEquipmentGained.push(cell.item);
-            } else {
-              this.player.addItem(cell.item);
-            }
-            cell.item = null;
-          }
-        }
-      }
-
-      const gainedItems = { ...this.player.handItems };
-      for (const itemId of Object.keys(this.player.handItems)) {
-        this.player.moveToInventory(itemId);
-      }
-
-      this.saveGameData(true);
-      const gainedEquipment = [...this.dungeonEquipmentGained];
-      this.dungeonEquipmentGained = [];
-      this.showResultScreen({
-        dungeonName: config.name,
-        expGained: config.clearExp,
-        clearGold: config.clearGold || 0,
-        prevLevel,
-        newLevel: this.player.level,
-        gainedItems,
-        gainedEquipment
-      });
-      return true;
-    }
-
-    return false;
+    this.saveGameData(true);
+    this.screenNavigator.showResultScreen(result);
+    return true;
   }
 
   showGameOver() {
-    this._discardDungeonEquipment();
+    this.dungeonSession.discardDungeonEquipment();
     this.modalUI.showGameOver(() => this.resetGame());
   }
 
@@ -970,5 +216,27 @@ _updateMonsterList() {
     this.showDungeonSelect();
   }
 
+  // --- プレイ中ボタン ---
 
+  _setupPlayButtons() {
+    document.getElementById("back-to-select-btn").addEventListener("click", () => {
+      this.dungeonSession.abandon();
+      this.showDungeonSelect();
+    });
+    document.getElementById("result-ok-btn").addEventListener("click", () => {
+      this.showDungeonSelect();
+    });
+    document.getElementById("flag-mode-btn").addEventListener("click", () => {
+      this.dungeonSession.toggleFlagMode();
+    });
+  }
+
+  // --- 認証後のプレイヤー差し替え ---
+
+  _setPlayer(player, battle) {
+    this.player = player;
+    this.battle = battle;
+    this.updateUI();
+    this.dungeonSelectUI.render();
+  }
 }
