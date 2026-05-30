@@ -44,12 +44,15 @@ export class DungeonSession {
 
     this.discardDungeonEquipment();
     player.handItems = {};
+    player.hp = player.maxHp;
     this.dungeonEquipmentGained = [];
     this.currentDungeonLevel = level;
 
     const itemPool = [
       ...Object.values(ITEM_TYPES),
-      ...Object.values(EQUIPMENT_TYPES).filter(e => e.minDungeon <= level)
+      ...Object.values(EQUIPMENT_TYPES).filter(e =>
+        e.slot === "weapon" || e.minDungeon <= level
+      )
     ];
 
     this.grid = new Grid(
@@ -164,6 +167,7 @@ export class DungeonSession {
 
     const gainedEquipment = [...this.dungeonEquipmentGained];
     this.dungeonEquipmentGained = [];
+    this.grid = null;
 
     return {
       dungeonName: config.name,
@@ -182,12 +186,16 @@ export class DungeonSession {
     const btn = document.getElementById("flag-mode-btn");
     btn.classList.toggle("flag-mode-on", this.flagMode);
     btn.classList.toggle("flag-mode-off", !this.flagMode);
-    btn.textContent = this.flagMode ? "⚑ 旗モード ON" : "⚑ 旗モード";
+    btn.textContent = this.flagMode ? "旗モード ON" : "旗モード";
   }
 
-  /** 撤退時：仮装備破棄と手持ちリセット */
+  /** 撤退時：仮装備破棄・手持ちリセット・HP全回復・セッション終了 */
   abandon() {
     this.discardDungeonEquipment();
-    this.getPlayer().handItems = {};
+    const player = this.getPlayer();
+    player.handItems = {};
+    player.hp = player.maxHp;
+    this.grid = null;
+    this.flagMode = false;
   }
 }

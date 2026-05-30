@@ -9,11 +9,13 @@ export class SaveService {
    * @param {import("../core/FirebaseManager.js").FirebaseManager} options.firebaseManager
    * @param {() => import("../core/Player.js").Player} options.getPlayer
    * @param {() => object[]} options.getDungeonEquipmentGained
+   * @param {() => boolean} options.getIsInDungeon - ダンジョン攻略中か
    */
-  constructor({ firebaseManager, getPlayer, getDungeonEquipmentGained }) {
+  constructor({ firebaseManager, getPlayer, getDungeonEquipmentGained, getIsInDungeon }) {
     this.firebaseManager = firebaseManager;
     this.getPlayer = getPlayer;
     this.getDungeonEquipmentGained = getDungeonEquipmentGained;
+    this.getIsInDungeon = getIsInDungeon || (() => false);
   }
 
   /**
@@ -25,6 +27,12 @@ export class SaveService {
 
     const player = this.getPlayer();
     let data = player.toJSON();
+
+    // ダンジョン中のダメージ HP はセーブしない（リロード退出時も全回復扱い）
+    if (this.getIsInDungeon()) {
+      data = { ...data, hp: data.maxHp };
+    }
+
     const dungeonEquipment = this.getDungeonEquipmentGained();
 
     // クリア前はダンジョン内で拾った装備をセーブデータから除外

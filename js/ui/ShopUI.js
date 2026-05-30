@@ -1,5 +1,6 @@
 import { ITEM_TYPES } from "../core/constants.js";
 import { renderIconHtml } from "./iconHtml.js";
+import { renderGoldLabel } from "../core/menuIcons.js";
 
 /**
  * ショップモーダル（購入・売却）の描画と操作を担当するクラス
@@ -36,7 +37,7 @@ export class ShopUI {
    */
   render(tab) {
     const player = this.getPlayer();
-    document.getElementById("shop-gold-display").textContent = `💰 所持金: ${player.gold}G`;
+    document.getElementById("shop-gold-display").innerHTML = renderGoldLabel(player.gold);
     document.getElementById("shop-tab-buy").classList.toggle("active", tab === "buy");
     document.getElementById("shop-tab-sell").classList.toggle("active", tab === "sell");
 

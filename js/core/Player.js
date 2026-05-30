@@ -5,7 +5,7 @@ export class Player {
     if (savedData) {
       this.level = savedData.level || 1;
       this.maxHp = savedData.maxHp || GAME_CONFIG.PLAYER_INITIAL_HP;
-      this.hp = savedData.hp || GAME_CONFIG.PLAYER_INITIAL_HP;
+      this.hp = this.maxHp;
       this.atk = savedData.atk || GAME_CONFIG.PLAYER_INITIAL_ATK;
       this.exp = savedData.exp || 0;
       

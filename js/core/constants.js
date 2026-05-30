@@ -57,10 +57,10 @@ export const ITEM_TYPES = {
 };
 
 export const EQUIPMENT_TYPES = {
-  WOODEN_STICK:   { id: "wooden_stick", name: "木の棒", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[1], slot: "weapon", category: "equipment", atk: 2, description: "ATK+2", minDungeon: 1, sellPrice: 15 },
-  IRON_SWORD:     { id: "iron_sword", name: "鉄の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[2], slot: "weapon", category: "equipment", atk: 5, description: "ATK+5", minDungeon: 2, sellPrice: 40 },
-  STEEL_SWORD:    { id: "steel_sword", name: "鋼の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[3], slot: "weapon", category: "equipment", atk: 9, description: "ATK+9", minDungeon: 4, sellPrice: 70 },
-  DRAGON_BLADE:   { id: "dragon_blade", name: "竜の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[4], slot: "weapon", category: "equipment", atk: 15, description: "ATK+15", minDungeon: 6, sellPrice: 120 },
+  WOODEN_STICK:   { id: "wooden_stick", name: "木の棒", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[1], slot: "weapon", category: "equipment", atk: 2, description: "ATK+2", sellPrice: 15 },
+  IRON_SWORD:     { id: "iron_sword", name: "鉄の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[2], slot: "weapon", category: "equipment", atk: 5, description: "ATK+5", sellPrice: 40 },
+  STEEL_SWORD:    { id: "steel_sword", name: "鋼の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[3], slot: "weapon", category: "equipment", atk: 9, description: "ATK+9", sellPrice: 70 },
+  DRAGON_BLADE:   { id: "dragon_blade", name: "竜の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[4], slot: "weapon", category: "equipment", atk: 15, description: "ATK+15", sellPrice: 120 },
   LEATHER_HELM:   { id: "leather_helm", name: "革の兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[1], slot: "head", category: "equipment", maxHp: 5, description: "MaxHP+5", minDungeon: 1, sellPrice: 15 },
   IRON_HELM:      { id: "iron_helm", name: "鉄兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[2], slot: "head", category: "equipment", maxHp: 10, description: "MaxHP+10", minDungeon: 2, sellPrice: 30 },
   STEEL_HELM:     { id: "steel_helm", name: "鋼の兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[3], slot: "head", category: "equipment", maxHp: 18, description: "MaxHP+18", minDungeon: 4, sellPrice: 55 },

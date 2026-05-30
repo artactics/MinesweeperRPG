@@ -66,15 +66,15 @@ export class BattleCoordinator {
       const { result, playerDmg, enemyDmg, isMine, gridReset } = attackResult;
 
       if (isMine) {
-        this.battleUI.addLog(`💣 地雷！攻撃失敗…`, "damage");
+        this.battleUI.addLog("地雷！攻撃失敗…", "damage");
       } else {
-        this.battleUI.addLog(`⚔️ ${enemy.name}に ${playerDmg} ダメージ！`, "attack");
+        this.battleUI.addLog(`${enemy.name}に ${playerDmg} ダメージ！`, "attack");
       }
       if (enemyDmg > 0) {
-        this.battleUI.addLog(`💥 ${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
+        this.battleUI.addLog(`${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
       }
       if (gridReset) {
-        this.battleUI.addLog(`🔄 新しいグリッドが出現！`, "normal");
+        this.battleUI.addLog("新しいグリッドが出現！", "normal");
       }
 
       this.battleUI.update(enemy, player);
@@ -84,8 +84,8 @@ export class BattleCoordinator {
       if (result === "victory") {
         this._onVictory(cell, enemy, grid);
       } else if (result === "defeat") {
-        this.battleUI.addLog(`💀 やられてしまった…`, "damage");
-        this.logUI.add("💀 やられてしまった…");
+        this.battleUI.addLog("やられてしまった…", "damage");
+        this.logUI.add("やられてしまった…");
         this.battleUI.hide();
         this.onGameOver();
       }
@@ -94,8 +94,8 @@ export class BattleCoordinator {
 
   /** 勝利時：マスを安全化し danger を再計算 */
   _onVictory(cell, enemy, grid) {
-    this.battleUI.addLog(`✨ ${enemy.name}を倒した！`, "victory");
-    this.logUI.add(`⚔️ ${enemy.name}を倒した！`);
+    this.battleUI.addLog(`${enemy.name}を倒した！`, "victory");
+    this.logUI.add(`${enemy.name}を倒した！`);
     this.onSave();
 
     cell.isEnemy = false;

@@ -102,7 +102,7 @@ export class GridRenderer {
         el.style.background = "";
       }
     } else {
-      el.textContent = cell.flagged ? "⚑" : "";
+      el.textContent = cell.flagged ? "旗" : "";
       el.style.background = "";
     }
   }

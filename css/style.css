@@ -910,3 +910,13 @@ button:hover {
 .eq-item-info .gi-icon {
   margin-right: 4px;
 }
+
+.gi-icon-menu-sm { width: 16px; height: 16px; }
+.gi-icon-menu    { width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; }
+.gi-icon-menu-lg { width: 32px; height: 32px; vertical-align: middle; margin-right: 6px; }
+
+button .gi-icon-menu,
+button .gi-icon-menu-sm {
+  vertical-align: middle;
+  margin-right: 4px;
+}

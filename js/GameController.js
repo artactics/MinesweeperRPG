@@ -18,6 +18,7 @@ import { ItemUsageService } from "./game/ItemUsageService.js";
 import { MinesweeperInputHandler } from "./game/MinesweeperInputHandler.js";
 import { BattleCoordinator } from "./game/BattleCoordinator.js";
 import { AuthFlow } from "./game/AuthFlow.js";
+import { initMenuIcons } from "./core/menuIcons.js";
 
 /**
  * ゲーム全体のオーケストレータ（ファサード）
@@ -58,7 +59,8 @@ export class GameController {
     this.saveService = new SaveService({
       firebaseManager: this.firebaseManager,
       getPlayer: () => this.player,
-      getDungeonEquipmentGained: () => this.dungeonSession.dungeonEquipmentGained
+      getDungeonEquipmentGained: () => this.dungeonSession.dungeonEquipmentGained,
+      getIsInDungeon: () => this.dungeonSession.grid !== null
     });
 
     // --- ゲームプレイ ---
@@ -147,6 +149,7 @@ export class GameController {
 
     this.firebaseManager.init(user => this.authFlow.onUserChanged(user));
 
+    initMenuIcons();
     this._setupPlayButtons();
     this.authFlow.setupButtons();
     this.updateUI();
@@ -206,14 +209,14 @@ export class GameController {
   }
 
   showGameOver() {
-    this.dungeonSession.discardDungeonEquipment();
     this.modalUI.showGameOver(() => this.resetGame());
   }
 
   resetGame() {
-    this.player.handItems = {};
-    this.player.hp = this.player.maxHp;
+    this.dungeonSession.abandon();
+    this.saveGameData();
     this.showDungeonSelect();
+    this.updateUI();
   }
 
   // --- プレイ中ボタン ---
@@ -221,7 +224,9 @@ export class GameController {
   _setupPlayButtons() {
     document.getElementById("back-to-select-btn").addEventListener("click", () => {
       this.dungeonSession.abandon();
+      this.saveGameData();
       this.showDungeonSelect();
+      this.updateUI();
     });
     document.getElementById("result-ok-btn").addEventListener("click", () => {
       this.showDungeonSelect();

@@ -1,5 +1,6 @@
 import { DUNGEON_CONFIG } from "../core/constants.js";
 import { renderIconHtml } from "./iconHtml.js";
+import { renderGoldInline, renderLockIcon, MENU_ICONS } from "../core/menuIcons.js";
 
 /**
  * ダンジョン選択画面の描画を担当するクラス
@@ -20,7 +21,7 @@ export class DungeonSelectUI {
   render() {
     const player = this.getPlayer();
     const statsEl = document.getElementById("ds-player-stats");
-    statsEl.innerHTML = `Lv <strong>${player.level}</strong> &nbsp; HP ${player.hp}/${player.maxHp} &nbsp; ATK ${player.atk} &nbsp; 💰 ${player.gold}G`;
+    statsEl.innerHTML = `Lv <strong>${player.level}</strong> &nbsp; HP ${player.hp}/${player.maxHp} &nbsp; ATK ${player.atk} &nbsp; ${renderGoldInline(player.gold)}`;
 
     const container = document.getElementById("dungeon-cards");
     container.innerHTML = "";
@@ -56,12 +57,12 @@ export class DungeonSelectUI {
       if (locked) {
         const lockEl = document.createElement("div");
         lockEl.className = "dungeon-card-lock";
-        lockEl.textContent = `🔒 Lv${config.minPlayerLevel}以上で解放`;
+        lockEl.innerHTML = `${renderLockIcon()} Lv${config.minPlayerLevel}以上で解放`;
         bodyEl.appendChild(lockEl);
       } else {
         const btn = document.createElement("button");
         btn.className = "dungeon-enter-btn";
-        btn.textContent = "入場する";
+        btn.innerHTML = `${renderIconHtml(MENU_ICONS.entryDoor, "gi-icon-menu-sm")} 入場する`;
         btn.addEventListener("click", () => this.onEnterDungeon(parseInt(level)));
         bodyEl.appendChild(btn);
       }
