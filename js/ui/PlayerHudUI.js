@@ -1,4 +1,4 @@
-import { renderIconHtml } from "./iconHtml.js";
+import { renderItemIcon } from "./iconBadge.js";
 
 /**
  * 攻略中のプレイヤーHUD（手持ち・倉庫アイテム一覧）を担当するクラス
@@ -42,18 +42,15 @@ export class PlayerHudUI {
     for (const itemId of itemIds) {
       const item = items[itemId];
       const itemDiv = document.createElement("div");
-      itemDiv.style.display = "flex";
-      itemDiv.style.alignItems = "center";
-      itemDiv.style.marginBottom = "5px";
+      itemDiv.className = "item-row";
 
       const itemInfo = document.createElement("span");
-      itemInfo.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} x${item.count}`;
-      itemInfo.style.flex = "1";
+      itemInfo.className = "item-row__info";
+      itemInfo.innerHTML = `${renderItemIcon(item)}<span>${item.name} x${item.count}</span>`;
 
       const useBtn = document.createElement("button");
+      useBtn.className = "item-row__use-btn";
       useBtn.textContent = "使用";
-      useBtn.style.marginLeft = "5px";
-      useBtn.style.padding = "2px 8px";
       useBtn.onclick = () => this.onUseItem(itemId, fromHand);
 
       itemDiv.appendChild(itemInfo);

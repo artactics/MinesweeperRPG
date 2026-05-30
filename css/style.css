@@ -19,55 +19,48 @@ body {
 
 #home-content {
   text-align: center;
-  max-width: 480px;
+  max-width: 520px;
   width: 100%;
+  padding: 28px 24px;
+  background: linear-gradient(165deg, #2a2a32 0%, #1e1e24 100%);
+  border: 1px solid #3a3a48;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .home-title {
-  font-size: 2.4rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #fff;
-  letter-spacing: 0.02em;
+  margin-bottom: 12px;
 }
 
 .home-subtitle {
-  font-size: 1rem;
-  color: #aaa;
+  font-size: 0.95rem;
+  color: #9a9aaa;
   margin-bottom: 24px;
+  line-height: 1.5;
 }
 
 .home-features {
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 10px;
-  padding: 16px 24px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid #3a3a44;
+  border-radius: 12px;
+  padding: 8px 12px;
   margin-bottom: 28px;
   text-align: left;
-  line-height: 2.2;
-  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .home-buttons {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  align-items: stretch;
+  gap: 10px;
 }
 
-.home-buttons button {
-  width: 260px;
-  padding: 12px 20px;
-  font-size: 1rem;
-  border-radius: 8px;
-}
-
-#home-guest-btn {
-  background: #555;
-}
-
-#home-guest-btn:hover {
-  background: #666;
+.home-buttons .ui-btn {
+  width: 100%;
+  margin: 0;
 }
 
 #game-screen {
@@ -88,34 +81,33 @@ body {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #444;
+  padding: 14px 16px;
+  background: linear-gradient(165deg, #2a2a32 0%, #222228 100%);
+  border: 1px solid #3a3a44;
+  border-radius: 12px;
 }
 
 #ds-header h2 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.15rem;
 }
 
 #ds-right {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
-#ds-right button {
-  white-space: nowrap;
+#ds-right .ui-btn {
+  margin: 0;
 }
 
 #ds-player-stats {
-  font-size: 0.9rem;
-  color: #ccc;
-  white-space: nowrap;
   flex: 1;
-  text-align: center;
+  min-width: 0;
 }
 
 #dungeon-cards {
@@ -145,10 +137,26 @@ body {
 }
 
 .dungeon-card-banner {
-  font-size: 2.4rem;
-  text-align: center;
-  padding: 16px 0 10px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 16px;
+  min-height: 88px;
+}
+
+.dungeon-card-lock {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.dungeon-enter-btn {
+  margin-top: 12px;
+  width: 100%;
 }
 
 .dungeon-card-body {
@@ -174,15 +182,16 @@ body {
   flex: 1;
 }
 
-.dungeon-card-lock {
-  margin-top: 8px;
-  color: #888;
-  font-size: 0.85rem;
-}
-
-.dungeon-enter-btn {
-  margin-top: 10px;
-  width: 100%;
+.dungeon-card-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid var(--theme-color, #555);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 #dungeon-play-screen {
@@ -198,14 +207,16 @@ body {
   margin-bottom: 6px;
 }
 
-#back-to-select-btn {
-  background: #555;
-  font-size: 0.85rem;
-  padding: 4px 10px;
+#back-to-select-btn.ui-btn {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
 }
 
-#back-to-select-btn:hover {
-  background: #666;
+#back-to-select-btn.ui-btn:hover {
+  background: #333;
+  border-color: #777;
+  color: #fff;
 }
 
 #flag-mode-btn {
@@ -251,10 +262,7 @@ body {
 }
 
 #shop-gold-display {
-  font-size: 1rem;
-  color: #ffd700;
-  font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 #shop-tabs {
@@ -288,6 +296,53 @@ body {
 
 .shop-item-info {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eq-item-name,
+.eq-item-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eq-item-name {
+  flex: 1;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 4px 0;
+}
+
+.item-row__info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.item-row__use-btn {
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  margin: 0;
+  background: #445544;
+}
+
+.item-row__use-btn:hover {
+  background: #557755;
+}
+
+.result-row > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .shop-item-price {
@@ -410,20 +465,19 @@ body {
 }
 
 #result-content {
-  background: #1a1a2e;
-  border: 2px solid #3a7bd5;
-  border-radius: 12px;
-  padding: 28px 40px;
+  background: linear-gradient(165deg, #1e1e2e 0%, #141420 100%);
+  border: 1px solid #4a6ab5;
+  border-radius: 16px;
+  padding: 32px 40px;
   min-width: 360px;
   max-width: 480px;
   width: 100%;
   text-align: center;
+  box-shadow: 0 12px 40px rgba(58, 123, 213, 0.2);
 }
 
 #result-title {
-  font-size: 1.7rem;
-  font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   color: #fff;
 }
 
@@ -651,6 +705,9 @@ body {
 #monster-list div {
   color: #bbb;
   line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 #monster-list .monster-elite {
@@ -679,11 +736,20 @@ body {
 }
 
 .modal-window {
-  background: #111;
+  background: linear-gradient(165deg, #1e1e26 0%, #141418 100%);
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 14px;
+  border: 1px solid #3a3a48;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
   width: 260px;
   text-align: center;
+}
+
+.ui-modal-heading {
+  text-align: left;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
 }
 
 #battle-window {
@@ -798,11 +864,20 @@ button:hover {
   #play-hint-mobile { display: inline; }
 
   /* ホーム画面 */
-  .home-title {
-    font-size: 1.7rem;
+  .home-title .ui-heading__text {
+    font-size: 1.35rem;
   }
 
-  .home-buttons button {
+  .ui-heading {
+    gap: 8px;
+  }
+
+  .ui-icon-badge--xl {
+    width: 52px;
+    height: 52px;
+  }
+
+  .home-buttons .ui-btn {
     width: 100%;
   }
 
@@ -820,8 +895,17 @@ button:hover {
 
   #ds-player-stats {
     width: 100%;
-    text-align: left;
     flex: none;
+  }
+
+  .stat-bar {
+    justify-content: flex-start;
+  }
+
+  #ds-right .ui-btn--toolbar {
+    min-width: 60px;
+    padding: 8px 6px;
+    font-size: 0.68rem;
   }
 
   #dungeon-cards {
@@ -870,53 +954,280 @@ button:hover {
   }
 }
 
-/* ===== SVGアイコン（asset/image） ===== */
+/* ===== SVGアイコン & UI デザインシステム ===== */
 .gi-icon {
   display: inline-block;
   vertical-align: middle;
   image-rendering: auto;
   flex-shrink: 0;
 }
+
 .gi-icon-sm   { width: 20px; height: 20px; }
 .gi-icon-cell { width: 22px; height: 22px; pointer-events: none; }
 .gi-icon-cell.icon-tint { display: block; margin: 0 auto; }
-.gi-icon-battle {
-  width: 72px;
-  height: 72px;
-  display: block;
-  margin: 0 auto 4px;
-}
-.gi-icon-dungeon {
-  width: 48px;
-  height: 48px;
-  display: block;
-  margin: 0 auto;
+
+.battle-enemy-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
-/* マスク着色（iconHtml.js がインラインで mask-image を指定） */
+.battle-enemy-icon .ui-icon-badge--lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+}
+
+.battle-enemy-icon .gi-icon-badge--lg {
+  width: 48px;
+  height: 48px;
+}
+
+#battle-text {
+  line-height: 1.5;
+}
+
+.gi-icon-dungeon {
+  width: 52px;
+  height: 52px;
+  display: block;
+}
+
+.gi-icon-badge--sm { width: 18px; height: 18px; }
+.gi-icon-badge--md { width: 24px; height: 24px; }
+.gi-icon-badge--lg { width: 32px; height: 32px; }
+.gi-icon-badge--xl { width: 40px; height: 40px; }
+
 .icon-tint {
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
 }
 
-#monster-list .gi-icon {
-  vertical-align: text-bottom;
-  margin-right: 2px;
+/* アイコンバッジ（SVG を目立たせる容器） */
+.ui-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--badge-bg, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--badge-border, #444);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
+.ui-icon-badge--sm { width: 32px; height: 32px; border-radius: 8px; }
+.ui-icon-badge--md { width: 40px; height: 40px; border-radius: 10px; }
+.ui-icon-badge--lg { width: 52px; height: 52px; border-radius: 12px; }
+.ui-icon-badge--xl { width: 64px; height: 64px; border-radius: 14px; }
+
+/* 見出し・機能行 */
+.ui-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.ui-heading__text {
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.home-title .ui-heading__text {
+  font-size: 1.65rem;
+}
+
+#result-title .ui-heading__text {
+  font-size: 1.35rem;
+}
+
+.ui-feature-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.ui-feature-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ui-feature-row__text {
+  font-size: 0.92rem;
+  color: #c8c8d4;
+  line-height: 1.4;
+}
+
+/* ボタン */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.ui-btn:active {
+  transform: scale(0.98);
+}
+
+.ui-btn--primary {
+  padding: 14px 20px;
+  background: linear-gradient(145deg, #4a8ae8, #2f63aa);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(58, 123, 213, 0.35);
+}
+
+.ui-btn--primary:hover {
+  background: linear-gradient(145deg, #5a9af0, #3a73c0);
+  box-shadow: 0 6px 18px rgba(58, 123, 213, 0.45);
+}
+
+.ui-btn--ghost {
+  padding: 14px 20px;
+  background: #2a2a32;
+  border: 1px solid #484858;
+  color: #ddd;
+  font-size: 1rem;
+}
+
+.ui-btn--ghost:hover {
+  background: #34343e;
+  border-color: #606070;
+  color: #fff;
+}
+
+.ui-btn--ghost-inline {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  gap: 8px;
+}
+
+.ui-btn--toolbar {
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  min-width: 68px;
+  background: #252530;
+  border: 1px solid #3a3a48;
+  color: #bbb;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.ui-btn--toolbar:hover {
+  background: #303040;
+  border-color: #555568;
+  color: #fff;
+}
+
+.ui-btn--toolbar .ui-btn__label {
+  line-height: 1.2;
+}
+
+.ui-btn--enter {
+  flex-direction: row;
+  gap: 10px;
+  padding: 12px 16px;
+  width: 100%;
+  background: linear-gradient(145deg, #3d8a50, #2a6640);
+  border: 1px solid #4a9a5a;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(60, 140, 80, 0.3);
+}
+
+.ui-btn--enter:hover {
+  background: linear-gradient(145deg, #48a060, #327850);
+}
+
+/* ステータスバー */
+.stat-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: #252530;
+  border: 1px solid #3a3a44;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+.stat-pill strong {
+  color: #fff;
+}
+
+.stat-pill--level { border-color: #5a6a8a; color: #a8b8d8; }
+.stat-pill--hp    { border-color: #5a8a5a; color: #a8d8a8; }
+.stat-pill--atk   { border-color: #8a6a5a; color: #d8b8a8; }
+.stat-pill--gold  {
+  border-color: #8a7a30;
+  color: #ffd700;
+  gap: 4px;
+}
+
+.stat-pill--gold .ui-icon-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+
+.stat-pill--gold .gi-icon-badge--sm {
+  width: 14px;
+  height: 14px;
+}
+
+/* 所持金表示（ショップ） */
+.gold-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(145deg, #2a2818, #1e1c10);
+  border: 1px solid #6a5a20;
+  border-radius: 10px;
+}
+
+.gold-display__text {
+  font-size: 1rem;
+  color: #e8d080;
+}
+
+.gold-display__text strong {
+  color: #ffd700;
+  font-size: 1.1rem;
+}
+
+/* リスト内アイコン */
+#monster-list .gi-icon,
 .shop-item-info .gi-icon,
 .eq-item-name .gi-icon,
 .eq-item-info .gi-icon {
+  vertical-align: middle;
   margin-right: 4px;
 }
 
-.gi-icon-menu-sm { width: 16px; height: 16px; }
-.gi-icon-menu    { width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; }
-.gi-icon-menu-lg { width: 32px; height: 32px; vertical-align: middle; margin-right: 6px; }
-
-button .gi-icon-menu,
-button .gi-icon-menu-sm {
+.result-row .gi-icon {
   vertical-align: middle;
   margin-right: 4px;
 }

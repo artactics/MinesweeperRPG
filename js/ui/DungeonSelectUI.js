@@ -1,6 +1,6 @@
 import { DUNGEON_CONFIG } from "../core/constants.js";
 import { renderIconHtml } from "./iconHtml.js";
-import { renderGoldInline, renderLockIcon, MENU_ICONS } from "../core/menuIcons.js";
+import { renderPlayerStats, renderLockIcon, renderEnterButtonLabel } from "../core/menuIcons.js";
 
 /**
  * ダンジョン選択画面の描画を担当するクラス
@@ -21,7 +21,7 @@ export class DungeonSelectUI {
   render() {
     const player = this.getPlayer();
     const statsEl = document.getElementById("ds-player-stats");
-    statsEl.innerHTML = `Lv <strong>${player.level}</strong> &nbsp; HP ${player.hp}/${player.maxHp} &nbsp; ATK ${player.atk} &nbsp; ${renderGoldInline(player.gold)}`;
+    statsEl.innerHTML = renderPlayerStats(player);
 
     const container = document.getElementById("dungeon-cards");
     container.innerHTML = "";
@@ -33,7 +33,9 @@ export class DungeonSelectUI {
 
       const bannerEl = document.createElement("div");
       bannerEl.className = "dungeon-card-banner";
-      bannerEl.innerHTML = renderIconHtml(config, "gi-icon-dungeon");
+      bannerEl.innerHTML =
+        `<span class="dungeon-card-icon-wrap" style="--theme-color:${config.iconColor}">` +
+        `${renderIconHtml(config, "gi-icon-dungeon")}</span>`;
       card.appendChild(bannerEl);
 
       const bodyEl = document.createElement("div");
@@ -57,12 +59,12 @@ export class DungeonSelectUI {
       if (locked) {
         const lockEl = document.createElement("div");
         lockEl.className = "dungeon-card-lock";
-        lockEl.innerHTML = `${renderLockIcon()} Lv${config.minPlayerLevel}以上で解放`;
+        lockEl.innerHTML = `${renderLockIcon()}<span>Lv${config.minPlayerLevel}以上で解放</span>`;
         bodyEl.appendChild(lockEl);
       } else {
         const btn = document.createElement("button");
-        btn.className = "dungeon-enter-btn";
-        btn.innerHTML = `${renderIconHtml(MENU_ICONS.entryDoor, "gi-icon-menu-sm")} 入場する`;
+        btn.className = "dungeon-enter-btn ui-btn ui-btn--enter";
+        btn.innerHTML = renderEnterButtonLabel();
         btn.addEventListener("click", () => this.onEnterDungeon(parseInt(level)));
         bodyEl.appendChild(btn);
       }

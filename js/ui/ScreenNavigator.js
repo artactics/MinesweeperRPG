@@ -1,4 +1,4 @@
-import { renderIconHtml } from "./iconHtml.js";
+import { renderItemIcon } from "./iconBadge.js";
 
 /**
  * 画面の表示切替を担当するクラス
@@ -69,7 +69,7 @@ export class ScreenNavigator {
       details.appendChild(titleEl);
       for (const itemId of itemIds) {
         const item = data.gainedItems[itemId];
-        addRow(`${renderIconHtml(item, "gi-icon-sm")} ${item.name}`, `×${item.count}`);
+        addRow(`${renderItemIcon(item)}<span>${item.name}</span>`, `×${item.count}`);
       }
     }
 
@@ -79,7 +79,7 @@ export class ScreenNavigator {
       eqTitle.textContent = "入手装備品";
       details.appendChild(eqTitle);
       for (const item of data.gainedEquipment) {
-        addRow(`${renderIconHtml(item, "gi-icon-sm")} ${item.name}`, item.description);
+        addRow(`${renderItemIcon(item)}<span>${item.name}</span>`, item.description);
       }
     }
   }

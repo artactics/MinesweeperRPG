@@ -1,5 +1,5 @@
 import { ITEM_TYPES } from "../core/constants.js";
-import { renderIconHtml } from "./iconHtml.js";
+import { renderItemIcon } from "./iconBadge.js";
 import { renderGoldLabel } from "../core/menuIcons.js";
 
 /**
@@ -59,7 +59,7 @@ export class ShopUI {
       row.className = "shop-row";
       const info = document.createElement("span");
       info.className = "shop-item-info";
-      info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#aaa;font-size:0.78rem">${item.description}</span>`;
+      info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span style="color:#aaa;font-size:0.78rem">${item.description}</span></span>`;
       const price = document.createElement("span");
       price.className = "shop-item-price";
       price.textContent = `${item.buyPrice}G`;
@@ -96,7 +96,7 @@ export class ShopUI {
         row.className = "shop-row";
         const info = document.createElement("span");
         info.className = "shop-item-info";
-        info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#aaa">×${item.count}</span>`;
+        info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span style="color:#aaa">×${item.count}</span></span>`;
         const price = document.createElement("span");
         price.className = "shop-item-price";
         price.textContent = `${item.sellPrice}G/個`;
@@ -131,7 +131,7 @@ export class ShopUI {
         row.className = "shop-row";
         const info = document.createElement("span");
         info.className = "shop-item-info";
-        info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${countSuffix}`;
+        info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${countSuffix}</span>`;
         const price = document.createElement("span");
         price.className = "shop-item-price";
         price.textContent = `${item.sellPrice}G`;

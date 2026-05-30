@@ -1,4 +1,4 @@
-import { renderIconHtml } from "./iconHtml.js";
+import { renderItemIcon } from "./iconBadge.js";
 
 /**
  * 装備モーダルの描画と装備・外す操作を担当するクラス
@@ -45,7 +45,7 @@ export class EquipmentUI {
       if (def) {
         const nameEl = document.createElement("span");
         nameEl.className = "eq-item-name";
-        nameEl.innerHTML = `${renderIconHtml(def, "gi-icon-sm")} ${def.name} <span class="eq-item-stat">${def.description}</span>`;
+        nameEl.innerHTML = `${renderItemIcon(def)}<span>${def.name} <span class="eq-item-stat">${def.description}</span></span>`;
         row.appendChild(nameEl);
         const btn = document.createElement("button");
         btn.className = "eq-unequip-btn";
@@ -78,7 +78,7 @@ export class EquipmentUI {
       row.className = "eq-inventory-item";
       const info = document.createElement("span");
       info.className = "eq-item-info";
-      info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` ×${item.count}` : ""}`;
+      info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` ×${item.count}` : ""}</span>`;
       const btn = document.createElement("button");
       btn.className = "eq-equip-btn";
       btn.textContent = "装備";

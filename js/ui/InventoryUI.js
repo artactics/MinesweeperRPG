@@ -1,4 +1,4 @@
-import { renderIconHtml } from "./iconHtml.js";
+import { renderItemIcon } from "./iconBadge.js";
 
 /**
  * 倉庫モーダル（閲覧専用）の描画を担当するクラス
@@ -43,7 +43,7 @@ export class InventoryUI {
       row.className = "shop-row";
       const info = document.createElement("span");
       info.className = "shop-item-info";
-      info.innerHTML = `${renderIconHtml(item, "gi-icon-sm")} ${item.name} <span style="color:#aaa;font-size:0.8rem">${sub}</span>`;
+      info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span style="color:#aaa;font-size:0.8rem">${sub}</span></span>`;
       const b = document.createElement("span");
       b.className = "inv-badge";
       b.textContent = badge;
