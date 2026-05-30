@@ -960,6 +960,8 @@ button:hover {
   vertical-align: middle;
   image-rendering: auto;
   flex-shrink: 0;
+  border: none;
+  outline: none;
 }
 
 .gi-icon-sm   { width: 20px; height: 20px; }
