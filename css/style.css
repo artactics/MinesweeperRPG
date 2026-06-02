@@ -140,7 +140,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 0 16px;
   min-height: 88px;
 }
 
@@ -971,7 +970,7 @@ button:hover {
 .battle-enemy-icon {
   display: flex;
   justify-content: center;
-  margin-bottom: 8px;
+  /*margin-bottom: 8px;*/
 }
 
 .battle-enemy-icon .ui-icon-badge--lg {
@@ -1139,7 +1138,7 @@ button:hover {
 .ui-btn--enter {
   flex-direction: row;
   gap: 10px;
-  padding: 12px 16px;
+  padding: 2px 16px;
   width: 100%;
   background: linear-gradient(145deg, #3d8a50, #2a6640);
   border: 1px solid #4a9a5a;
@@ -1226,7 +1225,7 @@ button:hover {
 .eq-item-name .gi-icon,
 .eq-item-info .gi-icon {
   vertical-align: middle;
-  margin-right: 4px;
+  /*margin-right: 4px;*/
 }
 
 .result-row .gi-icon {

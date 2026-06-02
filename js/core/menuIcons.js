@@ -21,7 +21,7 @@ export const MENU_ICONS = {
   coins:         { name: "所持金", iconUrl: MENU("coins.svg"), iconColor: "#FFCA28" },
   equipment:     { name: "装備", iconUrl: MENU("equipment.svg"), iconColor: "#90CAF9" },
   dungeonSelect: { name: "ダンジョン選択", iconUrl: MENU("dungeon-select.svg"), iconColor: "#CE93D8" },
-  entryDoor:     { name: "入場", iconUrl: MENU("entry-door.svg"), iconColor: "#66BB6A" },
+  entryDoor:     { name: "入場", iconUrl: MENU("entry-door.svg"), iconColor: "#5c3100" },
   exitDoor:      { name: "退出", iconUrl: MENU("exit-door.svg"), iconColor: "#EF9A9A" }
 };
 
@@ -77,7 +77,7 @@ export function initMenuIcons() {
 
   const resultTitle = document.getElementById("result-title");
   if (resultTitle) {
-    resultTitle.innerHTML = renderIconHeading(MENU_ICONS.entryDoor, "ダンジョンクリア！", "lg");
+    resultTitle.innerHTML = renderIconHeading(MENU_ICONS.party, "ダンジョンクリア！", "lg");
   }
 }
 
@@ -126,5 +126,5 @@ export function renderPlayerStats(player) {
 
 /** 入場ボタン */
 export function renderEnterButtonLabel() {
-  return renderIconButtonContent(MENU_ICONS.entryDoor, "入場する", "enter", "sm");
+  return renderIconButtonContent(MENU_ICONS.entryDoor, "入場する", "enter", "lg");
 }

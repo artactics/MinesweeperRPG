@@ -12,10 +12,10 @@ export function renderIconBadge(source, size = "md") {
   const icon = renderIconHtml(source, `gi-icon-badge gi-icon-badge--${size}`);
 
   return (
-    `<span class="ui-icon-badge ui-icon-badge--${size}" ` +
-    `style="--badge-color:${color};--badge-bg:${color}22;--badge-border:${color}66">` +
-    icon +
-    `</span>`
+    //`<span class="ui-icon-badge ui-icon-badge--${size}" ` +
+    //`style="--badge-color:${color};--badge-bg:${color}22;--badge-border:${color}66">` +
+    icon// +
+    //`</span>`
   );
 }
 
@@ -26,7 +26,7 @@ export function renderIconBadge(source, size = "md") {
  * @param {"toolbar"|"primary"|"ghost"|"enter"} variant
  * @param {"sm"|"md"|"lg"} [badgeSize]
  */
-export function renderIconButtonContent(source, label, variant = "toolbar", badgeSize = "sm") {
+export function renderIconButtonContent(source, label, variant = "toolbar", badgeSize = "md") {
   const badge = renderIconBadge(source, badgeSize);
   if (variant === "enter") {
     return `${badge}<span class="ui-btn__label">${label}</span>`;

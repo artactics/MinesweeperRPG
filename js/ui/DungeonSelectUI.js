@@ -33,9 +33,7 @@ export class DungeonSelectUI {
 
       const bannerEl = document.createElement("div");
       bannerEl.className = "dungeon-card-banner";
-      bannerEl.innerHTML =
-        `<span class="dungeon-card-icon-wrap" style="--theme-color:${config.iconColor}">` +
-        `${renderIconHtml(config, "gi-icon-dungeon")}</span>`;
+      bannerEl.innerHTML =renderIconHtml(config, "gi-icon-dungeon");
       card.appendChild(bannerEl);
 
       const bodyEl = document.createElement("div");
