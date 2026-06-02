@@ -15,14 +15,9 @@ export class PlayerHudUI {
     this.onUseItem = onUseItem;
   }
 
-  /** 手持ち・倉庫のアイテムリストを再描画 */
+  /** 倉庫アイテムリストを再描画 */
   renderItems() {
     const player = this.getPlayer();
-    this._renderItemList(
-      document.getElementById("hand-items-list"),
-      player.handItems,
-      true
-    );
     this._renderItemList(
       document.getElementById("inventory-list"),
       player.inventory,

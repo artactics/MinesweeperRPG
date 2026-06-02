@@ -48,12 +48,6 @@ export class MinesweeperInputHandler {
     }
     if (cell.flagged) return;
 
-    // 開いたマスでアイテムがある場合 → 取得
-    if (cell.revealed && cell.item) {
-      this._pickupItem(cell);
-      return;
-    }
-
     if (cell.revealed) {
       // コード開き：周囲の旗の数が danger と一致すれば隣接マスを一括開封
       if (cell.danger > 0) {
@@ -70,9 +64,6 @@ export class MinesweeperInputHandler {
 
     cell.revealed = true;
     this.gridRenderer.updateCell(cell);
-
-    // アイテムマスは開いた状態で止める（再度クリックで取得）
-    if (cell.item) return;
 
     if (cell.isEnemy) {
       this.battleCoordinator.startBattle(cell);
@@ -117,23 +108,4 @@ export class MinesweeperInputHandler {
     }
   }
 
-  /** マス上のアイテムをプレイヤーに加える */
-  _pickupItem(cell) {
-    const session = this.getSession();
-    const player = this.getPlayer();
-    const item = cell.item;
-
-    if (item.category === "equipment") {
-      session.trackEquipmentPickup(item);
-      this.logUI.add(`${item.name}を入手した！（装備品）`);
-    } else {
-      player.addItem(item);
-      this.logUI.add(`${item.name}を手に入れた！`);
-    }
-
-    cell.item = null;
-    this.gridRenderer.updateCell(cell);
-    this.onUpdateUI();
-    this.onSave();
-  }
 }

@@ -1,3 +1,34 @@
+import { ITEM_CONFIG }      from "../config/itemConfig.js";
+import { EQUIPMENT_CONFIG } from "../config/equipmentConfig.js";
+
+/** ITEM_TYPES / EQUIPMENT_TYPES として他ファイルから参照可能 */
+export const ITEM_TYPES      = ITEM_CONFIG;
+export const EQUIPMENT_TYPES = EQUIPMENT_CONFIG;
+
+/**
+ * アイテム・装備品にダンジョンレベルのスケーリングを適用して返す
+ * @param {object} base - ITEM_TYPES または EQUIPMENT_TYPES のエントリ
+ * @param {number} dungeonLevel - ダンジョンレベル（1〜8）
+ * @returns {object} スケール済みアイテムオブジェクト
+ */
+export function levelItem(base, dungeonLevel) {
+  const extra = Math.max(0, dungeonLevel - (base.minDungeon || 1));
+  const leveled = { ...base, level: dungeonLevel };
+  if (base.category === "equipment") {
+    if (base.atk)   { leveled.atk   = base.atk   + extra;     leveled.description = `ATK+${leveled.atk} Lv${dungeonLevel}`; }
+    if (base.maxHp) { leveled.maxHp = base.maxHp + extra * 2; leveled.description = `MaxHP+${leveled.maxHp} Lv${dungeonLevel}`; }
+  } else {
+    const val = base.effect.value
+      + (base.healScale || 0) * extra
+      + (base.atkScale  || 0) * extra;
+    leveled.effect = { ...base.effect, value: val };
+    leveled.description = base.effect.type === "heal"
+      ? `HP+${val}回復 Lv${dungeonLevel}`
+      : `ATK+${val} Lv${dungeonLevel}`;
+  }
+  return leveled;
+}
+
 export const DIRECTIONS = [
   [-1, -1], [-1, 0], [-1, 1],
   [0, -1],           [0, 1],
@@ -18,16 +49,6 @@ export const GAME_CONFIG = {
 const ASSET = (dir, file) => `./asset/image/${dir}/${file}`;
 const DUNGEON_IMG = (themeClass) => ASSET("dungeon", `${themeClass}.svg`);
 const ENEMY_IMG = (file) => ASSET("enemy", file);
-const ITEM_IMG = (file) => ASSET("item", file);
-const EQ_IMG = (file) => ASSET("equipment", file);
-
-/** 装備ティアごとの表示色（同一 SVG を色分け） */
-const TIER_COLOR = {
-  1: "#8D6E63",
-  2: "#90A4AE",
-  3: "#5C6BC0",
-  4: "#FFC107"
-};
 
 export const DUNGEON_CONFIG = {
   1: { name: "初心者の洞窟", themeClass: "theme-cave", iconUrl: DUNGEON_IMG("theme-cave"), iconColor: "#BCAAA4", minPlayerLevel: 1, maxPlayerLevel: 2, enemyTypes: ["SLIME"], enemyCount: 10, gridSize: { rows: 8, cols: 8 }, clearExp: 20, clearGold: 30, itemChance: 0.15 },
@@ -50,27 +71,3 @@ export const ENEMY_TYPES = {
   DEMON:    { name: "デーモン", iconUrl: ENEMY_IMG("demon.svg"), color: "#CE93D8", baseHp: 230, baseAtk: 29, baseExp: 25, dangerRange: [6, 8] }
 };
 
-export const ITEM_TYPES = {
-  POTION:       { id: "potion", name: "回復薬", iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#66BB6A", minDungeon: 1, description: "HP+10回復", effect: { type: "heal", value: 10 }, healScale: 3, buyPrice: 30, sellPrice: 12 },
-  SUPER_POTION: { id: "super_potion", name: "超回復薬", iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#42A5F5", minDungeon: 3, description: "HP+20回復", effect: { type: "heal", value: 20 }, healScale: 5, buyPrice: 60, sellPrice: 24 },
-  ATTACK_BOOST: { id: "attack_boost", name: "攻撃力UP", iconUrl: EQ_IMG("sword.svg"), iconColor: "#EF5350", minDungeon: 2, description: "ATK+3", effect: { type: "atk", value: 3 }, atkScale: 1, buyPrice: 80, sellPrice: 32 }
-};
-
-export const EQUIPMENT_TYPES = {
-  WOODEN_STICK:   { id: "wooden_stick", name: "木の棒", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[1], slot: "weapon", category: "equipment", atk: 2, description: "ATK+2", sellPrice: 15 },
-  IRON_SWORD:     { id: "iron_sword", name: "鉄の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[2], slot: "weapon", category: "equipment", atk: 5, description: "ATK+5", sellPrice: 40 },
-  STEEL_SWORD:    { id: "steel_sword", name: "鋼の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[3], slot: "weapon", category: "equipment", atk: 9, description: "ATK+9", sellPrice: 70 },
-  DRAGON_BLADE:   { id: "dragon_blade", name: "竜の剣", iconUrl: EQ_IMG("sword.svg"), iconColor: TIER_COLOR[4], slot: "weapon", category: "equipment", atk: 15, description: "ATK+15", sellPrice: 120 },
-  LEATHER_HELM:   { id: "leather_helm", name: "革の兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[1], slot: "head", category: "equipment", maxHp: 5, description: "MaxHP+5", minDungeon: 1, sellPrice: 15 },
-  IRON_HELM:      { id: "iron_helm", name: "鉄兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[2], slot: "head", category: "equipment", maxHp: 10, description: "MaxHP+10", minDungeon: 2, sellPrice: 30 },
-  STEEL_HELM:     { id: "steel_helm", name: "鋼の兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[3], slot: "head", category: "equipment", maxHp: 18, description: "MaxHP+18", minDungeon: 4, sellPrice: 55 },
-  DRAGON_HELM:    { id: "dragon_helm", name: "竜の兜", iconUrl: EQ_IMG("helm.svg"), iconColor: TIER_COLOR[4], slot: "head", category: "equipment", maxHp: 28, description: "MaxHP+28", minDungeon: 6, sellPrice: 85 },
-  LEATHER_ARMOR:  { id: "leather_armor", name: "革鎧", iconUrl: EQ_IMG("armor.svg"), iconColor: TIER_COLOR[1], slot: "body", category: "equipment", maxHp: 8, description: "MaxHP+8", minDungeon: 1, sellPrice: 25 },
-  CHAIN_MAIL:     { id: "chain_mail", name: "鎖帷子", iconUrl: EQ_IMG("armor.svg"), iconColor: TIER_COLOR[2], slot: "body", category: "equipment", maxHp: 15, description: "MaxHP+15", minDungeon: 3, sellPrice: 45 },
-  PLATE_ARMOR:    { id: "plate_armor", name: "プレートアーマー", iconUrl: EQ_IMG("armor.svg"), iconColor: TIER_COLOR[3], slot: "body", category: "equipment", maxHp: 25, description: "MaxHP+25", minDungeon: 5, sellPrice: 75 },
-  DRAGON_SCALE:   { id: "dragon_scale", name: "竜鱗鎧", iconUrl: EQ_IMG("armor.svg"), iconColor: TIER_COLOR[4], slot: "body", category: "equipment", maxHp: 38, description: "MaxHP+38", minDungeon: 7, sellPrice: 115 },
-  LEATHER_BOOTS:  { id: "leather_boots", name: "革のブーツ", iconUrl: EQ_IMG("boots.svg"), iconColor: TIER_COLOR[1], slot: "legs", category: "equipment", maxHp: 4, description: "MaxHP+4", minDungeon: 1, sellPrice: 12 },
-  IRON_GREAVES:   { id: "iron_greaves", name: "鉄の脚当て", iconUrl: EQ_IMG("boots.svg"), iconColor: TIER_COLOR[2], slot: "legs", category: "equipment", maxHp: 8, description: "MaxHP+8", minDungeon: 2, sellPrice: 25 },
-  STEEL_GREAVES:  { id: "steel_greaves", name: "鋼の脚当て", iconUrl: EQ_IMG("boots.svg"), iconColor: TIER_COLOR[3], slot: "legs", category: "equipment", maxHp: 14, description: "MaxHP+14", minDungeon: 4, sellPrice: 42 },
-  DRAGON_GREAVES: { id: "dragon_greaves", name: "竜の脚当て", iconUrl: EQ_IMG("boots.svg"), iconColor: TIER_COLOR[4], slot: "legs", category: "equipment", maxHp: 22, description: "MaxHP+22", minDungeon: 6, sellPrice: 65 }
-};

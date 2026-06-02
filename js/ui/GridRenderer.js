@@ -1,5 +1,3 @@
-import { renderIconHtml } from "./iconHtml.js";
-
 export class GridRenderer {
   constructor(grid, root, onLeft, onRight) {
     this.grid = grid;
@@ -94,13 +92,8 @@ export class GridRenderer {
     el.classList.toggle("flagged", cell.flagged);
 
     if (cell.revealed) {
-      if (cell.item) {
-        el.innerHTML = renderIconHtml(cell.item, "gi-icon-cell");
-        el.style.background = "#554433";
-      } else {
-        el.textContent = cell.isEnemy ? "✕" : (cell.danger || "");
-        el.style.background = "";
-      }
+      el.textContent = cell.isEnemy ? "✕" : (cell.danger || "");
+      el.style.background = "";
     } else {
       el.textContent = cell.flagged ? "🚩" : "";
       el.style.background = "";

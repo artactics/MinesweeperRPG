@@ -1,6 +1,6 @@
 import { Grid } from "../core/Grid.js";
 import { BattleSystem } from "../core/BattleSystem.js";
-import { ITEM_TYPES, EQUIPMENT_TYPES, DUNGEON_CONFIG } from "../core/constants.js";
+import { ITEM_TYPES, EQUIPMENT_TYPES, DUNGEON_CONFIG, levelItem } from "../core/constants.js";
 import { DUNGEON_LAYER_CONFIG, LAYER_LABELS } from "../config/dungeonLayerConfig.js";
 
 /**
@@ -89,20 +89,11 @@ export class DungeonSession {
     const config = DUNGEON_CONFIG[this.currentDungeonLevel];
     const lc = this.layerConfig;
 
-    const itemPool = [
-      ...Object.values(ITEM_TYPES),
-      ...Object.values(EQUIPMENT_TYPES).filter(e =>
-        e.slot === "weapon" || e.minDungeon <= this.currentDungeonLevel
-      )
-    ];
-
     this.grid = new Grid(
       lc.gridSize.rows,
       lc.gridSize.cols,
       lc.enemyCount,
       config.enemyTypes,
-      config.itemChance,
-      itemPool,
       this.currentDungeonLevel
     );
 
@@ -185,21 +176,6 @@ export class DungeonSession {
     this.totalExpGained += lc.expPerFloor;
     this.totalGoldGained += lc.goldPerFloor;
 
-    // グリッド上の未取得アイテムを自動回収
-    for (let r = 0; r < this.grid.rows; r++) {
-      for (let c = 0; c < this.grid.cols; c++) {
-        const cell = this.grid.cells[r][c];
-        if (cell.item) {
-          if (cell.item.category === "equipment") {
-            this.trackEquipmentPickup(cell.item);
-          } else {
-            player.addItem(cell.item);
-          }
-          cell.item = null;
-        }
-      }
-    }
-
     if (this.currentFloor < this.totalFloors) {
       // まだフロアが残っている → 次フロアへ
       const nextFloor = this.currentFloor + 1;
@@ -212,12 +188,7 @@ export class DungeonSession {
     // 全フロアクリア
     this.logUI.add(`${config.name} ${layerLabel} 全${this.totalFloors}F クリア！`);
 
-    const gainedItems = { ...player.handItems };
-    for (const itemId of Object.keys(player.handItems)) {
-      player.moveToInventory(itemId);
-    }
-
-    const gainedEquipment = [...this.dungeonEquipmentGained];
+    const { gainedItems, gainedEquipment } = this._rollDrops();
     this.dungeonEquipmentGained = [];
     this.grid = null;
 
@@ -231,6 +202,42 @@ export class DungeonSession {
       gainedItems,
       gainedEquipment
     };
+  }
+
+  /**
+   * ダンジョンクリア時のドロップ抽選を行い、結果をプレイヤーに付与する
+   * @returns {{ gainedItems: object, gainedEquipment: object[] }}
+   */
+  _rollDrops() {
+    const drops = this.layerConfig.drops || [];
+    const player = this.getPlayer();
+    const gainedItems = {};
+    const gainedEquipment = [];
+
+    for (const drop of drops) {
+      if (Math.random() > drop.chance) continue;
+
+      const base = drop.category === "equipment"
+        ? EQUIPMENT_TYPES[drop.id]
+        : ITEM_TYPES[drop.id];
+      if (!base) continue;
+
+      const item = levelItem(base, this.currentDungeonLevel);
+
+      if (drop.category === "equipment") {
+        player.addEquipment(item);
+        gainedEquipment.push(item);
+      } else {
+        player.addToInventory(item);
+        if (!gainedItems[item.id]) {
+          gainedItems[item.id] = { ...item, count: 1 };
+        } else {
+          gainedItems[item.id].count++;
+        }
+      }
+    }
+
+    return { gainedItems, gainedEquipment };
   }
 
   /** 旗モードの ON/OFF を切り替え */
