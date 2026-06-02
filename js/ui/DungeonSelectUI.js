@@ -41,7 +41,7 @@ export class DungeonSelectUI {
 
       const nameEl = document.createElement("div");
       nameEl.className = "dungeon-card-name";
-      nameEl.textContent = `Lv${level}: ${config.name}`;
+      nameEl.textContent = `${config.name}`;
 
       const detailsEl = document.createElement("div");
       detailsEl.className = "dungeon-card-details";
