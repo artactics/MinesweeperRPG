@@ -101,7 +101,7 @@ export class GameController {
     // --- メタ画面 UI ---
     this.dungeonSelectUI = new DungeonSelectUI({
       getPlayer: () => this.player,
-      onEnterDungeon: level => this.enterDungeon(level)
+      onEnterDungeon: (level, layer) => this.enterDungeon(level, layer)
     });
 
     const onMetaTransaction = () => {
@@ -173,8 +173,8 @@ export class GameController {
     this.dungeonSelectUI.render();
   }
 
-  enterDungeon(level) {
-    if (!this.dungeonSession.enter(level)) return;
+  enterDungeon(level, layer) {
+    if (!this.dungeonSession.enter(level, layer)) return;
     this._updateMonsterList();
     this.updateUI();
     this.screenNavigator.showDungeonPlay();
@@ -202,6 +202,13 @@ export class GameController {
   _handleCheckClear() {
     const result = this.dungeonSession.tryClear();
     if (!result) return false;
+
+    if (result.status === "advance") {
+      this._updateMonsterList();
+      this.updateUI();
+      this.saveGameData();
+      return true;
+    }
 
     this.saveGameData(true);
     this.screenNavigator.showResultScreen(result);

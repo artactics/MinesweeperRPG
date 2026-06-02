@@ -852,6 +852,95 @@ button:hover {
   background: #2f63aa;
 }
 
+/* ===== ダンジョン層選択ボタン ===== */
+
+.dungeon-layers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.layer-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 4px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  line-height: 1;
+  margin: 0;
+}
+
+.layer-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.layer-btn__name {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.layer-btn__floors {
+  font-size: 0.72rem;
+  opacity: 0.9;
+}
+
+.layer-btn__level {
+  font-size: 0.62rem;
+  opacity: 0.75;
+}
+
+.layer-btn--surface {
+  background: rgba(76, 175, 80, 0.12);
+  border-color: rgba(76, 175, 80, 0.35);
+  color: #a5d6a7;
+}
+
+.layer-btn--surface:hover:not(:disabled) {
+  background: rgba(76, 175, 80, 0.22);
+  border-color: #66BB6A;
+  color: #c8e6c9;
+}
+
+.layer-btn--middle {
+  background: rgba(255, 152, 0, 0.12);
+  border-color: rgba(255, 152, 0, 0.35);
+  color: #ffcc80;
+}
+
+.layer-btn--middle:hover:not(:disabled) {
+  background: rgba(255, 152, 0, 0.22);
+  border-color: #FFA726;
+  color: #ffe0b2;
+}
+
+.layer-btn--deep {
+  background: rgba(244, 67, 54, 0.12);
+  border-color: rgba(244, 67, 54, 0.35);
+  color: #ef9a9a;
+}
+
+.layer-btn--deep:hover:not(:disabled) {
+  background: rgba(244, 67, 54, 0.22);
+  border-color: #EF5350;
+  color: #ffcdd2;
+}
+
+.layer-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.layer-btn--surface:disabled:hover { background: rgba(76, 175, 80, 0.12); }
+.layer-btn--middle:disabled:hover  { background: rgba(255, 152, 0, 0.12); }
+.layer-btn--deep:disabled:hover    { background: rgba(244, 67, 54, 0.12); }
+
 /* ===== モバイル対応 ===== */
 @media (max-width: 600px) {
   body {

@@ -1,6 +1,7 @@
 import { Grid } from "../core/Grid.js";
 import { BattleSystem } from "../core/BattleSystem.js";
 import { ITEM_TYPES, EQUIPMENT_TYPES, DUNGEON_CONFIG } from "../core/constants.js";
+import { DUNGEON_LAYER_CONFIG, LAYER_LABELS } from "../config/dungeonLayerConfig.js";
 
 /**
  * ダンジョン攻略セッションの状態とライフサイクルを管理するクラス
@@ -21,6 +22,13 @@ export class DungeonSession {
     this.onBattleCreated = onBattleCreated;
 
     this.currentDungeonLevel = 1;
+    this.currentLayer = "surface";
+    this.currentFloor = 1;
+    this.totalFloors = 1;
+    this.layerConfig = null;
+    this.totalExpGained = 0;
+    this.totalGoldGained = 0;
+    this.entryPlayerLevel = 1;
     this.grid = null;
     this.flagMode = false;
     /** 今回のダンジョンで拾った装備（クリアまで仮所持） */
@@ -30,15 +38,21 @@ export class DungeonSession {
   /**
    * ダンジョンに入場し盤面を生成
    * @param {number} level
+   * @param {string} [layer] - "surface" | "middle" | "deep"
    * @returns {boolean} 入場成功なら true
    */
-  enter(level) {
+  enter(level, layer = "surface") {
     const config = DUNGEON_CONFIG[level];
-    if (!config) return false;
+    const layerConfig = DUNGEON_LAYER_CONFIG[level]?.[layer];
+    if (!config || !layerConfig) return false;
 
     const player = this.getPlayer();
     if (player.level < config.minPlayerLevel) {
       this.logUI.add(`このダンジョンはLv${config.minPlayerLevel}以上で入場可能です`);
+      return false;
+    }
+    if (player.level < layerConfig.minPlayerLevel) {
+      this.logUI.add(`この層はLv${layerConfig.minPlayerLevel}以上で入場可能です`);
       return false;
     }
 
@@ -46,29 +60,53 @@ export class DungeonSession {
     player.handItems = {};
     player.hp = player.maxHp;
     this.dungeonEquipmentGained = [];
+
     this.currentDungeonLevel = level;
-
-    const itemPool = [
-      ...Object.values(ITEM_TYPES),
-      ...Object.values(EQUIPMENT_TYPES).filter(e =>
-        e.slot === "weapon" || e.minDungeon <= level
-      )
-    ];
-
-    this.grid = new Grid(
-      config.gridSize.rows,
-      config.gridSize.cols,
-      config.enemyCount,
-      config.enemyTypes,
-      config.itemChance,
-      itemPool,
-      level
-    );
+    this.currentLayer = layer;
+    this.currentFloor = 1;
+    this.totalFloors = layerConfig.floorCount;
+    this.layerConfig = layerConfig;
+    this.totalExpGained = 0;
+    this.totalGoldGained = 0;
+    this.entryPlayerLevel = player.level;
 
     player.bonusAtk = 0;
     this.flagMode = false;
 
-    const battle = new BattleSystem(player);
+    this._generateFloor();
+
+    const layerLabel = LAYER_LABELS[layer];
+    this.logUI.clear();
+    this.logUI.add(`${config.name} ${layerLabel} 1F に入場しました`);
+
+    return true;
+  }
+
+  /**
+   * 現在のフロアのグリッドを生成して盤面を更新する
+   */
+  _generateFloor() {
+    const config = DUNGEON_CONFIG[this.currentDungeonLevel];
+    const lc = this.layerConfig;
+
+    const itemPool = [
+      ...Object.values(ITEM_TYPES),
+      ...Object.values(EQUIPMENT_TYPES).filter(e =>
+        e.slot === "weapon" || e.minDungeon <= this.currentDungeonLevel
+      )
+    ];
+
+    this.grid = new Grid(
+      lc.gridSize.rows,
+      lc.gridSize.cols,
+      lc.enemyCount,
+      config.enemyTypes,
+      config.itemChance,
+      itemPool,
+      this.currentDungeonLevel
+    );
+
+    const battle = new BattleSystem(this.getPlayer());
     this.onBattleCreated(battle);
 
     const gridEl = document.getElementById("grid");
@@ -76,11 +114,6 @@ export class DungeonSession {
 
     this.gridRenderer.grid = this.grid;
     this.gridRenderer.render();
-
-    this.logUI.clear();
-    this.logUI.add(`${config.name}に入場しました`);
-
-    return true;
   }
 
   /** ダンジョン内で拾った装備を破棄（撤退・ゲームオーバー時） */
@@ -114,8 +147,11 @@ export class DungeonSession {
   }
 
   /**
-   * 全安全マス開示済みか判定し、クリア処理を行う
-   * @returns {object|null} クリア時は結果画面用データ、未クリアは null
+   * 全安全マス開示済みか判定し、フロアクリア処理を行う
+   * @returns {{ status: 'advance'|'complete', ... }|null}
+   *   null        : 未クリア
+   *   advance     : フロアクリア・次フロアへ進む
+   *   complete    : 全フロアクリア・結果画面用データ
    */
   tryClear() {
     if (!this.grid) return null;
@@ -139,11 +175,15 @@ export class DungeonSession {
 
     const config = DUNGEON_CONFIG[this.currentDungeonLevel];
     const player = this.getPlayer();
-    const prevLevel = player.level;
+    const lc = this.layerConfig;
+    const layerLabel = LAYER_LABELS[this.currentLayer];
 
-    player.gainExp(config.clearExp);
-    player.addGold(config.clearGold || 0);
+    // フロアごとの報酬付与・HP回復
+    player.gainExp(lc.expPerFloor);
+    player.addGold(lc.goldPerFloor);
     player.hp = player.maxHp;
+    this.totalExpGained += lc.expPerFloor;
+    this.totalGoldGained += lc.goldPerFloor;
 
     // グリッド上の未取得アイテムを自動回収
     for (let r = 0; r < this.grid.rows; r++) {
@@ -160,6 +200,18 @@ export class DungeonSession {
       }
     }
 
+    if (this.currentFloor < this.totalFloors) {
+      // まだフロアが残っている → 次フロアへ
+      const nextFloor = this.currentFloor + 1;
+      this.logUI.add(`${layerLabel} ${this.currentFloor}F クリア！ → ${nextFloor}F へ進む`);
+      this.currentFloor = nextFloor;
+      this._generateFloor();
+      return { status: "advance", floor: this.currentFloor, totalFloors: this.totalFloors };
+    }
+
+    // 全フロアクリア
+    this.logUI.add(`${config.name} ${layerLabel} 全${this.totalFloors}F クリア！`);
+
     const gainedItems = { ...player.handItems };
     for (const itemId of Object.keys(player.handItems)) {
       player.moveToInventory(itemId);
@@ -170,10 +222,11 @@ export class DungeonSession {
     this.grid = null;
 
     return {
-      dungeonName: config.name,
-      expGained: config.clearExp,
-      clearGold: config.clearGold || 0,
-      prevLevel,
+      status: "complete",
+      dungeonName: `${config.name}【${layerLabel}】`,
+      expGained: this.totalExpGained,
+      clearGold: this.totalGoldGained,
+      prevLevel: this.entryPlayerLevel,
       newLevel: player.level,
       gainedItems,
       gainedEquipment
@@ -197,5 +250,9 @@ export class DungeonSession {
     player.hp = player.maxHp;
     this.grid = null;
     this.flagMode = false;
+    this.currentFloor = 1;
+    this.totalFloors = 1;
+    this.totalExpGained = 0;
+    this.totalGoldGained = 0;
   }
 }
