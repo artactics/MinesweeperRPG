@@ -15,7 +15,6 @@ export const MENU_ICONS = {
   key:           { name: "鍵", iconUrl: MENU("key.svg"), iconColor: "#FFD54F" },
   save:          { name: "セーブ", iconUrl: MENU("save.svg"), iconColor: "#81C784" },
   party:         { name: "パーティ", iconUrl: MENU("party.svg"), iconColor: "#FF8A65" },
-  bag:           { name: "バッグ", iconUrl: MENU("bag.svg"), iconColor: "#A1887F" },
   inventory:     { name: "倉庫", iconUrl: MENU("inventory.svg"), iconColor: "#90A4AE" },
   shop:          { name: "ショップ", iconUrl: MENU("shop.svg"), iconColor: "#FFB74D" },
   coins:         { name: "所持金", iconUrl: MENU("coins.svg"), iconColor: "#FFCA28" },
@@ -35,7 +34,7 @@ export function initMenuIcons() {
   const featureItems = [
     ["party", "ダンジョンを探索して敵と戦う"],
     ["coins", "経験値でレベルアップ"],
-    ["bag", "アイテムを集めて強化"],
+    ["inventory", "アイテムを集めて強化"],
     ["save", "Googleアカウントで進行を保存"]
   ];
   const featuresEl = document.querySelector(".home-features");
