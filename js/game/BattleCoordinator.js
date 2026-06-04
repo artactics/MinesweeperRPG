@@ -1,4 +1,5 @@
 import { DIRECTIONS } from "../core/constants.js";
+import { SKILL_CONFIG } from "../config/skillConfig.js";
 
 /**
  * フィールド上の敵マスと BattleUI / BattleSystem の連携を担当するクラス
@@ -45,6 +46,12 @@ export class BattleCoordinator {
     this.onGameOver = onGameOver;
   }
 
+  _getBattleSkills(player) {
+    return player.activeSkills
+      .map(key => SKILL_CONFIG[key])
+      .filter(s => s && (s.usableIn === "battle" || s.usableIn === "both"));
+  }
+
   /**
    * 敵マスで戦闘を開始
    * @param {object} cell - 敵がいるマス
@@ -59,43 +66,85 @@ export class BattleCoordinator {
     this.logUI.add(`${enemy.name}が現れた！`);
     this.battleUI.show(enemy, player, battle.battleGrid);
 
-    this.battleUI.onAttack((row, col) => {
-      const attackResult = battle.attack(row, col);
-      if (!attackResult) return;
+    const battleSkills = this._getBattleSkills(player);
+    this.battleUI.renderSkills(battleSkills, player);
 
-      const { result, playerDmg, enemyDmg, isMine, gridReset } = attackResult;
+    const delay = (ms) => new Promise(r => setTimeout(r, ms));
+
+    const handler = async (row, col) => {
+      this.battleUI.onAttack(null);
+
+      const pendingSkill = this.battleUI.selectedSkill;
+      if (pendingSkill && player.mp < pendingSkill.mpCost) {
+        this.battleUI.addLog("MPが足りない！", "damage");
+        this.battleUI.clearSkillSelection();
+        this.battleUI.renderSkills(battleSkills, player);
+        this.battleUI.onAttack(handler);
+        return;
+      }
+
+      const attackResult = battle.attack(row, col, pendingSkill);
+      if (!attackResult) { this.battleUI.onAttack(handler); return; }
+
+      const { result, playerDmg, enemyDmg, isMine, gridReset, skillConsumed } = attackResult;
+
+      if (skillConsumed && pendingSkill) {
+        player.spendMp(pendingSkill.mpCost);
+        if (pendingSkill.id === "heal") {
+          this.battleUI.addLog("回復スキル発動！HP+10", "heal");
+        } else if (pendingSkill.id === "double_strike") {
+          this.battleUI.addLog("連撃発動！", "attack");
+        } else if (pendingSkill.id === "focus") {
+          this.battleUI.addLog("集中！このターンは攻撃せず、次の攻撃が3倍になる", "heal");
+        }
+        this.battleUI.clearSkillSelection();
+      } else if (pendingSkill && isMine) {
+        this.battleUI.addLog("地雷によりスキルは発動されなかった", "normal");
+      }
 
       if (isMine) {
         this.battleUI.addLog("地雷！攻撃失敗…", "damage");
-      } else {
+      } else if (playerDmg > 0) {
         this.battleUI.addLog(`${enemy.name}に ${playerDmg} ダメージ！`, "attack");
-      }
-      if (enemyDmg > 0) {
-        this.battleUI.addLog(`${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
       }
       if (gridReset) {
         this.battleUI.addLog("新しいグリッドが出現！", "normal");
       }
-
       this.battleUI.update(enemy, player);
       this.battleUI.renderGrid(battle.battleGrid);
+      this.battleUI.renderSkills(battleSkills, player);
       this.onUpdateUI();
 
+      await delay(300);
+
       if (result === "victory") {
+        this.battleUI.addLog(`${enemy.name}を倒した！`, "victory");
+        this.logUI.add(`${enemy.name}を倒した！`);
+        await delay(300);
         this._onVictory(cell, enemy, grid);
       } else if (result === "defeat") {
+        this.battleUI.addLog(`${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
+        this.battleUI.update(enemy, player);
+        this.onUpdateUI();
+        await delay(300);
         this.battleUI.addLog("やられてしまった…", "damage");
         this.logUI.add("やられてしまった…");
+        await delay(300);
         this.battleUI.hide();
         this.onGameOver();
+      } else {
+        this.battleUI.addLog(`${enemy.name}から ${enemyDmg} ダメージを受けた！`, "damage");
+        this.battleUI.update(enemy, player);
+        this.onUpdateUI();
+        this.battleUI.onAttack(handler);
       }
-    });
+    };
+
+    this.battleUI.onAttack(handler);
   }
 
   /** 勝利時：マスを安全化し danger を再計算 */
   _onVictory(cell, enemy, grid) {
-    this.battleUI.addLog(`${enemy.name}を倒した！`, "victory");
-    this.logUI.add(`${enemy.name}を倒した！`);
     this.onSave();
 
     cell.isEnemy = false;

@@ -10,9 +10,10 @@ export class PlayerHudUI {
    * @param {() => import("../core/Player.js").Player} options.getPlayer
    * @param {(itemId: string, fromHand: boolean) => void} options.onUseItem
    */
-  constructor({ getPlayer, onUseItem }) {
+  constructor({ getPlayer, onUseItem, onUseSkill }) {
     this.getPlayer = getPlayer;
     this.onUseItem = onUseItem;
+    this.onUseSkill = onUseSkill || (() => {});
   }
 
   /** 倉庫アイテムリストを再描画 */
@@ -23,6 +24,26 @@ export class PlayerHudUI {
       player.inventory,
       false
     );
+  }
+
+  renderFieldSkills(skills) {
+    const container = document.getElementById("field-skill-list");
+    if (!container) return;
+    container.innerHTML = "";
+    const player = this.getPlayer();
+    if (!skills || skills.length === 0) {
+      container.innerHTML = "<div style=\"color:#777;font-size:0.82rem\">なし</div>";
+      return;
+    }
+    for (const skill of skills) {
+      const btn = document.createElement("button");
+      btn.className = "skill-btn";
+      btn.disabled = player.mp < skill.mpCost;
+      btn.innerHTML = `${skill.name} <span class="skill-cost">MP:${skill.mpCost}</span>`;
+      btn.title = skill.description;
+      btn.onclick = () => this.onUseSkill(skill);
+      container.appendChild(btn);
+    }
   }
 
   _renderItemList(container, items, fromHand) {

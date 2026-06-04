@@ -1,6 +1,13 @@
 import { ITEM_TYPES } from "../core/constants.js";
 import { renderItemIcon } from "./iconBadge.js";
 import { renderGoldLabel } from "../core/menuIcons.js";
+import { SKILL_CONFIG } from "../config/skillConfig.js";
+
+const skillTag = (item) => {
+  if (!item?.skill) return "";
+  const s = SKILL_CONFIG[item.skill];
+  return s ? ` <span class="skill-badge">${s.name}</span>` : "";
+};
 
 /**
  * ショップモーダル（購入・売却）の描画と操作を担当するクラス
@@ -53,7 +60,7 @@ export class ShopUI {
 
   /** 購入タブ */
   _renderBuyTab(player, content) {
-    for (const item of Object.values(ITEM_TYPES)) {
+    for (const item of Object.values(ITEM_TYPES).sort((a, b) => (a.no ?? 999) - (b.no ?? 999))) {
       if (!item.buyPrice) continue;
       const row = document.createElement("div");
       row.className = "shop-row";
@@ -89,8 +96,8 @@ export class ShopUI {
       t.className = "shop-section-title";
       t.textContent = "アイテム";
       content.appendChild(t);
-      for (const id of invIds) {
-        const item = player.inventory[id];
+      for (const item of Object.values(player.inventory).sort((a, b) => (a.no ?? 999) - (b.no ?? 999))) {
+        const id = item.id;
         if (!item.sellPrice) continue;
         const row = document.createElement("div");
         row.className = "shop-row";
@@ -123,15 +130,15 @@ export class ShopUI {
       t.className = "shop-section-title";
       t.textContent = "装備品";
       content.appendChild(t);
-      for (const id of eqIds) {
-        const item = player.equipmentInventory[id];
+      for (const item of Object.values(player.equipmentInventory).sort((a, b) => (a.no ?? 999) - (b.no ?? 999))) {
+        const id = item.id;
         if (!item.sellPrice) continue;
         const countSuffix = item.count > 1 ? ` <span style="color:#aaa">×${item.count}</span>` : "";
         const row = document.createElement("div");
         row.className = "shop-row";
         const info = document.createElement("span");
         info.className = "shop-item-info";
-        info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${countSuffix}</span>`;
+        info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span style="color:#5aaa88;font-size:0.78rem">${item.description}</span>${skillTag(item)}${countSuffix}</span>`;
         const price = document.createElement("span");
         price.className = "shop-item-price";
         price.textContent = `${item.sellPrice}G`;

@@ -19,6 +19,7 @@ import { MinesweeperInputHandler } from "./game/MinesweeperInputHandler.js";
 import { BattleCoordinator } from "./game/BattleCoordinator.js";
 import { AuthFlow } from "./game/AuthFlow.js";
 import { initMenuIcons } from "./core/menuIcons.js";
+import { SKILL_CONFIG } from "./config/skillConfig.js";
 
 /**
  * ゲーム全体のオーケストレータ（ファサード）
@@ -126,7 +127,11 @@ export class GameController {
 
     this.playerHudUI = new PlayerHudUI({
       getPlayer: () => this.player,
-      onUseItem: (itemId, fromHand) => this.itemUsage.useItem(itemId, fromHand)
+      onUseItem: (itemId, fromHand) => this.itemUsage.useItem(itemId, fromHand),
+      onUseSkill: (skill) => {
+        this.minesweeperInput.useFieldSkill(skill);
+        this._refreshFieldSkills();
+      }
     });
 
     // --- 認証 ---
@@ -185,6 +190,14 @@ export class GameController {
   updateUI() {
     this.logUI.updatePlayer(this.player);
     this.playerHudUI.renderItems();
+    this._refreshFieldSkills();
+  }
+
+  _refreshFieldSkills() {
+    const fieldSkills = this.player.activeSkills
+      .map(k => SKILL_CONFIG[k])
+      .filter(s => s && (s.usableIn === "field" || s.usableIn === "both"));
+    this.playerHudUI.renderFieldSkills(fieldSkills);
   }
 
   _updateMonsterList() {

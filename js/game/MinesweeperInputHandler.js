@@ -36,6 +36,46 @@ export class MinesweeperInputHandler {
     this.onCheckClear = onCheckClear;
   }
 
+  useFieldSkill(skill) {
+    const player = this.getPlayer();
+    if (!player || player.mp < skill.mpCost) {
+      this.logUI.add("スキルを使用するにはMPが足りません");
+      return false;
+    }
+    if (skill.id === "heal") {
+      const before = player.hp;
+      player.hp = Math.min(player.hp + 10, player.maxHp);
+      player.spendMp(skill.mpCost);
+      this.logUI.add(`回復スキル発動！HP+${player.hp - before}`);
+      this.onUpdateUI();
+      this.onSave();
+      return true;
+    }
+    if (skill.id === "scout") {
+      const session = this.getSession();
+      const grid = session.grid;
+      if (!grid) return false;
+      const candidates = [];
+      for (let r = 0; r < grid.rows; r++) {
+        for (let c = 0; c < grid.cols; c++) {
+          const cell = grid.cells[r][c];
+          if (!cell.revealed && !cell.isEnemy && !cell.flagged) candidates.push(cell);
+        }
+      }
+      if (candidates.length === 0) {
+        this.logUI.add("開けるマスがない");
+        return false;
+      }
+      const target = candidates[Math.floor(Math.random() * candidates.length)];
+      player.spendMp(skill.mpCost);
+      this.logUI.add(`索敵スキル発動！マスを開けた`);
+      this.onLeft(target);
+      this.onUpdateUI();
+      return true;
+    }
+    return false;
+  }
+
   /** 左クリック（マス開示・コード開き・アイテム取得） */
   onLeft(cell) {
     const session = this.getSession();
@@ -70,6 +110,8 @@ export class MinesweeperInputHandler {
       return;
     }
 
+    this.getPlayer().gainMp(1);
+
     if (cell.danger > 0) {
       cell.element.textContent = cell.danger;
     } else {
@@ -77,6 +119,7 @@ export class MinesweeperInputHandler {
     }
 
     this.onCheckClear();
+    this.onUpdateUI();
   }
 
   /** 右クリック（旗の設置・解除） */
@@ -101,6 +144,7 @@ export class MinesweeperInputHandler {
 
       cell.revealed = true;
       this.gridRenderer.updateCell(cell);
+      this.getPlayer().gainMp(1);
 
       if (cell.danger === 0) {
         this.floodReveal(nr, nc);

@@ -1,4 +1,11 @@
 import { renderItemIcon } from "./iconBadge.js";
+import { SKILL_CONFIG } from "../config/skillConfig.js";
+
+const skillTag = (item) => {
+  if (!item?.skill) return "";
+  const s = SKILL_CONFIG[item.skill];
+  return s ? ` <span class="skill-badge">${s.name}</span>` : "";
+};
 
 /**
  * 装備モーダルの描画と装備・外す操作を担当するクラス
@@ -45,7 +52,7 @@ export class EquipmentUI {
       if (def) {
         const nameEl = document.createElement("span");
         nameEl.className = "eq-item-name";
-        nameEl.innerHTML = `${renderItemIcon(def)}<span>${def.name} <span class="eq-item-stat">${def.description}</span></span>`;
+        nameEl.innerHTML = `${renderItemIcon(def)}<span>${def.name} <span class="eq-item-stat">${def.description}</span>${skillTag(def)}</span>`;
         row.appendChild(nameEl);
         const btn = document.createElement("button");
         btn.className = "eq-unequip-btn";
@@ -72,13 +79,13 @@ export class EquipmentUI {
       listEl.innerHTML = "<div style='color:#555;font-size:0.85rem;padding:8px 0'>装備品なし</div>";
       return;
     }
-    for (const itemId of itemIds) {
-      const item = player.equipmentInventory[itemId];
+    for (const item of Object.values(player.equipmentInventory).sort((a, b) => (a.no ?? 999) - (b.no ?? 999))) {
+      const itemId = item.id;
       const row = document.createElement("div");
       row.className = "eq-inventory-item";
       const info = document.createElement("span");
       info.className = "eq-item-info";
-      info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span class="eq-item-stat">${item.description}</span>${item.count > 1 ? ` ×${item.count}` : ""}</span>`;
+      info.innerHTML = `${renderItemIcon(item)}<span>${item.name} <span class="eq-item-stat">${item.description}</span>${skillTag(item)}${item.count > 1 ? ` ×${item.count}` : ""}</span>`;
       const btn = document.createElement("button");
       btn.className = "eq-equip-btn";
       btn.textContent = "装備";

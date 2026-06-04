@@ -1,4 +1,11 @@
 import { renderItemIcon } from "./iconBadge.js";
+import { SKILL_CONFIG } from "../config/skillConfig.js";
+
+const skillTag = (item) => {
+  if (!item?.skill) return "";
+  const s = SKILL_CONFIG[item.skill];
+  return s ? ` <span class="skill-badge">${s.name}</span>` : "";
+};
 
 /**
  * 倉庫モーダル（閲覧専用）の描画を担当するクラス
@@ -55,8 +62,7 @@ export class InventoryUI {
     const invIds = Object.keys(player.inventory);
     if (invIds.length > 0) {
       addSection("消費アイテム");
-      for (const id of invIds) {
-        const item = player.inventory[id];
+      for (const item of Object.values(player.inventory).sort((a, b) => (a.no ?? 999) - (b.no ?? 999))) {
         addRow(item, item.description, `×${item.count}`);
       }
     }
@@ -64,9 +70,8 @@ export class InventoryUI {
     const eqIds = Object.keys(player.equipmentInventory);
     if (eqIds.length > 0) {
       addSection("装備品");
-      for (const id of eqIds) {
-        const item = player.equipmentInventory[id];
-        addRow(item, item.description, item.count > 1 ? `×${item.count}` : "");
+      for (const item of Object.values(player.equipmentInventory).sort((a, b) => (a.no ?? 999) - (b.no ?? 999))) {
+        addRow(item, item.description + skillTag(item), item.count > 1 ? `×${item.count}` : "");
       }
     }
 

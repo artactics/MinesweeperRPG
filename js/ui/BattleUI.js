@@ -7,23 +7,61 @@ export class BattleUI {
     this.gridEl = document.getElementById("battle-grid");
     this.labelEl = document.getElementById("battle-grid-label");
     this.logEl = document.getElementById("battle-log");
+    this.skillPanel = document.getElementById("battle-skill-panel");
     this.attackCallback = null;
+    this.selectedSkill = null;
+    this._battleSkills = [];
+    this._currentPlayer = null;
   }
 
   show(enemy, player, battleGrid) {
     this.modal.style.display = "flex";
     this.logEl.innerHTML = "";
+    this.selectedSkill = null;
+    this._currentPlayer = player;
     this.update(enemy, player);
     this.renderGrid(battleGrid);
   }
 
   update(enemy, player) {
+    this._currentPlayer = player;
     const img = `<div class="battle-enemy-icon">${renderIconBadge(enemy, "lg")}</div>`;
+    const focusBadge = player.focusActive ? ` <span class="focus-badge">集中中</span>` : "";
     this.text.innerHTML =
       `${img}<br>` +
       `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
       `敵HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
-      `あなたのHP: <strong>${player.hp} / ${player.maxHp}</strong>`;
+      `あなたのHP: <strong>${player.hp} / ${player.maxHp}</strong>` +
+      ` &nbsp; MP: <strong>${player.mp} / ${player.maxMp}</strong>${focusBadge}`;
+  }
+
+  renderSkills(skills, player) {
+    this._battleSkills = skills;
+    this._currentPlayer = player;
+    if (!this.skillPanel) return;
+    if (!skills || skills.length === 0) {
+      this.skillPanel.innerHTML = "";
+      return;
+    }
+    this.skillPanel.innerHTML = "";
+    for (const skill of skills) {
+      const btn = document.createElement("button");
+      btn.className = "skill-btn";
+      const canUse = player.mp >= skill.mpCost;
+      btn.disabled = !canUse;
+      if (this.selectedSkill?.id === skill.id) btn.classList.add("skill-btn--selected");
+      btn.innerHTML = `${skill.name} <span class="skill-cost">MP:${skill.mpCost}</span>`;
+      btn.title = skill.description;
+      btn.onclick = () => {
+        this.selectedSkill = (this.selectedSkill?.id === skill.id) ? null : skill;
+        this.renderSkills(this._battleSkills, this._currentPlayer);
+      };
+      this.skillPanel.appendChild(btn);
+    }
+  }
+
+  clearSkillSelection() {
+    this.selectedSkill = null;
   }
 
 

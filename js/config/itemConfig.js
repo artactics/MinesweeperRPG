@@ -20,21 +20,21 @@ const EQ_IMG   = (file) => `./asset/image/equipment/${file}`;
 
 export const ITEM_CONFIG = {
   POTION: {
-    id: "potion", name: "回復薬",
+    no: 1, id: "potion", name: "回復薬",
     iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#66BB6A",
     minDungeon: 1, description: "HP+10回復",
     effect: { type: "heal", value: 10 }, healScale: 3,
     buyPrice: 30, sellPrice: 12
   },
   SUPER_POTION: {
-    id: "super_potion", name: "超回復薬",
+    no: 2, id: "super_potion", name: "超回復薬",
     iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#42A5F5",
     minDungeon: 3, description: "HP+20回復",
     effect: { type: "heal", value: 20 }, healScale: 5,
     buyPrice: 60, sellPrice: 24
   },
   ATTACK_BOOST: {
-    id: "attack_boost", name: "攻撃力UP",
+    no: 3, id: "attack_boost", name: "攻撃力UP",
     iconUrl: EQ_IMG("sword.svg"), iconColor: "#EF5350",
     minDungeon: 2, description: "ATK+3",
     effect: { type: "atk", value: 3 }, atkScale: 1,

@@ -6,6 +6,8 @@ export class LogUI {
     this.playerMaxHpEl = document.getElementById("player-max-hp");
     this.playerAtkEl = document.getElementById("player-atk");
     this.playerExpEl = document.getElementById("player-exp");
+    this.playerMpEl = document.getElementById("player-mp");
+    this.playerMaxMpEl = document.getElementById("player-max-mp");
   }
 
   add(message) {
@@ -24,5 +26,7 @@ export class LogUI {
     const bonus = player.bonusAtk || 0;
     this.playerAtkEl.textContent = bonus > 0 ? `${player.atk + bonus}(+${bonus})` : player.atk;
     this.playerExpEl.textContent = player.exp;
+    if (this.playerMpEl)    this.playerMpEl.textContent    = player.mp    ?? "?";
+    if (this.playerMaxMpEl) this.playerMaxMpEl.textContent = player.maxMp ?? "?";
   }
 }

@@ -34,6 +34,9 @@ export class Player {
         legs:   this._restoreEquipped(se.legs)
       };
       this.equipmentInventory = this._rehydrateStash(savedData.equipmentInventory || {});
+      this.maxMp = this._calcMaxMp(this.level);
+      this.mp = savedData.mp !== undefined ? Math.min(savedData.mp, this.maxMp) : this.maxMp;
+      this.focusActive = false;
     } else {
       this.level = 1;
       this.maxHp = GAME_CONFIG.PLAYER_INITIAL_HP;
@@ -46,6 +49,9 @@ export class Player {
       this.equipmentInventory = {};
       this.gold = 0;
       this.bonusAtk = 0;
+      this.maxMp = this._calcMaxMp(1);
+      this.mp = this.maxMp;
+      this.focusActive = false;
     }
   }
 
@@ -64,6 +70,32 @@ export class Player {
     this.checkLevelUp();
   }
 
+  _calcMaxMp(level) {
+    return 10 + Math.floor(level * 2.5);
+  }
+
+  gainMp(amount) {
+    this.mp = Math.min(this.mp + amount, this.maxMp);
+  }
+
+  spendMp(amount) {
+    if (this.mp < amount) return false;
+    this.mp -= amount;
+    return true;
+  }
+
+  get activeSkills() {
+    const seen = new Set();
+    const skills = [];
+    for (const item of Object.values(this.equipped)) {
+      if (item?.skill && !seen.has(item.skill)) {
+        seen.add(item.skill);
+        skills.push(item.skill);
+      }
+    }
+    return skills;
+  }
+
   checkLevelUp() {
     const need = this.level * GAME_CONFIG.EXP_PER_LEVEL;
     while (this.exp >= need) {
@@ -72,6 +104,8 @@ export class Player {
       this.maxHp += GAME_CONFIG.HP_GAIN_PER_LEVEL;
       this.atk += GAME_CONFIG.ATK_GAIN_PER_LEVEL;
       this.hp = this.maxHp;
+      this.maxMp = this._calcMaxMp(this.level);
+      this.mp = Math.min(this.mp + 5, this.maxMp);
     }
   }
 
@@ -197,6 +231,7 @@ export class Player {
       atk: this.atk,
       exp: this.exp,
       gold: this.gold,
+      mp: this.mp,
       inventory: this.inventory,
       equipped: this.equipped,
       equipmentInventory: this.equipmentInventory
