@@ -169,10 +169,9 @@ export class DungeonSession {
     const lc = this.layerConfig;
     const layerLabel = LAYER_LABELS[this.currentLayer];
 
-    // フロアごとの報酬付与・HP回復
+    // フロアごとの報酬付与
     player.gainExp(lc.expPerFloor);
     player.addGold(lc.goldPerFloor);
-    player.hp = player.maxHp;
     this.totalExpGained += lc.expPerFloor;
     this.totalGoldGained += lc.goldPerFloor;
 
@@ -222,7 +221,7 @@ export class DungeonSession {
         : ITEM_TYPES[drop.id];
       if (!base) continue;
 
-      const item = levelItem(base, this.currentDungeonLevel);
+      const item = drop.category === "equipment" ? base : levelItem(base, this.currentDungeonLevel);
 
       if (drop.category === "equipment") {
         player.addEquipment(item);
