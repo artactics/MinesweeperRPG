@@ -28,5 +28,13 @@ export class LogUI {
     this.playerExpEl.textContent = player.exp;
     if (this.playerMpEl)    this.playerMpEl.textContent    = player.mp    ?? "?";
     if (this.playerMaxMpEl) this.playerMaxMpEl.textContent = player.maxMp ?? "?";
+    const statusEl = document.getElementById("player-status");
+    if (statusEl) {
+      const badges = [];
+      if (player.poison) badges.push(`<span class="status-badge status-poison">毒</span>`);
+      if (player.burn)   badges.push(`<span class="status-badge status-burn">火傷</span>`);
+      if (player.freeze) badges.push(`<span class="status-badge status-freeze">凍傷</span>`);
+      statusEl.innerHTML = badges.join(" ");
+    }
   }
 }

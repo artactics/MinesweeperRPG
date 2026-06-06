@@ -106,7 +106,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 3, gridSize: { rows: 10, cols: 10 }, enemyCount: 14, expPerFloor: 22, goldPerFloor: 38, minPlayerLevel: 3,
+      floorCount: 2, gridSize: { rows: 10, cols: 10 }, enemyCount: 14, expPerFloor: 22, goldPerFloor: 38, minPlayerLevel: 3,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -117,7 +117,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 5, gridSize: { rows: 11, cols: 11 }, enemyCount: 18, expPerFloor: 30, goldPerFloor: 52, minPlayerLevel: 4,
+      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyCount: 18, expPerFloor: 30, goldPerFloor: 52, minPlayerLevel: 4,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -141,7 +141,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 3, gridSize: { rows: 10, cols: 10 }, enemyCount: 16, expPerFloor: 30, goldPerFloor: 48, minPlayerLevel: 4,
+      floorCount: 2, gridSize: { rows: 10, cols: 10 }, enemyCount: 16, expPerFloor: 30, goldPerFloor: 48, minPlayerLevel: 4,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -152,7 +152,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 5, gridSize: { rows: 11, cols: 11 }, enemyCount: 20, expPerFloor: 40, goldPerFloor: 65, minPlayerLevel: 5,
+      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyCount: 20, expPerFloor: 40, goldPerFloor: 65, minPlayerLevel: 5,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -176,7 +176,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyCount: 18, expPerFloor: 40, goldPerFloor: 64, minPlayerLevel: 5,
+      floorCount: 2, gridSize: { rows: 11, cols: 11 }, enemyCount: 18, expPerFloor: 40, goldPerFloor: 64, minPlayerLevel: 5,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -187,7 +187,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 6, gridSize: { rows: 12, cols: 12 }, enemyCount: 23, expPerFloor: 55, goldPerFloor: 88, minPlayerLevel: 6,
+      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyCount: 23, expPerFloor: 55, goldPerFloor: 88, minPlayerLevel: 6,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -211,7 +211,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyCount: 20, expPerFloor:  50, goldPerFloor:  80, minPlayerLevel: 6,
+      floorCount: 2, gridSize: { rows: 12, cols: 12 }, enemyCount: 20, expPerFloor:  50, goldPerFloor:  80, minPlayerLevel: 6,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -222,7 +222,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 6, gridSize: { rows: 13, cols: 13 }, enemyCount: 26, expPerFloor:  70, goldPerFloor: 112, minPlayerLevel: 7,
+      floorCount: 3, gridSize: { rows: 13, cols: 13 }, enemyCount: 26, expPerFloor:  70, goldPerFloor: 112, minPlayerLevel: 7,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -235,7 +235,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   7: { // 悪魔の領域 ── 悪魔シリーズ（DEMON）
     surface: {
-      floorCount: 2, gridSize: { rows: 11, cols: 11 }, enemyCount: 18, expPerFloor:  52, goldPerFloor:  80, minPlayerLevel: 7,
+      floorCount: 1, gridSize: { rows: 11, cols: 11 }, enemyCount: 18, expPerFloor:  52, goldPerFloor:  80, minPlayerLevel: 7,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -246,7 +246,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 4, gridSize: { rows: 12, cols: 12 }, enemyCount: 22, expPerFloor:  65, goldPerFloor: 105, minPlayerLevel: 7,
+      floorCount: 2, gridSize: { rows: 12, cols: 12 }, enemyCount: 22, expPerFloor:  65, goldPerFloor: 105, minPlayerLevel: 7,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -257,7 +257,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 7, gridSize: { rows: 13, cols: 13 }, enemyCount: 28, expPerFloor:  90, goldPerFloor: 145, minPlayerLevel: 8,
+      floorCount: 3, gridSize: { rows: 13, cols: 13 }, enemyCount: 28, expPerFloor:  90, goldPerFloor: 145, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -270,7 +270,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   8: { // 魔王の城 ── 魔王シリーズ（LORD）
     surface: {
-      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyCount: 20, expPerFloor:  80, goldPerFloor: 120, minPlayerLevel: 8,
+      floorCount: 1, gridSize: { rows: 12, cols: 12 }, enemyCount: 20, expPerFloor:  80, goldPerFloor: 120, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -281,7 +281,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 5, gridSize: { rows: 13, cols: 13 }, enemyCount: 25, expPerFloor: 100, goldPerFloor: 162, minPlayerLevel: 8,
+      floorCount: 2, gridSize: { rows: 13, cols: 13 }, enemyCount: 25, expPerFloor: 100, goldPerFloor: 162, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -292,7 +292,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 8, gridSize: { rows: 14, cols: 14 }, enemyCount: 32, expPerFloor: 140, goldPerFloor: 225, minPlayerLevel: 8,
+      floorCount: 3, gridSize: { rows: 14, cols: 14 }, enemyCount: 32, expPerFloor: 140, goldPerFloor: 225, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },

@@ -59,6 +59,10 @@ export class DungeonSession {
     this.discardDungeonEquipment();
     player.handItems = {};
     player.hp = player.maxHp;
+    player.mp = player.maxMp;
+    player.poison = false;
+    player.burn   = false;
+    player.freeze = false;
     this.dungeonEquipmentGained = [];
 
     this.currentDungeonLevel = level;
@@ -186,6 +190,9 @@ export class DungeonSession {
 
     // 全フロアクリア
     this.logUI.add(`${config.name} ${layerLabel} 全${this.totalFloors}F クリア！`);
+    player.poison = false;
+    player.burn   = false;
+    player.freeze = false;
 
     const { gainedItems, gainedEquipment } = this._rollDrops();
     this.dungeonEquipmentGained = [];

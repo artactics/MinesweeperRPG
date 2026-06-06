@@ -39,5 +39,26 @@ export const ITEM_CONFIG = {
     minDungeon: 2, description: "ATK+3",
     effect: { type: "atk", value: 3 }, atkScale: 1,
     buyPrice: 80, sellPrice: 32
+  },
+  ANTIDOTE: {
+    no: 4, id: "antidote", name: "解毒薬",
+    iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#a050d0",
+    minDungeon: 1, description: "毒状態を解除する",
+    effect: { type: "cure_poison" },
+    buyPrice: 40, sellPrice: 16
+  },
+  FIRE_CURE: {
+    no: 5, id: "fire_cure", name: "解炎薬",
+    iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#ff6030",
+    minDungeon: 1, description: "火傷状態を解除する",
+    effect: { type: "cure_burn" },
+    buyPrice: 40, sellPrice: 16
+  },
+  FREEZE_CURE: {
+    no: 6, id: "freeze_cure", name: "解凍薬",
+    iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#5090d0",
+    minDungeon: 1, description: "凍傷状態を解除する",
+    effect: { type: "cure_freeze" },
+    buyPrice: 40, sellPrice: 16
   }
 };

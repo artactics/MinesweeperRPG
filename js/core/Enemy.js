@@ -9,5 +9,10 @@ export class Enemy {
     this.maxHp = this.hp;
     this.atk   = type ? (isElite ? Math.ceil(type.baseAtk * 1.5) : type.baseAtk)     : 3;
     this.exp   = type ? (isElite ? type.baseExp * 3       : type.baseExp)             : 5;
+    this.chargeActive = false;
+    this.breathActive = null;
+    this.poison = false;
+    this.burn = false;
+    this.freeze = false;
   }
 }

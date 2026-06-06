@@ -37,6 +37,10 @@ export class Player {
       this.maxMp = this._calcMaxMp(this.level);
       this.mp = savedData.mp !== undefined ? Math.min(savedData.mp, this.maxMp) : this.maxMp;
       this.focusActive = false;
+      this.guardActive = false;
+      this.poison = false;
+      this.burn = false;
+      this.freeze = false;
     } else {
       this.level = 1;
       this.maxHp = GAME_CONFIG.PLAYER_INITIAL_HP;
@@ -52,6 +56,10 @@ export class Player {
       this.maxMp = this._calcMaxMp(1);
       this.mp = this.maxMp;
       this.focusActive = false;
+      this.guardActive = false;
+      this.poison = false;
+      this.burn = false;
+      this.freeze = false;
     }
   }
 

@@ -39,7 +39,7 @@ const SERIES_COLOR = {
  */
 export const EQUIPMENT_SERIES = {
   1: { // スライムシリーズ
-    SLIME_SWORD:  { no:  1, id: "slime_sword",  name: "スライムの剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[1], slot: "weapon", category: "equipment", atk:  2,  description: "ATK+2",    minDungeon: 1, sellPrice:  15, skill: "HEAL" },
+    SLIME_SWORD:  { no:  1, id: "slime_sword",  name: "スライムの剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[1], slot: "weapon", category: "equipment", atk:  2,  description: "ATK+2",    minDungeon: 1, sellPrice:  15, skill: "DRAIN" },
     SLIME_HELM:   { no:  2, id: "slime_helm",   name: "スライムの兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[1], slot: "head",   category: "equipment", maxHp: 5, description: "MaxHP+5",  minDungeon: 1, sellPrice:  10, skill: "HEAL" },
     SLIME_ARMOR:  { no:  3, id: "slime_armor",  name: "スライムの鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[1], slot: "body",   category: "equipment", maxHp: 8, description: "MaxHP+8",  minDungeon: 1, sellPrice:  16, skill: "FOCUS" },
     SLIME_BOOTS:  { no:  4, id: "slime_boots",  name: "スライムの脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[1], slot: "legs",   category: "equipment", maxHp: 3, description: "MaxHP+3",  minDungeon: 1, sellPrice:   6, skill: "SCOUT" },
@@ -64,27 +64,27 @@ export const EQUIPMENT_SERIES = {
   },
   5: { // 亡者シリーズ
     DEAD_SWORD:  { no: 17, id: "dead_sword",  name: "亡者の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[5], slot: "weapon", category: "equipment", atk:  15,  description: "ATK+15",   minDungeon: 5, sellPrice:  85, skill: "DOUBLE_STRIKE" },
-    DEAD_HELM:   { no: 18, id: "dead_helm",   name: "亡者の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[5], slot: "head",   category: "equipment", maxHp: 22, description: "MaxHP+22", minDungeon: 5, sellPrice:  44, skill: "HEAL" },
-    DEAD_ARMOR:  { no: 19, id: "dead_armor",  name: "亡者の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[5], slot: "body",   category: "equipment", maxHp: 34, description: "MaxHP+34", minDungeon: 5, sellPrice:  68, skill: "FOCUS" },
-    DEAD_BOOTS:  { no: 20, id: "dead_boots",  name: "亡者の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[5], slot: "legs",   category: "equipment", maxHp: 15, description: "MaxHP+15", minDungeon: 5, sellPrice:  30, skill: "SCOUT" },
+    DEAD_HELM:   { no: 18, id: "dead_helm",   name: "亡者の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[5], slot: "head",   category: "equipment", maxHp: 22, description: "MaxHP+22", minDungeon: 5, sellPrice:  44, skill: "CURE_POISON" },
+    DEAD_ARMOR:  { no: 19, id: "dead_armor",  name: "亡者の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[5], slot: "body",   category: "equipment", maxHp: 34, description: "MaxHP+34", minDungeon: 5, sellPrice:  68, skill: "ICE_MARK" },
+    DEAD_BOOTS:  { no: 20, id: "dead_boots",  name: "亡者の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[5], slot: "legs",   category: "equipment", maxHp: 15, description: "MaxHP+15", minDungeon: 5, sellPrice:  30, skill: "CURE_BURN" },
   },
   6: { // ドラゴンの山脈シリーズ
-    DRAGON_SWORD:  { no: 21, id: "dragon_sword",  name: "竜の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[6], slot: "weapon", category: "equipment", atk:  20,  description: "ATK+20",   minDungeon: 6, sellPrice: 115, skill: "DOUBLE_STRIKE" },
-    DRAGON_HELM:   { no: 22, id: "dragon_helm",   name: "竜の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[6], slot: "head",   category: "equipment", maxHp: 28, description: "MaxHP+28", minDungeon: 6, sellPrice:  56, skill: "HEAL" },
-    DRAGON_ARMOR:  { no: 23, id: "dragon_armor",  name: "竜鱗鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[6], slot: "body",   category: "equipment", maxHp: 43, description: "MaxHP+43", minDungeon: 6, sellPrice:  86, skill: "FOCUS" },
-    DRAGON_BOOTS:  { no: 24, id: "dragon_boots",  name: "竜の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[6], slot: "legs",   category: "equipment", maxHp: 19, description: "MaxHP+19", minDungeon: 6, sellPrice:  38, skill: "SCOUT" },
+    DRAGON_SWORD:  { no: 21, id: "dragon_sword",  name: "竜の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[6], slot: "weapon", category: "equipment", atk:  20,  description: "ATK+20",   minDungeon: 6, sellPrice: 115, skill: "DRAIN" },
+    DRAGON_HELM:   { no: 22, id: "dragon_helm",   name: "竜の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[6], slot: "head",   category: "equipment", maxHp: 28, description: "MaxHP+28", minDungeon: 6, sellPrice:  56, skill: "GUARD" },
+    DRAGON_ARMOR:  { no: 23, id: "dragon_armor",  name: "竜鱗鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[6], slot: "body",   category: "equipment", maxHp: 43, description: "MaxHP+43", minDungeon: 6, sellPrice:  86, skill: "POISON_MARK" },
+    DRAGON_BOOTS:  { no: 24, id: "dragon_boots",  name: "竜の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[6], slot: "legs",   category: "equipment", maxHp: 19, description: "MaxHP+19", minDungeon: 6, sellPrice:  38, skill: "FIRE_MARK" },
   },
   7: { // 悪魔の領域シリーズ
-    DEMON_SWORD:  { no: 25, id: "demon_sword",  name: "悪魔の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[7], slot: "weapon", category: "equipment", atk:  26,  description: "ATK+26",   minDungeon: 7, sellPrice: 150, skill: "DOUBLE_STRIKE" },
-    DEMON_HELM:   { no: 26, id: "demon_helm",   name: "悪魔の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[7], slot: "head",   category: "equipment", maxHp: 35, description: "MaxHP+35", minDungeon: 7, sellPrice:  70, skill: "HEAL" },
-    DEMON_ARMOR:  { no: 27, id: "demon_armor",  name: "悪魔の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[7], slot: "body",   category: "equipment", maxHp: 54, description: "MaxHP+54", minDungeon: 7, sellPrice: 108, skill: "FOCUS" },
-    DEMON_BOOTS:  { no: 28, id: "demon_boots",  name: "悪魔の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[7], slot: "legs",   category: "equipment", maxHp: 24, description: "MaxHP+24", minDungeon: 7, sellPrice:  48, skill: "SCOUT" },
+    DEMON_SWORD:  { no: 25, id: "demon_sword",  name: "悪魔の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[7], slot: "weapon", category: "equipment", atk:  26,  description: "ATK+26",   minDungeon: 7, sellPrice: 150, skill: "DRAIN" },
+    DEMON_HELM:   { no: 26, id: "demon_helm",   name: "悪魔の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[7], slot: "head",   category: "equipment", maxHp: 35, description: "MaxHP+35", minDungeon: 7, sellPrice:  70, skill: "GUARD" },
+    DEMON_ARMOR:  { no: 27, id: "demon_armor",  name: "悪魔の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[7], slot: "body",   category: "equipment", maxHp: 54, description: "MaxHP+54", minDungeon: 7, sellPrice: 108, skill: "POISON_MARK" },
+    DEMON_BOOTS:  { no: 28, id: "demon_boots",  name: "悪魔の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[7], slot: "legs",   category: "equipment", maxHp: 24, description: "MaxHP+24", minDungeon: 7, sellPrice:  48, skill: "CURE_FREEZE" },
   },
   8: { // 魔王の城シリーズ
-    LORD_SWORD:  { no: 29, id: "lord_sword",  name: "魔王の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[8], slot: "weapon", category: "equipment", atk:  33,  description: "ATK+33",   minDungeon: 8, sellPrice: 190, skill: "DOUBLE_STRIKE" },
-    LORD_HELM:   { no: 30, id: "lord_helm",   name: "魔王の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[8], slot: "head",   category: "equipment", maxHp: 43, description: "MaxHP+43", minDungeon: 8, sellPrice:  86, skill: "HEAL" },
-    LORD_ARMOR:  { no: 31, id: "lord_armor",  name: "魔王の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[8], slot: "body",   category: "equipment", maxHp: 66, description: "MaxHP+66", minDungeon: 8, sellPrice: 132, skill: "FOCUS" },
-    LORD_BOOTS:  { no: 32, id: "lord_boots",  name: "魔王の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[8], slot: "legs",   category: "equipment", maxHp: 30, description: "MaxHP+30", minDungeon: 8, sellPrice:  60, skill: "SCOUT" },
+    LORD_SWORD:  { no: 29, id: "lord_sword",  name: "魔王の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[8], slot: "weapon", category: "equipment", atk:  33,  description: "ATK+33",   minDungeon: 8, sellPrice: 190, skill: "DRAIN" },
+    LORD_HELM:   { no: 30, id: "lord_helm",   name: "魔王の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[8], slot: "head",   category: "equipment", maxHp: 43, description: "MaxHP+43", minDungeon: 8, sellPrice:  86, skill: "GUARD" },
+    LORD_ARMOR:  { no: 31, id: "lord_armor",  name: "魔王の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[8], slot: "body",   category: "equipment", maxHp: 66, description: "MaxHP+66", minDungeon: 8, sellPrice: 132, skill: "POISON_MARK" },
+    LORD_BOOTS:  { no: 32, id: "lord_boots",  name: "魔王の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[8], slot: "legs",   category: "equipment", maxHp: 30, description: "MaxHP+30", minDungeon: 8, sellPrice:  60, skill: "FIRE_MARK" },
   },
 };
 

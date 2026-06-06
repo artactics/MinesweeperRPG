@@ -26,13 +26,19 @@ export class BattleUI {
   update(enemy, player) {
     this._currentPlayer = player;
     const img = `<div class="battle-enemy-icon">${renderIconBadge(enemy, "lg")}</div>`;
-    const focusBadge = player.focusActive ? ` <span class="focus-badge">集中中</span>` : "";
+    const focusBadge  = player.focusActive ? ` <span class="focus-badge">集中中</span>` : "";
+    const pPoison     = player.poison  ? ` <span class="status-badge status-poison">毒</span>` : "";
+    const pBurn       = player.burn    ? ` <span class="status-badge status-burn">火傷</span>` : "";
+    const pFreeze     = player.freeze  ? ` <span class="status-badge status-freeze">凍傷</span>` : "";
+    const ePoison     = enemy.poison   ? ` <span class="status-badge status-poison">毒</span>` : "";
+    const eBurn       = enemy.burn     ? ` <span class="status-badge status-burn">火傷</span>` : "";
+    const eFreeze     = enemy.freeze   ? ` <span class="status-badge status-freeze">凍傷</span>` : "";
     this.text.innerHTML =
       `${img}<br>` +
-      `<strong style="color: ${enemy.color}">${enemy.name}</strong><br>` +
+      `<strong style="color: ${enemy.color}">${enemy.name}</strong>${ePoison}${eBurn}${eFreeze}<br>` +
       `敵HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
       `あなたのHP: <strong>${player.hp} / ${player.maxHp}</strong>` +
-      ` &nbsp; MP: <strong>${player.mp} / ${player.maxMp}</strong>${focusBadge}`;
+      ` &nbsp; MP: <strong>${player.mp} / ${player.maxMp}</strong>${focusBadge}${pPoison}${pBurn}${pFreeze}`;
   }
 
   renderSkills(skills, player) {

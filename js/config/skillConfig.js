@@ -28,5 +28,45 @@ export const SKILL_CONFIG = {
     id: "focus", name: "集中", mpCost: 6,
     usableIn: "battle",
     description: "次の攻撃が3倍ダメージ"
+  },
+  DRAIN: {
+    id: "drain", name: "ドレイン", mpCost: 8,
+    usableIn: "battle",
+    description: "100%ダメージ、与えダメージの50%回復"
+  },
+  GUARD: {
+    id: "guard", name: "ガード", mpCost: 5,
+    usableIn: "battle",
+    description: "攻撃せず、このターン被ダメージ50%カット"
+  },
+  POISON_MARK: {
+    id: "poison_mark", name: "毒印", mpCost: 6,
+    usableIn: "battle",
+    description: "攻撃せず、敵を毒状態にする"
+  },
+  FIRE_MARK: {
+    id: "fire_mark", name: "火印", mpCost: 6,
+    usableIn: "battle",
+    description: "攻撃せず、敵を火傷状態にする"
+  },
+  ICE_MARK: {
+    id: "ice_mark", name: "冷印", mpCost: 6,
+    usableIn: "battle",
+    description: "攻撃せず、敵を凍傷状態にする"
+  },
+  CURE_POISON: {
+    id: "cure_poison", name: "解毒", mpCost: 4,
+    usableIn: "both",
+    description: "攻撃せず、自分の毒状態を解除する"
+  },
+  CURE_BURN: {
+    id: "cure_burn", name: "解炎", mpCost: 4,
+    usableIn: "both",
+    description: "攻撃せず、自分の火傷状態を解除する"
+  },
+  CURE_FREEZE: {
+    id: "cure_freeze", name: "解凍", mpCost: 4,
+    usableIn: "both",
+    description: "攻撃せず、自分の凍傷状態を解除する"
   }
 };

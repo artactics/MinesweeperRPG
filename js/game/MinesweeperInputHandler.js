@@ -51,6 +51,20 @@ export class MinesweeperInputHandler {
       this.onSave();
       return true;
     }
+    if (skill.id === "cure_poison" || skill.id === "cure_burn" || skill.id === "cure_freeze") {
+      const key = skill.id === "cure_poison" ? "poison" : skill.id === "cure_burn" ? "burn" : "freeze";
+      if (!player[key]) {
+        this.logUI.add(`${skill.name}：状態異常になっていません`);
+        return false;
+      }
+      player[key] = false;
+      player.spendMp(skill.mpCost);
+      const label = skill.id === "cure_poison" ? "毒" : skill.id === "cure_burn" ? "火傷" : "凍傷";
+      this.logUI.add(`${skill.name}発動！${label}を解除した`);
+      this.onUpdateUI();
+      this.onSave();
+      return true;
+    }
     if (skill.id === "scout") {
       const session = this.getSession();
       const grid = session.grid;

@@ -42,6 +42,18 @@ export class ItemUsageService {
         player.hp += effect.value;
         this.logUI.add(`${item.name}を使用！ 最大HP+${effect.value}`);
         break;
+      case "cure_poison":
+        player.poison = false;
+        this.logUI.add(`${item.name}を使用！ 毒が治った`);
+        break;
+      case "cure_burn":
+        player.burn = false;
+        this.logUI.add(`${item.name}を使用！ 火傷が治った`);
+        break;
+      case "cure_freeze":
+        player.freeze = false;
+        this.logUI.add(`${item.name}を使用！ 凍傷が治った`);
+        break;
     }
 
     player.removeItem(itemId, fromHand);

@@ -1401,6 +1401,34 @@ button:hover {
 .battle-log-heal   { color: #7ed86a; }
 .battle-log-normal { color: #aaa; }
 
+.status-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  padding: 0px 5px;
+  border-radius: 8px;
+  margin-left: 3px;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.status-poison {
+  background: #2a0a3a;
+  border: 1px solid #a050d0;
+  color: #d090ff;
+}
+
+.status-burn {
+  background: #3a1000;
+  border: 1px solid #ff6030;
+  color: #ffaa70;
+}
+
+.status-freeze {
+  background: #001a3a;
+  border: 1px solid #5090d0;
+  color: #80c0ff;
+}
+
 .skill-badge {
   display: inline-block;
   background: #1a3a5a;
