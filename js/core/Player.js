@@ -73,6 +73,8 @@ export class Player {
     return true;
   }
 
+  get expToNext() { return this.level * GAME_CONFIG.EXP_PER_LEVEL; }
+
   gainExp(amount) {
     this.exp += amount;
     this.checkLevelUp();

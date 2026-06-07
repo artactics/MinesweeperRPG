@@ -28,6 +28,10 @@ export class LogUI {
     this.playerExpEl.textContent = player.exp;
     if (this.playerMpEl)    this.playerMpEl.textContent    = player.mp    ?? "?";
     if (this.playerMaxMpEl) this.playerMaxMpEl.textContent = player.maxMp ?? "?";
+    const hpBar = document.getElementById("field-hp-bar");
+    const mpBar = document.getElementById("field-mp-bar");
+    if (hpBar) hpBar.style.width = `${Math.min(100, Math.round(player.hp / player.maxHp * 100))}%`;
+    if (mpBar) mpBar.style.width = `${Math.min(100, Math.round((player.mp ?? 0) / (player.maxMp || 1) * 100))}%`;
     const statusEl = document.getElementById("player-status");
     if (statusEl) {
       const badges = [];

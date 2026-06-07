@@ -1,10 +1,12 @@
 import { DIRECTIONS, ENEMY_TYPES } from "./constants.js";
 
 export class Grid {
-  constructor(rows, cols, enemyCount, enemyTypes = null, dungeonLevel = 1) {
+  constructor(rows, cols, enemySpawn, enemyTypes = null, dungeonLevel = 1) {
     this.rows = rows;
     this.cols = cols;
-    this.enemyCount = enemyCount;
+    this.enemySpawn = typeof enemySpawn === "number"
+      ? { normal: enemySpawn, elite: 1, master: 0 }
+      : enemySpawn;
     this.enemyTypes = enemyTypes || Object.keys(ENEMY_TYPES);
     this.dungeonLevel = dungeonLevel;
     this.cells = [];
@@ -23,6 +25,7 @@ export class Grid {
           enemyType: null,
           revealed: false,
           flagged: false,
+          flagType: 0,
           danger: 0
         });
       }
@@ -32,38 +35,29 @@ export class Grid {
     this.calcDanger();
   }
 
-  placeEnemies() {
-    let placed = 0;
+  _placeTier(count, isElite, isMaster) {
     const maxAttempts = this.rows * this.cols * 10;
-    let attempts = 0;
-
-    while (placed < this.enemyCount && attempts < maxAttempts) {
+    let placed = 0, attempts = 0;
+    while (placed < count && attempts < maxAttempts) {
       const r = Math.floor(Math.random() * this.rows);
       const c = Math.floor(Math.random() * this.cols);
       if (!this.cells[r][c].isEnemy) {
-        const enemyTypeKey = this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
-        this.cells[r][c].isEnemy = true;
-        this.cells[r][c].isElite = false;
-        this.cells[r][c].enemyType = ENEMY_TYPES[enemyTypeKey];
+        const key = this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
+        this.cells[r][c].isEnemy  = true;
+        this.cells[r][c].isElite  = isElite;
+        this.cells[r][c].isMaster = isMaster;
+        this.cells[r][c].enemyType = ENEMY_TYPES[key];
         placed++;
       }
       attempts++;
     }
+  }
 
-    // エリートを必ず1体配置
-    attempts = 0;
-    while (attempts < maxAttempts) {
-      const r = Math.floor(Math.random() * this.rows);
-      const c = Math.floor(Math.random() * this.cols);
-      if (!this.cells[r][c].isEnemy) {
-        const enemyTypeKey = this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
-        this.cells[r][c].isEnemy = true;
-        this.cells[r][c].isElite = true;
-        this.cells[r][c].enemyType = ENEMY_TYPES[enemyTypeKey];
-        break;
-      }
-      attempts++;
-    }
+  placeEnemies() {
+    const { normal = 0, elite = 0, master = 0 } = this.enemySpawn;
+    this._placeTier(normal, false, false);
+    this._placeTier(elite,  true,  false);
+    this._placeTier(master, false, true);
   }
 
   calcDanger() {
@@ -75,7 +69,7 @@ export class Grid {
           const nc = c + dc;
           if (nr >= 0 && nr < this.rows && nc >= 0 && nc < this.cols) {
             const nb = this.cells[nr][nc];
-            if (nb.isEnemy) count += nb.isElite ? 2 : 1;
+            if (nb.isEnemy) count += nb.isMaster ? 3 : nb.isElite ? 2 : 1;
           }
         }
         this.cells[r][c].danger = count;
@@ -102,7 +96,7 @@ export class Grid {
       const nc = c + dc;
       if (nr < 0 || nr >= this.rows || nc < 0 || nc >= this.cols) continue;
       const nb = this.cells[nr][nc];
-      if (nb.isEnemy) count += nb.isElite ? 2 : 1;
+      if (nb.isEnemy) count += nb.isMaster ? 3 : nb.isElite ? 2 : 1;
     }
     return count;
   }

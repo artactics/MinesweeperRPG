@@ -19,13 +19,15 @@ export class MonsterListUI {
         const cell = grid.cells[r][c];
         if (!cell.isEnemy || cell.revealed) continue;
         const t = cell.enemyType;
-        const key = (cell.isElite ? "elite:" : "normal:") + (t ? t.name : "?");
+        const tier = cell.isMaster ? "master" : cell.isElite ? "elite" : "normal";
+        const key = tier + ":" + (t ? t.name : "?");
         if (!counts[key]) {
           const icon = t ? `${renderItemIcon(t)} ` : "";
           const enemyName = t ? t.name : "?";
+          const suffix = cell.isMaster ? "（マスター）" : cell.isElite ? "（エリート）" : "";
           counts[key] = {
-            label: cell.isElite ? `${icon}${enemyName}（エリート）` : `${icon}${enemyName}`,
-            isElite: cell.isElite,
+            label: `${icon}${enemyName}${suffix}`,
+            tier,
             count: 0
           };
         }
@@ -33,10 +35,11 @@ export class MonsterListUI {
       }
     }
 
+    const tierOrder = { master: 0, elite: 1, normal: 2 };
     const items = Object.values(counts)
-      .sort((a, b) => b.isElite - a.isElite)
+      .sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier])
       .map(e => {
-        const cls = e.isElite ? "monster-elite" : "";
+        const cls = e.tier === "master" ? "monster-master" : e.tier === "elite" ? "monster-elite" : "";
         return `<div class="${cls}">${e.label} ×${e.count}</div>`;
       });
 

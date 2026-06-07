@@ -150,8 +150,14 @@
 
           <div>Lv: <span id="player-level">1</span></div>
 
-          <div>HP: <span id="player-hp">30</span> / <span id="player-max-hp">30</span></div>
-          <div>MP: <span id="player-mp">12</span> / <span id="player-max-mp">12</span></div>
+          <div class="field-stat-bar">
+            <div class="field-stat-bar__label">HP <span id="player-hp">30</span> / <span id="player-max-hp">30</span></div>
+            <div class="rpg-bar"><div class="rpg-bar__fill rpg-bar__fill--hp" id="field-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="field-stat-bar">
+            <div class="field-stat-bar__label">MP <span id="player-mp">12</span> / <span id="player-max-mp">12</span></div>
+            <div class="rpg-bar"><div class="rpg-bar__fill rpg-bar__fill--mp" id="field-mp-bar" style="width:100%"></div></div>
+          </div>
 
           <div id="player-status"></div>
 

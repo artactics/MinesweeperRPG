@@ -36,9 +36,17 @@ export class BattleUI {
     this.text.innerHTML =
       `${img}<br>` +
       `<strong style="color: ${enemy.color}">${enemy.name}</strong>${ePoison}${eBurn}${eFreeze}<br>` +
-      `敵HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong><br>` +
+      `敵HP: <strong>${Math.max(0, enemy.hp)} / ${enemy.maxHp}</strong>` +
+      this._bar(Math.max(0, enemy.hp), enemy.maxHp, "hp-enemy") +
       `あなたのHP: <strong>${player.hp} / ${player.maxHp}</strong>` +
-      ` &nbsp; MP: <strong>${player.mp} / ${player.maxMp}</strong>${focusBadge}${pPoison}${pBurn}${pFreeze}`;
+      this._bar(player.hp, player.maxHp, "hp") +
+      `MP: <strong>${player.mp} / ${player.maxMp}</strong>${focusBadge}${pPoison}${pBurn}${pFreeze}` +
+      this._bar(player.mp, player.maxMp, "mp");
+  }
+
+  _bar(cur, max, type) {
+    const pct = max > 0 ? Math.min(100, Math.round(cur / max * 100)) : 0;
+    return `<div class="btl-bar"><div class="rpg-bar"><div class="rpg-bar__fill rpg-bar__fill--${type}" style="width:${pct}%"></div></div></div>`;
   }
 
   renderSkills(skills, player) {

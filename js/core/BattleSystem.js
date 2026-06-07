@@ -9,10 +9,11 @@ export class BattleSystem {
   }
 
   start(cell) {
-    const isElite = cell.isElite || false;
+    const isElite  = cell.isElite  || false;
+    const isMaster = cell.isMaster || false;
     const enemyType = cell.enemyType || ENEMY_TYPES.SLIME;
-    this.enemy = new Enemy(enemyType, isElite);
-    this.battleGrid = new BattleGrid(isElite ? 3 : 2);
+    this.enemy = new Enemy(enemyType, isElite, isMaster);
+    this.battleGrid = new BattleGrid(isMaster ? 4 : isElite ? 3 : 2);
     return this.enemy;
   }
 

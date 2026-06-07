@@ -96,8 +96,8 @@ export class DungeonSession {
     this.grid = new Grid(
       lc.gridSize.rows,
       lc.gridSize.cols,
-      lc.enemyCount,
-      config.enemyTypes,
+      lc.enemySpawn,
+      lc.enemyTypes || config.enemyTypes,
       this.currentDungeonLevel
     );
 

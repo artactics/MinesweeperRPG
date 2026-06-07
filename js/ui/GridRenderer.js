@@ -90,12 +90,22 @@ export class GridRenderer {
     const el = cell.element;
     el.classList.toggle("revealed", cell.revealed);
     el.classList.toggle("flagged", cell.flagged);
+    el.classList.remove("flag-1", "flag-2", "flag-3");
 
     if (cell.revealed) {
       el.textContent = cell.isEnemy ? "✕" : (cell.danger || "");
       el.style.background = "";
+    } else if (cell.flagType === 1) {
+      el.textContent = "１";
+      el.classList.add("flag-1");
+    } else if (cell.flagType === 2) {
+      el.textContent = "２";
+      el.classList.add("flag-2");
+    } else if (cell.flagType === 3) {
+      el.textContent = "３";
+      el.classList.add("flag-3");
     } else {
-      el.textContent = cell.flagged ? "🚩" : "";
+      el.textContent = "";
       el.style.background = "";
     }
   }

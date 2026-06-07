@@ -110,6 +110,8 @@ export function renderGoldLabel(gold) {
 
 /** ダンジョン選択画面のプレイヤーステータス行 */
 export function renderPlayerStats(player) {
+  const expNeed = player.expToNext;
+  const expPct  = expNeed > 0 ? Math.min(100, Math.round(player.exp / expNeed * 100)) : 0;
   return (
     `<div class="stat-bar">` +
     renderStatPill(`Lv <strong>${player.level}</strong>`, "level") +
@@ -119,6 +121,10 @@ export function renderPlayerStats(player) {
     `${renderIconBadge(MENU_ICONS.coins, "sm")}` +
     `<span>${player.gold}G</span>` +
     `</span>` +
+    `</div>` +
+    `<div class="ds-exp-row">` +
+    `<span class="ds-exp-label">EXP <strong>${player.exp}</strong> / ${expNeed}</span>` +
+    `<div class="rpg-bar"><div class="rpg-bar__fill rpg-bar__fill--exp" style="width:${expPct}%"></div></div>` +
     `</div>`
   );
 }

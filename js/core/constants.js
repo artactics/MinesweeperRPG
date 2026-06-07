@@ -63,18 +63,18 @@ export const DUNGEON_CONFIG = {
 
 export const ENEMY_TYPES = {
   SLIME:    { name: "スライム", iconUrl: ENEMY_IMG("slime.svg"), color: "#4CAF50", baseHp: 10, baseAtk: 2, baseExp: 5, dangerRange: [0, 2],
-    skills: [] },
+    skills: [{ id: "drain", chance: 0.20 }] },
   GOBLIN:   { name: "ゴブリン", iconUrl: ENEMY_IMG("goblin.svg"), color: "#8BC34A", baseHp: 20, baseAtk: 4, baseExp: 8, dangerRange: [1, 4],
-    skills: [{ id: "power_attack", chance: 0.20 }] },
+    skills: [{ id: "charge", chance: 0.20 }] },
   WOLF:     { name: "オオカミ", iconUrl: ENEMY_IMG("wolf.svg"), color: "#A1887F", baseHp: 40, baseAtk: 7, baseExp: 10, dangerRange: [2, 5],
-    skills: [{ id: "power_attack", chance: 0.25 }, { id: "regen", chance: 0.20 }, { id: "fire_mark", chance: 0.15 }] },
+    skills: [{ id: "fire_mark", chance: 0.20 }] },
   ORC:      { name: "オーク", iconUrl: ENEMY_IMG("orc.svg"), color: "#FF9800", baseHp: 70, baseAtk: 11, baseExp: 12, dangerRange: [3, 6],
-    skills: [{ id: "power_attack", chance: 0.30 }, { id: "regen", chance: 0.20 }, { id: "ice_mark", chance: 0.15 }] },
+    skills: [{ id: "ice_mark", chance: 0.20 }] },
   SKELETON: { name: "スケルトン", iconUrl: ENEMY_IMG("skeleton.svg"), color: "#E0E0E0", baseHp: 110, baseAtk: 16, baseExp: 15, dangerRange: [4, 7],
-    skills: [{ id: "power_attack", chance: 0.20 }, { id: "poison_mark", chance: 0.20 }, { id: "ice_mark", chance: 0.20 }] },
+    skills: [{ id: "regen", chance: 0.40 }, { id: "poison_mark", chance: 0.20 }] },
   DRAGON:   { name: "ドラゴン", iconUrl: ENEMY_IMG("dragon.svg"), color: "#F44336", baseHp: 160, baseAtk: 22, baseExp: 20, dangerRange: [5, 8],
-    skills: [{ id: "power_attack", chance: 0.20 }, { id: "charge", chance: 0.20 }, { id: "flame_breath", chance: 0.20 }, { id: "ice_breath", chance: 0.15 }] },
+    skills: [{ id: "flame_breath", chance: 0.20 }] },
   DEMON:    { name: "デーモン", iconUrl: ENEMY_IMG("demon.svg"), color: "#CE93D8", baseHp: 230, baseAtk: 29, baseExp: 25, dangerRange: [6, 8],
-    skills: [{ id: "power_attack", chance: 0.20 }, { id: "drain", chance: 0.20 }, { id: "charge", chance: 0.15 }, { id: "flame_breath", chance: 0.15 }, { id: "poison_breath", chance: 0.15 }, { id: "ice_breath", chance: 0.15 }] }
+    skills: [{ id: "poison_breath", chance: 0.20 }, { id: "ice_breath", chance: 0.20 }] }
 };
 
