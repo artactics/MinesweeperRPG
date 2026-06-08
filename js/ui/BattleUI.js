@@ -126,6 +126,25 @@ export class BattleUI {
     this.modal.style.display = "none";
   }
 
+  hitFlash() {
+    const el = this.modal.querySelector(".battle-enemy-icon");
+    if (!el) return;
+    el.classList.remove("hit-flash");
+    void el.offsetWidth;
+    el.classList.add("hit-flash");
+    el.addEventListener("animationend", () => el.classList.remove("hit-flash"), { once: true });
+  }
+
+  showDamageFloat(value) {
+    const container = this.modal.querySelector(".battle-enemy-icon");
+    if (!container) return;
+    const el = document.createElement("span");
+    el.className = "dmg-float";
+    el.textContent = `-${value}`;
+    container.appendChild(el);
+    el.addEventListener("animationend", () => el.remove(), { once: true });
+  }
+
   onAttack(callback) {
     this.attackCallback = callback;
   }

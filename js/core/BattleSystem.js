@@ -36,7 +36,7 @@ export class BattleSystem {
         switch (skill.id) {
           case "double_strike": playerDmg *= 2; skillConsumed = true; break;
           case "focus":         this.player.focusActive = true; playerDmg = 0; skillConsumed = true; break;
-          case "heal":          this.player.hp = Math.min(this.player.hp + 10, this.player.maxHp); skillConsumed = true; break;
+          case "heal":          this.player.hp = Math.min(this.player.hp + 10, this.player.maxHp); playerDmg = 0; skillConsumed = true; break;
           case "drain":         playerHeal = Math.floor(playerDmg * 0.5); this.player.hp = Math.min(this.player.hp + playerHeal, this.player.maxHp); skillConsumed = true; break;
           case "guard":         this.player.guardActive = true; playerDmg = 0; skillConsumed = true; break;
           case "poison_mark":   this.enemy.poison  = true; playerDmg = 0; enemyStatusInflicted = "poison"; skillConsumed = true; break;

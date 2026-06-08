@@ -181,6 +181,7 @@ export class GameController {
   enterDungeon(level, layer) {
     if (!this.dungeonSession.enter(level, layer)) return;
     this._updateMonsterList();
+    this._updateFloorProgress();
     this.updateUI();
     this.screenNavigator.showDungeonPlay();
   }
@@ -204,6 +205,13 @@ export class GameController {
     this.monsterListUI.render(this.dungeonSession.grid);
   }
 
+  _updateFloorProgress() {
+    const el = document.getElementById("floor-progress");
+    if (!el) return;
+    const s = this.dungeonSession;
+    el.textContent = `${s.currentFloor}F / ${s.totalFloors}F`;
+  }
+
   // --- セーブ ---
 
   async saveGameData(dungeonClear = false) {
@@ -218,6 +226,7 @@ export class GameController {
 
     if (result.status === "advance") {
       this._updateMonsterList();
+      this._updateFloorProgress();
       this.updateUI();
       this.saveGameData();
       return true;

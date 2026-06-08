@@ -103,10 +103,10 @@ export class MinesweeperInputHandler {
     if (cell.flagged) return;
 
     if (cell.revealed) {
-      // コード開き：周囲の旗の数が danger と一致すれば隣接マスを一括開封
+      // コード開き：周囲の旗の値の合計が danger と一致すれば隣接マスを一括開封
       if (cell.danger > 0) {
         const neighbors = grid.getNeighbors(cell);
-        const flagCount = neighbors.filter(n => n.flagged).length;
+        const flagCount = neighbors.reduce((s, n) => s + (n.flagType || (n.flagged ? 1 : 0)), 0);
         if (flagCount === cell.danger) {
           for (const n of neighbors.filter(n => !n.flagged && !n.revealed)) {
             this.onLeft(n);

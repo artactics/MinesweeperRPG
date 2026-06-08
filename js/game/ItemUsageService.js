@@ -54,6 +54,15 @@ export class ItemUsageService {
         player.freeze = false;
         this.logUI.add(`${item.name}を使用！ 凍傷が治った`);
         break;
+      case "mp_heal":
+        player.mp = Math.min(player.mp + effect.value, player.maxMp);
+        this.logUI.add(`${item.name}を使用！ MPを${effect.value}回復`);
+        break;
+      case "elixir":
+        player.hp = player.maxHp;
+        player.mp = player.maxMp;
+        this.logUI.add(`${item.name}を使用！ HP・MP全回復！`);
+        break;
     }
 
     player.removeItem(itemId, fromHand);

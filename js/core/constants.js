@@ -20,10 +20,13 @@ export function levelItem(base, dungeonLevel) {
   } else {
     const val = base.effect.value
       + (base.healScale || 0) * extra
-      + (base.atkScale  || 0) * extra;
+      + (base.atkScale  || 0) * extra
+      + (base.mpScale   || 0) * extra;
     leveled.effect = { ...base.effect, value: val };
     leveled.description = base.effect.type === "heal"
       ? `HP+${val}回復 Lv${dungeonLevel}`
+      : base.effect.type === "mp_heal"
+      ? `MP+${val}回復 Lv${dungeonLevel}`
       : `ATK+${val} Lv${dungeonLevel}`;
   }
   return leveled;

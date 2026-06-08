@@ -60,5 +60,19 @@ export const ITEM_CONFIG = {
     minDungeon: 1, description: "凍傷状態を解除する",
     effect: { type: "cure_freeze" },
     buyPrice: 40, sellPrice: 16
+  },
+  MP_POTION: {
+    no: 7, id: "mp_potion", name: "マナ薬",
+    iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#7986CB",
+    minDungeon: 1, description: "MP+8回復",
+    effect: { type: "mp_heal", value: 8 }, mpScale: 2,
+    buyPrice: 50, sellPrice: 20
+  },
+  ELIXIR: {
+    no: 8, id: "elixir", name: "エリクサー",
+    iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#F0E060",
+    minDungeon: 4, description: "HP・MP全回復",
+    effect: { type: "elixir" },
+    buyPrice: 200, sellPrice: 80
   }
 };

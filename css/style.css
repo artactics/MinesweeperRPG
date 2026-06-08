@@ -218,6 +218,14 @@ body {
   color: #fff;
 }
 
+#floor-progress {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #f0c040;
+  letter-spacing: 0.05em;
+  margin: 0 auto;
+}
+
 #flag-mode-btn {
   display: none;
   font-size: 0.85rem;
@@ -1068,6 +1076,7 @@ button:hover {
 .battle-enemy-icon {
   display: flex;
   justify-content: center;
+  position: relative;
   /*margin-bottom: 8px;*/
 }
 
@@ -1080,6 +1089,49 @@ button:hover {
 .battle-enemy-icon .gi-icon-badge--lg {
   width: 48px;
   height: 48px;
+}
+
+@keyframes hit-flash {
+  0%   { filter: brightness(1) saturate(1); }
+  20%  { filter: brightness(5) saturate(0); }
+  100% { filter: brightness(1) saturate(1); }
+}
+
+.battle-enemy-icon.hit-flash {
+  animation: hit-flash 0.35s ease-out;
+}
+
+@keyframes dmg-float {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1.3); }
+  70%  { opacity: 1; transform: translateX(-50%) translateY(-30px) scale(1);   }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-44px) scale(0.85); }
+}
+
+.dmg-float {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ff4444;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  pointer-events: none;
+  animation: dmg-float 0.8s ease-out forwards;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+@keyframes monster-breathe {
+  0%, 100% { transform: scaleX(1.00) scaleY(1.00); }
+  45%       { transform: scaleX(0.95) scaleY(1.06); }
+  55%       { transform: scaleX(0.97) scaleY(1.04); }
+}
+
+.battle-enemy-icon .ui-icon-badge--lg,
+.battle-enemy-icon .gi-icon-badge--lg {
+  animation: monster-breathe 2.2s ease-in-out infinite;
+  transform-origin: center bottom;
 }
 
 #battle-text {

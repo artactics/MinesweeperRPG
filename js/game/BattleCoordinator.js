@@ -126,6 +126,10 @@ export class BattleCoordinator {
       if (enemyStatusTick?.burn)   this.battleUI.addLog(`火傷！${enemy.name}に ${enemyStatusTick.burn} ダメージ！`, "attack");
 
       this.battleUI.update(enemy, player);
+      if (!isMine && playerDmg > 0) {
+        this.battleUI.hitFlash();
+        this.battleUI.showDamageFloat(playerDmg);
+      }
       this.battleUI.renderGrid(battle.battleGrid);
       this.battleUI.renderSkills(battleSkills, player);
       this.onUpdateUI();
