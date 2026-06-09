@@ -83,7 +83,7 @@ export class MinesweeperInputHandler {
       const target = candidates[Math.floor(Math.random() * candidates.length)];
       player.spendMp(skill.mpCost);
       this.logUI.add(`索敵スキル発動！マスを開けた`);
-      this.onLeft(target);
+      this.onLeft(target, true);
       this.onUpdateUI();
       return true;
     }
@@ -91,7 +91,7 @@ export class MinesweeperInputHandler {
   }
 
   /** 左クリック（マス開示・コード開き・アイテム取得） */
-  onLeft(cell) {
+  onLeft(cell, skipMpGain = false) {
     const session = this.getSession();
     const grid = session.grid;
     if (!grid) return;
@@ -103,17 +103,25 @@ export class MinesweeperInputHandler {
     if (cell.flagged) return;
 
     if (cell.revealed) {
-      // コード開き：周囲の旗の値の合計が danger と一致すれば隣接マスを一括開封
-      if (cell.danger > 0) {
+      // コード開き：表示数値の合計が一致すれば隣接マスを一括開封（霧マスは無効）
+      const displayDanger = cell.displayedDanger ?? cell.danger;
+      if (displayDanger !== null && displayDanger > 0) {
         const neighbors = grid.getNeighbors(cell);
         const flagCount = neighbors.reduce((s, n) => s + (n.flagType || (n.flagged ? 1 : 0)), 0);
-        if (flagCount === cell.danger) {
+        if (flagCount === displayDanger) {
           for (const n of neighbors.filter(n => !n.flagged && !n.revealed)) {
-            this.onLeft(n);
+            this.onLeft(n, skipMpGain);
           }
         }
       }
       return;
+    }
+
+    // 頑丈チェック：周囲の通常マスが全て開放されていないと開けない
+    if (cell.specialType === "sturdy") {
+      const neighbors = grid.getNeighbors(cell);
+      const canOpen = neighbors.every(n => n.isEnemy || n.specialType === "sturdy" || n.revealed);
+      if (!canOpen) return;
     }
 
     cell.revealed = true;
@@ -124,12 +132,11 @@ export class MinesweeperInputHandler {
       return;
     }
 
-    this.getPlayer().gainMp(1);
+    if (!skipMpGain) this.getPlayer().gainMp(1);
 
-    if (cell.danger > 0) {
-      cell.element.textContent = cell.danger;
-    } else {
-      this.floodReveal(cell.row, cell.col);
+    // 特殊マス・dangerあり：フラッド無効。通常danger=0のみ連鎖開示
+    if (!cell.specialType && cell.danger === 0) {
+      this.floodReveal(cell.row, cell.col, skipMpGain);
     }
 
     this.onCheckClear();
@@ -145,7 +152,7 @@ export class MinesweeperInputHandler {
   }
 
   /** danger=0 のマスから連鎖的に開示 */
-  floodReveal(r, c) {
+  floodReveal(r, c, skipMpGain = false) {
     const session = this.getSession();
     const grid = session.grid;
 
@@ -155,14 +162,14 @@ export class MinesweeperInputHandler {
       if (nr < 0 || nr >= grid.rows || nc < 0 || nc >= grid.cols) continue;
 
       const cell = grid.cells[nr][nc];
-      if (cell.revealed || cell.isEnemy) continue;
+      if (cell.revealed || cell.isEnemy || cell.specialType) continue;
 
       cell.revealed = true;
       this.gridRenderer.updateCell(cell);
-      this.getPlayer().gainMp(1);
+      if (!skipMpGain) this.getPlayer().gainMp(1);
 
       if (cell.danger === 0) {
-        this.floodReveal(nr, nc);
+        this.floodReveal(nr, nc, skipMpGain);
       }
     }
   }

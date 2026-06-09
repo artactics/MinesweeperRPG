@@ -81,6 +81,7 @@ export class GridRenderer {
         div.style.width  = `${cellSize}px`;
         div.style.height = `${cellSize}px`;
         cell.element = div;
+        this.updateCell(cell);
         this.root.appendChild(div);
       }
     }
@@ -90,10 +91,21 @@ export class GridRenderer {
     const el = cell.element;
     el.classList.toggle("revealed", cell.revealed);
     el.classList.toggle("flagged", cell.flagged);
-    el.classList.remove("flag-1", "flag-2", "flag-3");
+    el.classList.remove("flag-1", "flag-2", "flag-3",
+      "special-fog", "special-sturdy", "special-tension", "special-phantom");
+
+    if (cell.specialType) {
+      el.classList.add(`special-${cell.specialType}`);
+    }
 
     if (cell.revealed) {
-      el.textContent = cell.isEnemy ? "✕" : (cell.danger || "");
+      if (cell.isEnemy) {
+        el.textContent = "✕";
+      } else if (cell.specialType === "fog") {
+        el.textContent = "?";
+      } else {
+        el.textContent = (cell.displayedDanger || "");
+      }
       el.style.background = "";
     } else if (cell.flagType === 1) {
       el.textContent = "１";

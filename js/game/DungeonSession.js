@@ -98,7 +98,8 @@ export class DungeonSession {
       lc.gridSize.cols,
       lc.enemySpawn,
       lc.enemyTypes || config.enemyTypes,
-      this.currentDungeonLevel
+      this.currentDungeonLevel,
+      lc.specialBlocks || null
     );
 
     const battle = new BattleSystem(this.getPlayer());

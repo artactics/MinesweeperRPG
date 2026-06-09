@@ -193,6 +193,7 @@ export class BattleCoordinator {
     cell.isEnemy = false;
     cell.revealed = true;
     cell.danger = grid.countDanger(cell.row, cell.col);
+    if (!cell.specialType) cell.displayedDanger = cell.danger;
     this.gridRenderer.updateCell(cell);
 
     for (const [dr, dc] of DIRECTIONS) {
@@ -203,7 +204,16 @@ export class BattleCoordinator {
       const neighbor = grid.cells[nr][nc];
       if (!neighbor.isEnemy) {
         neighbor.danger = grid.countDanger(nr, nc);
+        if (!neighbor.specialType || neighbor.specialType === "sturdy") neighbor.displayedDanger = neighbor.danger;
         this.gridRenderer.updateCell(neighbor);
+      }
+    }
+
+    grid.recalcSpecialDangers();
+    for (let r = 0; r < grid.rows; r++) {
+      for (let c = 0; c < grid.cols; c++) {
+        const sc = grid.cells[r][c];
+        if (sc.specialType && sc.revealed) this.gridRenderer.updateCell(sc);
       }
     }
 

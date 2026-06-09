@@ -182,6 +182,7 @@ export class GameController {
     if (!this.dungeonSession.enter(level, layer)) return;
     this._updateMonsterList();
     this._updateFloorProgress();
+    this._updateSpecialBlocksLegend();
     this.updateUI();
     this.screenNavigator.showDungeonPlay();
   }
@@ -203,6 +204,26 @@ export class GameController {
 
   _updateMonsterList() {
     this.monsterListUI.render(this.dungeonSession.grid);
+  }
+
+  _updateSpecialBlocksLegend() {
+    const section = document.getElementById("special-blocks-section");
+    const legend  = document.getElementById("special-blocks-legend");
+    if (!section || !legend) return;
+    const sb = this.dungeonSession.layerConfig?.specialBlocks;
+    const LABELS = {
+      fog:     { name: "視界不良", desc: "開けても数字が見えない" },
+      sturdy:  { name: "頑丈",     desc: "周囲マスが全て開いてから開放" },
+      tension: { name: "緊張感",   desc: "周囲2マス分の合計を表示" },
+      phantom: { name: "まぼろし", desc: "表示数字が±1ずれている" },
+    };
+    const lines = sb
+      ? Object.entries(LABELS)
+          .filter(([t]) => (sb[t] || 0) > 0)
+          .map(([t, l]) => `<div class="special-legend-item special-legend--${t}"><span class="legend-sample special-${t}"></span><strong>${l.name}</strong>：${l.desc}</div>`)
+      : [];
+    section.style.display = lines.length ? "" : "none";
+    legend.innerHTML = lines.join("");
   }
 
   _updateFloorProgress() {
@@ -227,6 +248,7 @@ export class GameController {
     if (result.status === "advance") {
       this._updateMonsterList();
       this._updateFloorProgress();
+      this._updateSpecialBlocksLegend();
       this.updateUI();
       this.saveGameData();
       return true;
