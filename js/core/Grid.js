@@ -112,7 +112,6 @@ export class Grid {
         const cell = this.cells[r][c];
         if      (cell.specialType === "tension") { cell.displayedDanger = this._countDanger2Radius(r, c); }
         else if (cell.specialType === "phantom") { let off = Math.random() < 0.5 ? 1 : -1; if (cell.danger + off < 1) off = 1; cell._phantomOffset = off; cell.displayedDanger = cell.danger + off; }
-        else if (cell.specialType === "fog")     { cell.displayedDanger = null; }
         else                                      { cell.displayedDanger = cell.danger; }
       }
     }
@@ -122,7 +121,9 @@ export class Grid {
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const cell = this.cells[r][c];
-        if      (cell.specialType === "tension") cell.displayedDanger = this._countDanger2Radius(r, c);
+        if      (cell.specialType === "fog")     { cell.danger = this.countDanger(r, c); cell.displayedDanger = cell.danger; }
+        else if (cell.specialType === "sturdy")  { cell.danger = this.countDanger(r, c); cell.displayedDanger = cell.danger; }
+        else if (cell.specialType === "tension") cell.displayedDanger = this._countDanger2Radius(r, c);
         else if (cell.specialType === "phantom") cell.displayedDanger = Math.max(1, cell.danger + (cell._phantomOffset || 1));
       }
     }

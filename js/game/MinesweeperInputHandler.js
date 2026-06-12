@@ -24,7 +24,8 @@ export class MinesweeperInputHandler {
     logUI,
     onUpdateUI,
     onSave,
-    onCheckClear
+    onCheckClear,
+    onFlagChange = null
   }) {
     this.getSession = getSession;
     this.gridRenderer = gridRenderer;
@@ -34,6 +35,7 @@ export class MinesweeperInputHandler {
     this.onUpdateUI = onUpdateUI;
     this.onSave = onSave;
     this.onCheckClear = onCheckClear;
+    this.onFlagChange = onFlagChange;
   }
 
   useFieldSkill(skill) {
@@ -103,7 +105,8 @@ export class MinesweeperInputHandler {
     if (cell.flagged) return;
 
     if (cell.revealed) {
-      // コード開き：表示数値の合計が一致すれば隣接マスを一括開封（霧マスは無効）
+      // コード開き：特殊マスは無効
+      if (cell.specialType) return;
       const displayDanger = cell.displayedDanger ?? cell.danger;
       if (displayDanger !== null && displayDanger > 0) {
         const neighbors = grid.getNeighbors(cell);
@@ -149,6 +152,7 @@ export class MinesweeperInputHandler {
     cell.flagType = ((cell.flagType || 0) + 1) % 4;
     cell.flagged  = cell.flagType > 0;
     this.gridRenderer.updateCell(cell);
+    this.onFlagChange?.();
   }
 
   /** danger=0 のマスから連鎖的に開示 */

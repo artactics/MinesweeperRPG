@@ -91,18 +91,23 @@ export class GridRenderer {
     const el = cell.element;
     el.classList.toggle("revealed", cell.revealed);
     el.classList.toggle("flagged", cell.flagged);
+    el.classList.toggle("defeated", !!cell.defeated);
     el.classList.remove("flag-1", "flag-2", "flag-3",
-      "special-fog", "special-sturdy", "special-tension", "special-phantom");
+      "special-fog", "special-sturdy", "special-tension", "special-phantom",
+      "defeated-1", "defeated-2", "defeated-3");
 
     if (cell.specialType) {
       el.classList.add(`special-${cell.specialType}`);
+    }
+    if (cell.defeated && cell.displayedDanger) {
+      el.classList.add(`defeated-${cell.displayedDanger}`);
     }
 
     if (cell.revealed) {
       if (cell.isEnemy) {
         el.textContent = "✕";
       } else if (cell.specialType === "fog") {
-        el.textContent = "?";
+        el.textContent = cell.danger % 2 === 0 ? "□" : "△";
       } else {
         el.textContent = (cell.displayedDanger || "");
       }

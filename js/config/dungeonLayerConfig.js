@@ -5,11 +5,11 @@
  *   floorCount    : 階層数（クリアが必要なフロア数）
  *   gridSize      : グリッドサイズ { rows, cols }
  *   enemyCount    : 1フロアあたりの敵数
- *   expPerFloor   : 1フロアクリアで得る経験値
- *   goldPerFloor  : 1フロアクリアで得るゴールド
+ *   exp           : ダンジョン層クリアで得る経験値
+ *   gold          : ダンジョン層クリアで得るゴールド
  *   minPlayerLevel: この層に入場できる最低プレイヤーレベル
  *   drops         : ダンジョンクリア時のドロップテーブル（確率0のアイテムは記載しない）
- *                   { id: ITEM_TYPES/EQUIPMENT_TYPES のキー, category: "item"|"equipment", chance: 0〜1 }
+ *                   { id: ITEM_TYPES/EQUIPMENT_TYPES のキー, category: "item"|"equipment", chance: 0～1 }
  */
 
 /** 層の表示ラベル */
@@ -29,7 +29,7 @@ export const LAYER_KEYS = ["surface", "middle", "deep"];
 export const DUNGEON_LAYER_CONFIG = {
   1: { // スライムの洞窟 ── スライムシリーズ（SLIME）
     surface: {
-      floorCount: 1, gridSize: { rows: 8, cols: 8 }, enemyTypes: ["SLIME"], enemySpawn: { normal:  8, elite: 0, master: 0 }, expPerFloor:  8, goldPerFloor: 12, minPlayerLevel: 1,
+      floorCount: 1, gridSize: { rows: 8, cols: 8 }, enemyTypes: ["SLIME"], enemySpawn: { normal:  8, elite: 0, master: 0 }, exp:  8, gold: 12, minPlayerLevel: 1,
       drops: [
         { id: "POTION",       category: "item",      chance: 0.01 },
         { id: "SLIME_SWORD",  category: "equipment", chance: 0.01 },
@@ -39,7 +39,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 8, cols: 8 }, enemyTypes: ["SLIME"], enemySpawn: { normal:  8, elite: 2, master: 0 }, expPerFloor: 10, goldPerFloor: 16, minPlayerLevel: 1,
+      floorCount: 2, gridSize: { rows: 8, cols: 8 }, enemyTypes: ["SLIME"], enemySpawn: { normal:  8, elite: 2, master: 0 }, exp: 10, gold: 16, minPlayerLevel: 1,
       drops: [
         { id: "POTION",       category: "item",      chance: 0.10 },
         { id: "SLIME_SWORD",  category: "equipment", chance: 0.10 },
@@ -49,7 +49,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 8, cols: 8 }, enemyTypes: ["SLIME"], enemySpawn: { normal: 10, elite: 2, master: 1 }, expPerFloor: 14, goldPerFloor: 22, minPlayerLevel: 2,
+      floorCount: 3, gridSize: { rows: 8, cols: 8 }, enemyTypes: ["SLIME"], enemySpawn: { normal: 10, elite: 2, master: 1 }, exp: 14, gold: 22, minPlayerLevel: 2,
       drops: [
         { id: "POTION",       category: "item",      chance: 0.50 },
         { id: "SLIME_SWORD",  category: "equipment", chance: 0.50 },
@@ -61,7 +61,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   2: { // ゴブリンの森 ── ゴブリンシリーズ（GOBLIN）
     surface: {
-      floorCount: 1, gridSize: { rows:  9, cols:  9 }, enemyTypes: ["SLIME", "GOBLIN"], enemySpawn: { normal: 10, elite: 0, master: 0 }, expPerFloor: 12, goldPerFloor: 18, minPlayerLevel: 2,
+      floorCount: 1, gridSize: { rows:  9, cols:  9 }, enemyTypes: ["SLIME", "GOBLIN"], enemySpawn: { normal: 10, elite: 0, master: 0 }, exp: 12, gold: 18, minPlayerLevel: 2,
       drops: [
         { id: "POTION",         category: "item",      chance: 0.01 },
         { id: "GOBLIN_SWORD",   category: "equipment", chance: 0.01 },
@@ -71,7 +71,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows:  9, cols:  9 }, enemyTypes: ["SLIME", "GOBLIN"], enemySpawn: { normal:  9, elite: 3, master: 0 }, expPerFloor: 15, goldPerFloor: 25, minPlayerLevel: 2,
+      floorCount: 2, gridSize: { rows:  9, cols:  9 }, enemyTypes: ["SLIME", "GOBLIN"], enemySpawn: { normal:  9, elite: 3, master: 0 }, exp: 15, gold: 25, minPlayerLevel: 2,
       drops: [
         { id: "POTION",         category: "item",      chance: 0.10 },
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
@@ -82,7 +82,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 9, cols: 9 }, enemyTypes: ["SLIME", "GOBLIN"], enemySpawn: { normal: 11, elite: 3, master: 1 }, expPerFloor: 20, goldPerFloor: 35, minPlayerLevel: 3,
+      floorCount: 3, gridSize: { rows: 9, cols: 9 }, enemyTypes: ["SLIME", "GOBLIN"], enemySpawn: { normal: 11, elite: 3, master: 1 }, exp: 20, gold: 35, minPlayerLevel: 3,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -95,7 +95,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   3: { // 狼の巣窟 ── 狼シリーズ（WOLF）
     surface: {
-      floorCount: 1, gridSize: { rows:  10, cols:  10 }, enemyTypes: ["GOBLIN", "WOLF"], enemySpawn: { normal: 12, elite: 0, master: 0 }, expPerFloor: 18, goldPerFloor: 28, minPlayerLevel: 3,
+      floorCount: 1, gridSize: { rows:  10, cols:  10 }, enemyTypes: ["GOBLIN", "WOLF"], enemySpawn: { normal: 12, elite: 0, master: 0 }, exp: 18, gold: 28, minPlayerLevel: 3,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -106,7 +106,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["GOBLIN", "WOLF"], enemySpawn: { normal: 11, elite: 3, master: 0 }, expPerFloor: 22, goldPerFloor: 38, minPlayerLevel: 3,
+      floorCount: 2, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["GOBLIN", "WOLF"], enemySpawn: { normal: 11, elite: 3, master: 0 }, exp: 22, gold: 38, minPlayerLevel: 3,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -117,7 +117,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["GOBLIN", "WOLF"], enemySpawn: { normal: 13, elite: 4, master: 1 }, expPerFloor: 30, goldPerFloor: 52, minPlayerLevel: 4,
+      floorCount: 3, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["GOBLIN", "WOLF"], enemySpawn: { normal: 13, elite: 4, master: 1 }, exp: 30, gold: 52, minPlayerLevel: 4,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -130,7 +130,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   4: { // オークの要塞 ── オークシリーズ（ORC）
     surface: {
-      floorCount: 1, gridSize: { rows:  10, cols:  10 }, enemyTypes: ["WOLF", "ORC"], enemySpawn: { normal: 13, elite: 0, master: 0 }, specialBlocks: { sturdy: 2 }, expPerFloor: 24, goldPerFloor: 36, minPlayerLevel: 4,
+      floorCount: 1, gridSize: { rows:  10, cols:  10 }, enemyTypes: ["WOLF", "ORC"], enemySpawn: { normal: 13, elite: 0, master: 0 }, specialBlocks: { sturdy: 4 }, exp: 24, gold: 36, minPlayerLevel: 4,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -141,7 +141,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["WOLF", "ORC"], enemySpawn: { normal: 12, elite: 4, master: 0 }, specialBlocks: { sturdy: 3 }, expPerFloor: 30, goldPerFloor: 48, minPlayerLevel: 4,
+      floorCount: 2, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["WOLF", "ORC"], enemySpawn: { normal: 12, elite: 4, master: 0 }, specialBlocks: { sturdy: 6 }, exp: 30, gold: 48, minPlayerLevel: 4,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -152,7 +152,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["WOLF", "ORC"], enemySpawn: { normal: 14, elite: 4, master: 2 }, specialBlocks: { sturdy: 4 }, expPerFloor: 40, goldPerFloor: 65, minPlayerLevel: 5,
+      floorCount: 3, gridSize: { rows: 10, cols: 10 }, enemyTypes: ["WOLF", "ORC"], enemySpawn: { normal: 14, elite: 4, master: 2 }, specialBlocks: { sturdy: 8 }, exp: 40, gold: 65, minPlayerLevel: 5,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -165,7 +165,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   5: { // 亡者の墓地 ── 亡者シリーズ（DEAD）
     surface: {
-      floorCount: 1, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["ORC", "SKELETON"], enemySpawn: { normal: 15, elite: 0, master: 0 }, specialBlocks: { fog: 2 }, expPerFloor: 32, goldPerFloor: 48, minPlayerLevel: 5,
+      floorCount: 1, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["ORC", "SKELETON"], enemySpawn: { normal: 15, elite: 0, master: 0 }, specialBlocks: { fog: 4 }, exp: 32, gold: 48, minPlayerLevel: 5,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -176,7 +176,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["ORC", "SKELETON"], enemySpawn: { normal: 14, elite: 4, master: 0 }, specialBlocks: { fog: 3 }, expPerFloor: 40, goldPerFloor: 64, minPlayerLevel: 5,
+      floorCount: 2, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["ORC", "SKELETON"], enemySpawn: { normal: 14, elite: 4, master: 0 }, specialBlocks: { fog: 6 }, exp: 40, gold: 64, minPlayerLevel: 5,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -187,7 +187,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["ORC", "SKELETON"], enemySpawn: { normal: 16, elite: 5, master: 2 }, specialBlocks: { fog: 4 }, expPerFloor: 55, goldPerFloor: 88, minPlayerLevel: 6,
+      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["ORC", "SKELETON"], enemySpawn: { normal: 16, elite: 5, master: 2 }, specialBlocks: { fog: 8 }, exp: 55, gold: 88, minPlayerLevel: 6,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -200,7 +200,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   6: { // ドラゴンの山脈 ── ドラゴンシリーズ（DRAGON）
     surface: {
-      floorCount: 1, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["SKELETON", "DRAGON"], enemySpawn: { normal: 17, elite: 0, master: 0 }, specialBlocks: { tension: 2 }, expPerFloor:  40, goldPerFloor:  64, minPlayerLevel: 6,
+      floorCount: 1, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["SKELETON", "DRAGON"], enemySpawn: { normal: 17, elite: 0, master: 0 }, specialBlocks: { tension: 4 }, exp:  40, gold:  64, minPlayerLevel: 6,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -211,7 +211,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["SKELETON", "DRAGON"], enemySpawn: { normal: 15, elite: 5, master: 0 }, specialBlocks: { tension: 3 }, expPerFloor:  50, goldPerFloor:  80, minPlayerLevel: 6,
+      floorCount: 2, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["SKELETON", "DRAGON"], enemySpawn: { normal: 15, elite: 5, master: 0 }, specialBlocks: { tension: 6 }, exp:  50, gold:  80, minPlayerLevel: 6,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -222,7 +222,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["SKELETON", "DRAGON"], enemySpawn: { normal: 18, elite: 6, master: 2 }, specialBlocks: { tension: 4 }, expPerFloor:  70, goldPerFloor: 112, minPlayerLevel: 7,
+      floorCount: 3, gridSize: { rows: 11, cols: 11 }, enemyTypes: ["SKELETON", "DRAGON"], enemySpawn: { normal: 18, elite: 6, master: 2 }, specialBlocks: { tension: 8 }, exp:  70, gold: 112, minPlayerLevel: 7,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -235,7 +235,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   7: { // 悪魔の領域 ── 悪魔シリーズ（DEMON）
     surface: {
-      floorCount: 1, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DRAGON", "DEMON"], enemySpawn: { normal: 18, elite: 0, master: 0 }, specialBlocks: { phantom: 2 }, expPerFloor:  52, goldPerFloor:  80, minPlayerLevel: 7,
+      floorCount: 1, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DRAGON", "DEMON"], enemySpawn: { normal: 18, elite: 0, master: 0 }, specialBlocks: { phantom: 4 }, exp:  52, gold:  80, minPlayerLevel: 7,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -246,7 +246,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DRAGON", "DEMON"], enemySpawn: { normal: 17, elite: 5, master: 0 }, specialBlocks: { phantom: 3 }, expPerFloor:  65, goldPerFloor: 105, minPlayerLevel: 7,
+      floorCount: 2, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DRAGON", "DEMON"], enemySpawn: { normal: 17, elite: 5, master: 0 }, specialBlocks: { phantom: 6 }, exp:  65, gold: 105, minPlayerLevel: 7,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -257,7 +257,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DRAGON", "DEMON"], enemySpawn: { normal: 20, elite: 6, master: 2 }, specialBlocks: { phantom: 4 }, expPerFloor:  90, goldPerFloor: 145, minPlayerLevel: 8,
+      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DRAGON", "DEMON"], enemySpawn: { normal: 20, elite: 6, master: 2 }, specialBlocks: { phantom: 8 }, exp:  90, gold: 145, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },
@@ -270,7 +270,7 @@ export const DUNGEON_LAYER_CONFIG = {
   },
   8: { // 魔王の城 ── 魔王シリーズ（LORD）
     surface: {
-      floorCount: 1, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DEMON"], enemySpawn: { normal: 20, elite: 0, master: 0 }, specialBlocks: { fog: 1, sturdy: 1 }, expPerFloor:  80, goldPerFloor: 120, minPlayerLevel: 8,
+      floorCount: 1, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DEMON"], enemySpawn: { normal: 20, elite: 0, master: 0 }, specialBlocks: { fog: 2, sturdy: 2 }, exp:  80, gold: 120, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.01 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.01 },
@@ -281,7 +281,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     middle: {
-      floorCount: 2, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DEMON"], enemySpawn: { normal: 19, elite: 6, master: 0 }, specialBlocks: { fog: 2, sturdy: 1, tension: 1, phantom: 1 }, expPerFloor: 100, goldPerFloor: 162, minPlayerLevel: 8,
+      floorCount: 2, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DEMON"], enemySpawn: { normal: 19, elite: 6, master: 0 }, specialBlocks: { fog: 4, sturdy: 2, tension: 2, phantom: 2 }, exp: 100, gold: 162, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.10 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.10 },
@@ -292,7 +292,7 @@ export const DUNGEON_LAYER_CONFIG = {
       ],
     },
     deep: {
-      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DEMON"], enemySpawn: { normal: 22, elite: 7, master: 3 }, specialBlocks: { fog: 2, sturdy: 2, tension: 2, phantom: 2 }, expPerFloor: 140, goldPerFloor: 225, minPlayerLevel: 8,
+      floorCount: 3, gridSize: { rows: 12, cols: 12 }, enemyTypes: ["DEMON"], enemySpawn: { normal: 22, elite: 7, master: 3 }, specialBlocks: { fog: 4, sturdy: 4, tension: 4, phantom: 4 }, exp: 140, gold: 225, minPlayerLevel: 8,
       drops: [
         { id: "SUPER_POTION",   category: "item",      chance: 0.50 },
         { id: "ATTACK_BOOST",   category: "item",      chance: 0.50 },

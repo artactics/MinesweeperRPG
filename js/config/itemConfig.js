@@ -68,11 +68,4 @@ export const ITEM_CONFIG = {
     effect: { type: "mp_heal", value: 8 }, mpScale: 2,
     buyPrice: 50, sellPrice: 20
   },
-  ELIXIR: {
-    no: 8, id: "elixir", name: "エリクサー",
-    iconUrl: ITEM_IMG("round-potion.svg"), iconColor: "#F0E060",
-    minDungeon: 4, description: "HP・MP全回復",
-    effect: { type: "elixir" },
-    buyPrice: 200, sellPrice: 80
-  }
 };

@@ -15,7 +15,7 @@ export const SKILL_CONFIG = {
     description: "HPを10回復"
   },
   SCOUT: {
-    id: "scout", name: "索敵", mpCost: 4,
+    id: "scout", name: "索敵", mpCost: 10,
     usableIn: "field",
     description: "モンスターのいないマスを1つ開ける"
   },

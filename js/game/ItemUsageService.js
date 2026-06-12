@@ -58,11 +58,6 @@ export class ItemUsageService {
         player.mp = Math.min(player.mp + effect.value, player.maxMp);
         this.logUI.add(`${item.name}を使用！ MPを${effect.value}回復`);
         break;
-      case "elixir":
-        player.hp = player.maxHp;
-        player.mp = player.maxMp;
-        this.logUI.add(`${item.name}を使用！ HP・MP全回復！`);
-        break;
     }
 
     player.removeItem(itemId, fromHand);

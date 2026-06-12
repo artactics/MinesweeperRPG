@@ -174,12 +174,6 @@ export class DungeonSession {
     const lc = this.layerConfig;
     const layerLabel = LAYER_LABELS[this.currentLayer];
 
-    // フロアごとの報酬付与
-    player.gainExp(lc.expPerFloor);
-    player.addGold(lc.goldPerFloor);
-    this.totalExpGained += lc.expPerFloor;
-    this.totalGoldGained += lc.goldPerFloor;
-
     if (this.currentFloor < this.totalFloors) {
       // まだフロアが残っている → 次フロアへ
       const nextFloor = this.currentFloor + 1;
@@ -189,7 +183,11 @@ export class DungeonSession {
       return { status: "advance", floor: this.currentFloor, totalFloors: this.totalFloors };
     }
 
-    // 全フロアクリア
+    // 全フロアクリア → EXP・ゴールドを一括付与
+    player.gainExp(lc.exp);
+    this.totalExpGained += lc.exp;
+    player.addGold(lc.gold);
+    this.totalGoldGained += lc.gold;
     this.logUI.add(`${config.name} ${layerLabel} 全${this.totalFloors}F クリア！`);
     player.poison = false;
     player.burn   = false;

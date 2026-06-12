@@ -87,7 +87,8 @@ export class GameController {
       logUI: this.logUI,
       onUpdateUI: () => this.updateUI(),
       onSave: () => this.saveGameData(),
-      onCheckClear: () => this._handleCheckClear()
+      onCheckClear: () => this._handleCheckClear(),
+      onFlagChange: () => this._updateFlagCount()
     });
 
     this.itemUsage = new ItemUsageService({
@@ -183,6 +184,7 @@ export class GameController {
     this._updateMonsterList();
     this._updateFloorProgress();
     this._updateSpecialBlocksLegend();
+    this._updateFlagCount();
     this.updateUI();
     this.screenNavigator.showDungeonPlay();
   }
@@ -206,14 +208,33 @@ export class GameController {
     this.monsterListUI.render(this.dungeonSession.grid);
   }
 
+  _updateFlagCount() {
+    const section = document.getElementById("flag-count-section");
+    const el = document.getElementById("flag-counts");
+    if (!section || !el) return;
+    const grid = this.dungeonSession.grid;
+    if (!grid) { section.style.display = "none"; return; }
+    const counts = [0, 0, 0];
+    for (let r = 0; r < grid.rows; r++) {
+      for (let c = 0; c < grid.cols; c++) {
+        const ft = grid.cells[r][c].flagType;
+        if (ft >= 1 && ft <= 3) counts[ft - 1]++;
+      }
+    }
+    section.style.display = "";
+    el.innerHTML = [1, 2, 3].map((f, i) =>
+      `<span class="flag-cnt flag-${f}">旗${f}:<strong>${counts[i]}</strong></span>`
+    ).join("");
+  }
+
   _updateSpecialBlocksLegend() {
     const section = document.getElementById("special-blocks-section");
     const legend  = document.getElementById("special-blocks-legend");
     if (!section || !legend) return;
     const sb = this.dungeonSession.layerConfig?.specialBlocks;
     const LABELS = {
-      fog:     { name: "視界不良", desc: "開けても数字が見えない" },
-      sturdy:  { name: "頑丈",     desc: "周囲マスが全て開いてから開放" },
+      fog:     { name: "視界不良", desc: "奇数なら△、偶数なら□" },
+      sturdy:  { name: "頑丈",     desc: "周囲の安全マスが全て開いてから開放" },
       tension: { name: "緊張感",   desc: "周囲2マス分の合計を表示" },
       phantom: { name: "まぼろし", desc: "表示数字が±1ずれている" },
     };
@@ -249,6 +270,7 @@ export class GameController {
       this._updateMonsterList();
       this._updateFloorProgress();
       this._updateSpecialBlocksLegend();
+      this._updateFlagCount();
       this.updateUI();
       this.saveGameData();
       return true;

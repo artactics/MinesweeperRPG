@@ -79,7 +79,7 @@ export class DungeonSelectUI {
 
           const levelNote = layerLocked
             ? `<span class="layer-btn__level">Lv${lc.minPlayerLevel}+</span>`
-            : `<span class="layer-btn__level">${lc.floorCount}F×EXP${lc.expPerFloor}</span>`;
+            : `<span class="layer-btn__level">EXP ${lc.exp}</span>`;
 
           btn.innerHTML = `
             <span class="layer-btn__name">${LAYER_LABELS[layerKey]}</span>
