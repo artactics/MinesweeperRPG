@@ -307,6 +307,12 @@ export class GameController {
     document.getElementById("flag-mode-btn").addEventListener("click", () => {
       this.dungeonSession.toggleFlagMode();
     });
+    document.getElementById("zoom-in-btn").addEventListener("click", () => {
+      this.gridRenderer.zoom(4);
+    });
+    document.getElementById("zoom-out-btn").addEventListener("click", () => {
+      this.gridRenderer.zoom(-4);
+    });
   }
 
   // --- 認証後のプレイヤー差し替え ---

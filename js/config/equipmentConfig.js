@@ -47,8 +47,8 @@ export const EQUIPMENT_SERIES = {
   2: { // ゴブリンシリーズ
     GOBLIN_SWORD:  { no:  5, id: "goblin_sword",  name: "小鬼の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[2], slot: "weapon", category: "equipment", atk:  4,  description: "ATK+4",    minDungeon: 2, sellPrice:  25, skill: "DOUBLE_STRIKE" },
     GOBLIN_HELM:   { no:  6, id: "goblin_helm",   name: "小鬼の兜",      iconUrl: EQ_IMG("helm.svg"),   iconColor: SERIES_COLOR[2], slot: "head",   category: "equipment", maxHp: 8, description: "MaxHP+8",  minDungeon: 2, sellPrice:  16, skill: "SCOUT" },
-    GOBLIN_ARMOR:  { no:  7, id: "goblin_armor",  name: "小鬼の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[2], slot: "body",   category: "equipment", maxHp: 13, description: "MaxHP+13", minDungeon: 2, sellPrice: 26, skill: "CURE_BURN" },
-    GOBLIN_BOOTS:  { no:  8, id: "goblin_boots",  name: "小鬼の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[2], slot: "legs",   category: "equipment", maxHp: 5, description: "MaxHP+5",  minDungeon: 2, sellPrice:  10, skill: "HEAL" },
+    GOBLIN_ARMOR:  { no:  7, id: "goblin_armor",  name: "小鬼の鎧",      iconUrl: EQ_IMG("armor.svg"),  iconColor: SERIES_COLOR[2], slot: "body",   category: "equipment", maxHp: 13, description: "MaxHP+13", minDungeon: 2, sellPrice: 26, skill: "FORTUNE_PRAYER" },
+    GOBLIN_BOOTS:  { no:  8, id: "goblin_boots",  name: "小鬼の脚当て",  iconUrl: EQ_IMG("boots.svg"),  iconColor: SERIES_COLOR[2], slot: "legs",   category: "equipment", maxHp: 5, description: "MaxHP+5",  minDungeon: 2, sellPrice:  10, skill: "TREASURE_PRAYER" },
   },
   3: { // 狼シリーズ
     WOLF_SWORD:  { no:  9, id: "wolf_sword",  name: "狼の剣",      iconUrl: EQ_IMG("sword.svg"),  iconColor: SERIES_COLOR[3], slot: "weapon", category: "equipment", atk:  7,  description: "ATK+7",    minDungeon: 3, sellPrice:  40, skill: "DOUBLE_STRIKE" },

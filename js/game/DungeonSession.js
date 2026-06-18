@@ -60,9 +60,11 @@ export class DungeonSession {
     player.handItems = {};
     player.hp = player.maxHp;
     player.mp = player.maxMp;
-    player.poison = false;
-    player.burn   = false;
-    player.freeze = false;
+    player.poison   = false;
+    player.burn     = false;
+    player.freeze   = false;
+    player.fortune  = false;
+    player.treasure = false;
     this.dungeonEquipmentGained = [];
 
     this.currentDungeonLevel = level;
@@ -184,14 +186,17 @@ export class DungeonSession {
     }
 
     // 全フロアクリア → EXP・ゴールドを一括付与
+    const goldAmt = player.fortune ? Math.floor(lc.gold * 1.25) : lc.gold;
     player.gainExp(lc.exp);
     this.totalExpGained += lc.exp;
-    player.addGold(lc.gold);
-    this.totalGoldGained += lc.gold;
+    player.addGold(goldAmt);
+    this.totalGoldGained += goldAmt;
     this.logUI.add(`${config.name} ${layerLabel} 全${this.totalFloors}F クリア！`);
-    player.poison = false;
-    player.burn   = false;
-    player.freeze = false;
+    player.poison   = false;
+    player.burn     = false;
+    player.freeze   = false;
+    player.fortune  = false;
+    player.treasure = false;
 
     const { gainedItems, gainedEquipment } = this._rollDrops();
     this.dungeonEquipmentGained = [];
@@ -219,8 +224,9 @@ export class DungeonSession {
     const gainedItems = {};
     const gainedEquipment = [];
 
+    const dropMult = player.treasure ? 1.25 : 1;
     for (const drop of drops) {
-      if (Math.random() > drop.chance) continue;
+      if (Math.random() > Math.min(1, drop.chance * dropMult)) continue;
 
       const base = drop.category === "equipment"
         ? EQUIPMENT_TYPES[drop.id]
@@ -258,8 +264,10 @@ export class DungeonSession {
   abandon() {
     this.discardDungeonEquipment();
     const player = this.getPlayer();
-    player.handItems = {};
-    player.hp = player.maxHp;
+    player.handItems  = {};
+    player.hp         = player.maxHp;
+    player.fortune    = false;
+    player.treasure   = false;
     this.grid = null;
     this.flagMode = false;
     this.currentFloor = 1;

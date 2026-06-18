@@ -233,6 +233,29 @@ body {
   margin-left: 8px;
 }
 
+.zoom-controls {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.zoom-btn {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 3px 11px;
+  background: #444;
+  border: 1px solid #666;
+  color: #ddd;
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.zoom-btn:hover {
+  background: #555;
+  border-color: #888;
+}
+
 #flag-mode-btn.flag-mode-off {
   background: #555;
 }
@@ -1016,6 +1039,12 @@ button:hover {
   opacity: 0.75;
 }
 
+.layer-btn__gold {
+  font-size: 0.62rem;
+  opacity: 0.75;
+  color: #ffd54f;
+}
+
 .layer-btn--surface {
   background: rgba(76, 175, 80, 0.12);
   border-color: rgba(76, 175, 80, 0.35);
@@ -1622,6 +1651,18 @@ button:hover {
   background: #001a3a;
   border: 1px solid #5090d0;
   color: #80c0ff;
+}
+
+.status-fortune {
+  background: #2a1a00;
+  border: 1px solid #d0a030;
+  color: #ffe060;
+}
+
+.status-treasure {
+  background: #001a14;
+  border: 1px solid #30c090;
+  color: #60ffc0;
 }
 
 .skill-badge {

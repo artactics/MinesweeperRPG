@@ -4,9 +4,9 @@ export class Player {
   constructor(savedData = null) {
     if (savedData) {
       this.level = savedData.level || 1;
-      this.maxHp = savedData.maxHp || GAME_CONFIG.PLAYER_INITIAL_HP;
+      this.maxHp = this._calcMaxHp(this.level);
       this.hp = this.maxHp;
-      this.atk = savedData.atk || GAME_CONFIG.PLAYER_INITIAL_ATK;
+      this.atk = this._calcAtk(this.level);
       this.exp = savedData.exp || 0;
       
       // 古いデータ形式（配列）から新しい形式（オブジェクト）に変換
@@ -34,18 +34,23 @@ export class Player {
         legs:   this._restoreEquipped(se.legs)
       };
       this.equipmentInventory = this._rehydrateStash(savedData.equipmentInventory || {});
+      for (const item of Object.values(this.equipped)) {
+        if (item) this._applyEquipmentStats(item, 1);
+      }
       this.maxMp = this._calcMaxMp(this.level);
       this.mp = savedData.mp !== undefined ? Math.min(savedData.mp, this.maxMp) : this.maxMp;
       this.focusActive = false;
       this.guardActive = false;
-      this.poison = false;
-      this.burn = false;
-      this.freeze = false;
+      this.poison   = false;
+      this.burn     = false;
+      this.freeze   = false;
+      this.fortune  = false;
+      this.treasure = false;
     } else {
       this.level = 1;
-      this.maxHp = GAME_CONFIG.PLAYER_INITIAL_HP;
-      this.hp = GAME_CONFIG.PLAYER_INITIAL_HP;
-      this.atk = GAME_CONFIG.PLAYER_INITIAL_ATK;
+      this.maxHp = this._calcMaxHp(1);
+      this.hp = this.maxHp;
+      this.atk = this._calcAtk(1);
       this.exp = 0;
       this.inventory = {};
       this.handItems = {};
@@ -57,9 +62,11 @@ export class Player {
       this.mp = this.maxMp;
       this.focusActive = false;
       this.guardActive = false;
-      this.poison = false;
-      this.burn = false;
-      this.freeze = false;
+      this.poison   = false;
+      this.burn     = false;
+      this.freeze   = false;
+      this.fortune  = false;
+      this.treasure = false;
     }
   }
 
@@ -73,16 +80,16 @@ export class Player {
     return true;
   }
 
-  get expToNext() { return this.level * GAME_CONFIG.EXP_PER_LEVEL; }
+  get expToNext() { return this.level ** 2; }
 
   gainExp(amount) {
     this.exp += amount;
     this.checkLevelUp();
   }
 
-  _calcMaxMp(level) {
-    return 10 + Math.floor(level * 2.5);
-  }
+  _calcMaxHp(level)  { return 20 + 3 * level; }
+  _calcAtk(level)    { return 10 + level; }
+  _calcMaxMp(level)  { return 10 + level; }
 
   gainMp(amount) {
     this.mp = Math.min(this.mp + amount, this.maxMp);
@@ -107,16 +114,16 @@ export class Player {
   }
 
   checkLevelUp() {
-    const need = this.level * GAME_CONFIG.EXP_PER_LEVEL;
-    while (this.exp >= need) {
-      this.exp -= need;
-      this.level++;
-      this.maxHp += GAME_CONFIG.HP_GAIN_PER_LEVEL;
-      this.atk += GAME_CONFIG.ATK_GAIN_PER_LEVEL;
-      this.hp = this.maxHp;
-      this.maxMp = this._calcMaxMp(this.level);
-      this.mp = Math.min(this.mp + 5, this.maxMp);
+    while (this.level < GAME_CONFIG.MAX_LEVEL && this.exp >= this.level ** 2) {
+      this.exp  -= this.level ** 2;
+      const prev = this.level++;
+      this.maxHp += this._calcMaxHp(this.level) - this._calcMaxHp(prev);
+      this.atk   += this._calcAtk(this.level)   - this._calcAtk(prev);
+      this.hp     = this.maxHp;
+      this.maxMp  = this._calcMaxMp(this.level);
+      this.mp     = Math.min(this.mp + 5, this.maxMp);
     }
+    if (this.level >= GAME_CONFIG.MAX_LEVEL) this.exp = 0;
   }
 
   addItem(item) {

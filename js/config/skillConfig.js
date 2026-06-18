@@ -68,5 +68,15 @@ export const SKILL_CONFIG = {
     id: "cure_freeze", name: "解凍", mpCost: 4,
     usableIn: "both",
     description: "攻撃せず、自分の凍傷状態を解除する"
+  },
+  FORTUNE_PRAYER: {
+    id: "fortune_prayer", name: "金運の祈り", mpCost: 4,
+    usableIn: "field",
+    description: "「金運」状態になる。ゴールド獲得率が1.25倍"
+  },
+  TREASURE_PRAYER: {
+    id: "treasure_prayer", name: "宝運の祈り", mpCost: 4,
+    usableIn: "field",
+    description: "「宝運」状態になる。アイテムドロップ率が1.25倍"
   }
 };

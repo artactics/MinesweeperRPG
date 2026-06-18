@@ -35,9 +35,11 @@ export class LogUI {
     const statusEl = document.getElementById("player-status");
     if (statusEl) {
       const badges = [];
-      if (player.poison) badges.push(`<span class="status-badge status-poison">毒</span>`);
-      if (player.burn)   badges.push(`<span class="status-badge status-burn">火傷</span>`);
-      if (player.freeze) badges.push(`<span class="status-badge status-freeze">凍傷</span>`);
+      if (player.poison)   badges.push(`<span class="status-badge status-poison">毒</span>`);
+      if (player.burn)     badges.push(`<span class="status-badge status-burn">火傷</span>`);
+      if (player.freeze)   badges.push(`<span class="status-badge status-freeze">凍傷</span>`);
+      if (player.fortune)  badges.push(`<span class="status-badge status-fortune">金運</span>`);
+      if (player.treasure) badges.push(`<span class="status-badge status-treasure">宝運</span>`);
       statusEl.innerHTML = badges.join(" ");
     }
   }

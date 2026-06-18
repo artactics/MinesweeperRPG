@@ -49,7 +49,7 @@ export class BattleGrid {
     const cell = this.cells[row][col];
     if (cell.revealed) return { cell: null, gridReset: false };
     cell.revealed = true;
-    const allRevealed = this.cells.flat().every(c => c.revealed);
+    const allRevealed = this.cells.flat().filter(c => !c.isMine).every(c => c.revealed);
     if (allRevealed) {
       this._init();
       return { cell, gridReset: true };

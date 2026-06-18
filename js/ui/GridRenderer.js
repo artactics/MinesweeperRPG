@@ -4,6 +4,7 @@ export class GridRenderer {
     this.root = root;
     this.onLeft = onLeft;
     this.onRight = onRight;
+    this.cellSize = parseInt(localStorage.getItem("gridZoom") || "32");
     this._setupEvents();
   }
 
@@ -67,9 +68,9 @@ export class GridRenderer {
   render() {
     this.root.innerHTML = "";
 
-    const cellSize = 32;
-    this.root.style.gridTemplateColumns = `repeat(${this.grid.cols}, ${cellSize}px)`;
-    this.root.style.gridTemplateRows    = `repeat(${this.grid.rows}, ${cellSize}px)`;
+    const sz = this.cellSize;
+    this.root.style.gridTemplateColumns = `repeat(${this.grid.cols}, ${sz}px)`;
+    this.root.style.gridTemplateRows    = `repeat(${this.grid.rows}, ${sz}px)`;
 
     for (let r = 0; r < this.grid.rows; r++) {
       for (let c = 0; c < this.grid.cols; c++) {
@@ -78,13 +79,20 @@ export class GridRenderer {
         div.className = "cell";
         div.dataset.row = r;
         div.dataset.col = c;
-        div.style.width  = `${cellSize}px`;
-        div.style.height = `${cellSize}px`;
+        div.style.width    = `${sz}px`;
+        div.style.height   = `${sz}px`;
+        div.style.fontSize = `${Math.max(7, Math.round(sz * 0.44))}px`;
         cell.element = div;
         this.updateCell(cell);
         this.root.appendChild(div);
       }
     }
+  }
+
+  zoom(delta) {
+    this.cellSize = Math.min(64, Math.max(16, this.cellSize + delta));
+    localStorage.setItem("gridZoom", String(this.cellSize));
+    if (this.grid) this.render();
   }
 
   updateCell(cell) {

@@ -67,6 +67,22 @@ export class MinesweeperInputHandler {
       this.onSave();
       return true;
     }
+    if (skill.id === "fortune_prayer") {
+      player.fortune = true;
+      player.spendMp(skill.mpCost);
+      this.logUI.add("金運の祈り発動！ゴールド獲得率が1.25倍になった");
+      this.onUpdateUI();
+      this.onSave();
+      return true;
+    }
+    if (skill.id === "treasure_prayer") {
+      player.treasure = true;
+      player.spendMp(skill.mpCost);
+      this.logUI.add("宝運の祈り発動！アイテムドロップ率が1.25倍になった");
+      this.onUpdateUI();
+      this.onSave();
+      return true;
+    }
     if (skill.id === "scout") {
       const session = this.getSession();
       const grid = session.grid;
