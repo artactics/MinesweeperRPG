@@ -410,8 +410,16 @@ body {
 #equipment-window {
   width: 380px;
   max-height: 75vh;
-  overflow-y: auto;
+  overflow: hidden;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+#equipment-inventory-list {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .eq-section-title {
@@ -1045,6 +1053,13 @@ button:hover {
   color: #ffd54f;
 }
 
+.layer-btn__stars {
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  color: #ffd700;
+  opacity: 0.9;
+}
+
 .layer-btn--surface {
   background: rgba(76, 175, 80, 0.12);
   border-color: rgba(76, 175, 80, 0.35);
@@ -1676,4 +1691,35 @@ button:hover {
   margin-left: 4px;
   vertical-align: middle;
   white-space: nowrap;
+}
+
+.eq-skill-badge {
+  cursor: pointer;
+}
+
+.eq-skill-badge:hover {
+  background: #1e4a70;
+  border-color: #6aaad0;
+}
+
+.abandon-ok-btn {
+  background: #7a2020;
+  border-color: #aa3030;
+  color: #ffcccc;
+  font-weight: bold;
+}
+
+.abandon-ok-btn:hover {
+  background: #992828;
+}
+
+.eq-skill-tooltip {
+  background: #0e1f30;
+  border: 1px solid #4a7aaa;
+  color: #a8d4f8;
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  line-height: 1.5;
 }

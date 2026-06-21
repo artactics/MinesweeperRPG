@@ -147,6 +147,7 @@ export class MinesweeperInputHandler {
     this.gridRenderer.updateCell(cell);
 
     if (cell.isEnemy) {
+      session.markEnemyEncountered();
       this.battleCoordinator.startBattle(cell);
       return;
     }

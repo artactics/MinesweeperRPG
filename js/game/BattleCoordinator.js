@@ -92,6 +92,7 @@ export class BattleCoordinator {
               enemyStatusTick, playerStatusTick } = attackResult;
 
       if (skillConsumed && pendingSkill) {
+        this.getSession().markSkillOrItemUsed();
         player.spendMp(pendingSkill.mpCost);
         switch (pendingSkill.id) {
           case "heal":         this.battleUI.addLog("回復スキル発動！HP+10", "heal"); break;

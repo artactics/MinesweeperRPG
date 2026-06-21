@@ -94,6 +94,7 @@ export class GameController {
     this.itemUsage = new ItemUsageService({
       getPlayer: () => this.player,
       logUI: this.logUI,
+      onMarkUsed: () => this.dungeonSession.markSkillOrItemUsed(),
       onAfterUse: () => {
         this.updateUI();
         this.saveGameData();
@@ -130,7 +131,8 @@ export class GameController {
       getPlayer: () => this.player,
       onUseItem: (itemId, fromHand) => this.itemUsage.useItem(itemId, fromHand),
       onUseSkill: (skill) => {
-        this.minesweeperInput.useFieldSkill(skill);
+        const used = this.minesweeperInput.useFieldSkill(skill);
+        if (used) this.dungeonSession.markSkillOrItemUsed();
         this._refreshFieldSkills();
       }
     });
@@ -296,10 +298,17 @@ export class GameController {
 
   _setupPlayButtons() {
     document.getElementById("back-to-select-btn").addEventListener("click", () => {
+      document.getElementById("abandon-confirm-modal").style.display = "flex";
+    });
+    document.getElementById("abandon-confirm-ok").addEventListener("click", () => {
+      document.getElementById("abandon-confirm-modal").style.display = "none";
       this.dungeonSession.abandon();
       this.saveGameData();
       this.showDungeonSelect();
       this.updateUI();
+    });
+    document.getElementById("abandon-confirm-cancel").addEventListener("click", () => {
+      document.getElementById("abandon-confirm-modal").style.display = "none";
     });
     document.getElementById("result-ok-btn").addEventListener("click", () => {
       this.showDungeonSelect();

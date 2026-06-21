@@ -4,7 +4,7 @@ import { SKILL_CONFIG } from "../config/skillConfig.js";
 const skillTag = (item) => {
   if (!item?.skill) return "";
   const s = SKILL_CONFIG[item.skill];
-  return s ? ` <span class="skill-badge">${s.name}</span>` : "";
+  return s ? ` <span class="skill-badge eq-skill-badge" data-skill-id="${item.skill}">${s.name}</span>` : "";
 };
 
 /**
@@ -30,7 +30,29 @@ export class EquipmentUI {
     });
     document.getElementById("equipment-close-btn").addEventListener("click", () => {
       document.getElementById("equipment-modal").style.display = "none";
+      this._hideSkillTooltip();
     });
+    document.getElementById("equipment-window").addEventListener("click", e => {
+      const badge = e.target.closest(".eq-skill-badge[data-skill-id]");
+      const tooltip = document.getElementById("skill-tooltip");
+      if (!badge) { this._hideSkillTooltip(); return; }
+      e.stopPropagation();
+      const skillKey = badge.dataset.skillId;
+      if (tooltip.dataset.activeSkill === skillKey && tooltip.style.display !== "none") {
+        this._hideSkillTooltip();
+        return;
+      }
+      const s = SKILL_CONFIG[skillKey];
+      if (!s) return;
+      tooltip.textContent = `${s.name}  MP: ${s.mpCost}  ${s.description}`;
+      tooltip.dataset.activeSkill = skillKey;
+      tooltip.style.display = "block";
+    });
+  }
+
+  _hideSkillTooltip() {
+    const tooltip = document.getElementById("skill-tooltip");
+    if (tooltip) { tooltip.style.display = "none"; tooltip.dataset.activeSkill = ""; }
   }
 
   /** 装備スロットと所持装備一覧を描画 */

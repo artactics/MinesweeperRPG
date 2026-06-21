@@ -33,7 +33,13 @@ export class DungeonSession {
     this.flagMode = false;
     /** 今回のダンジョンで拾った装備（クリアまで仮所持） */
     this.dungeonEquipmentGained = [];
+    /** 星評価トラッキング */
+    this.usedSkillOrItem = false;
+    this.encounteredEnemy = false;
   }
+
+  markSkillOrItemUsed() { this.usedSkillOrItem = true; }
+  markEnemyEncountered()  { this.encounteredEnemy  = true; }
 
   /**
    * ダンジョンに入場し盤面を生成
@@ -75,6 +81,8 @@ export class DungeonSession {
     this.totalExpGained = 0;
     this.totalGoldGained = 0;
     this.entryPlayerLevel = player.level;
+    this.usedSkillOrItem = false;
+    this.encounteredEnemy = false;
 
     player.bonusAtk = 0;
     this.flagMode = false;
@@ -201,6 +209,12 @@ export class DungeonSession {
     const { gainedItems, gainedEquipment } = this._rollDrops();
     this.dungeonEquipmentGained = [];
     this.grid = null;
+
+    // 星評価（増加のみ、減少なし）
+    let stars = 1;
+    if (!this.usedSkillOrItem) stars = 2;
+    if (!this.usedSkillOrItem && !this.encounteredEnemy) stars = 3;
+    player.setLayerStars(this.currentDungeonLevel, this.currentLayer, stars);
 
     return {
       status: "complete",

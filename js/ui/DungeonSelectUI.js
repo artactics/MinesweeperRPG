@@ -77,6 +77,9 @@ export class DungeonSelectUI {
           btn.className = `layer-btn ${LAYER_CSS[layerKey]}`;
           btn.disabled = layerLocked;
 
+          const stars = player.getLayerStars(dungeonLvl, layerKey);
+          const starsHtml = `<span class="layer-btn__stars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</span>`;
+
           const levelNote = layerLocked
             ? `<span class="layer-btn__level">Lv${lc.minPlayerLevel}+</span>`
             : `<span class="layer-btn__level">EXP ${lc.exp}</span><span class="layer-btn__gold">${lc.gold}G</span>`;
@@ -85,6 +88,7 @@ export class DungeonSelectUI {
             <span class="layer-btn__name">${LAYER_LABELS[layerKey]}</span>
             <span class="layer-btn__floors">${lc.floorCount}F</span>
             ${levelNote}
+            ${starsHtml}
           `;
 
           if (!layerLocked) {

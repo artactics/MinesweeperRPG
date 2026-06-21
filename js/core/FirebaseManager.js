@@ -73,7 +73,8 @@ export class FirebaseManager {
         gold: playerData.gold || 0,
         inventory: playerData.inventory || {},
         equipped: playerData.equipped || { weapon: null, armor: null },
-        equipmentInventory: playerData.equipmentInventory || {}
+        equipmentInventory: playerData.equipmentInventory || {},
+        dungeonStars: playerData.dungeonStars || {}
       }
     };
 

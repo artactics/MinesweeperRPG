@@ -46,6 +46,7 @@ export class Player {
       this.freeze   = false;
       this.fortune  = false;
       this.treasure = false;
+      this.dungeonStars = savedData.dungeonStars || {};
     } else {
       this.level = 1;
       this.maxHp = this._calcMaxHp(1);
@@ -67,6 +68,7 @@ export class Player {
       this.freeze   = false;
       this.fortune  = false;
       this.treasure = false;
+      this.dungeonStars = {};
     }
   }
 
@@ -240,6 +242,15 @@ export class Player {
     this.equipped[slot] = null;
   }
 
+  setLayerStars(level, layer, stars) {
+    const key = `${level}:${layer}`;
+    this.dungeonStars[key] = Math.max(this.dungeonStars[key] || 0, stars);
+  }
+
+  getLayerStars(level, layer) {
+    return this.dungeonStars[`${level}:${layer}`] || 0;
+  }
+
   toJSON() {
     return {
       level: this.level,
@@ -251,7 +262,8 @@ export class Player {
       mp: this.mp,
       inventory: this.inventory,
       equipped: this.equipped,
-      equipmentInventory: this.equipmentInventory
+      equipmentInventory: this.equipmentInventory,
+      dungeonStars: this.dungeonStars
     };
   }
 }

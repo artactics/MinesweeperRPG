@@ -9,10 +9,11 @@ export class ItemUsageService {
    * @param {import("../ui/LogUI.js").LogUI} options.logUI
    * @param {() => void} options.onAfterUse
    */
-  constructor({ getPlayer, logUI, onAfterUse }) {
+  constructor({ getPlayer, logUI, onAfterUse, onMarkUsed }) {
     this.getPlayer = getPlayer;
     this.logUI = logUI;
     this.onAfterUse = onAfterUse;
+    this.onMarkUsed = onMarkUsed || (() => {});
   }
 
   /**
@@ -61,6 +62,7 @@ export class ItemUsageService {
     }
 
     player.removeItem(itemId, fromHand);
+    this.onMarkUsed();
     this.onAfterUse();
   }
 }
