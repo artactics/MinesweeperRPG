@@ -38,6 +38,8 @@ export class DungeonSession {
     this.encounteredEnemy = false;
     /** アイテム使用回数トラッキング（ダンジョン層ごとにリセット） */
     this.itemUsageCounts = {};
+    /** 現フロアのグリッドに存在する最大danger値 */
+    this.maxDangerLevel = 3;
   }
 
   markSkillOrItemUsed() { this.usedSkillOrItem = true; }
@@ -124,6 +126,11 @@ export class DungeonSession {
 
     const gridEl = document.getElementById("grid");
     gridEl.className = config.themeClass || "";
+
+    const spawn = lc.enemySpawn || {};
+    if ((spawn.master || 0) > 0)     this.maxDangerLevel = 3;
+    else if ((spawn.elite || 0) > 0) this.maxDangerLevel = 2;
+    else                             this.maxDangerLevel = 1;
 
     this.gridRenderer.grid = this.grid;
     this.gridRenderer.render();

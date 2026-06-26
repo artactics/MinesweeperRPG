@@ -163,10 +163,11 @@ export class MinesweeperInputHandler {
     this.onUpdateUI();
   }
 
-  /** 右クリック（旗サイクル: なし→1→2→3→なし） */
+  /** 右クリック（旗サイクル: なし→1→…→最大danger→なし） */
   onRight(cell) {
     if (cell.revealed) return;
-    cell.flagType = ((cell.flagType || 0) + 1) % 4;
+    const maxFlag = this.getSession().maxDangerLevel || 3;
+    cell.flagType = ((cell.flagType || 0) + 1) % (maxFlag + 1);
     cell.flagged  = cell.flagType > 0;
     this.gridRenderer.updateCell(cell);
     this.onFlagChange?.();

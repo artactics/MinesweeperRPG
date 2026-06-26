@@ -157,7 +157,7 @@ export class GameController {
       onGuestPlay: () => this.showDungeonSelect()
     });
 
-    this.firebaseManager.init(user => this.authFlow.onUserChanged(user));
+    this.firebaseManager.init(user => this.authFlow.onUserChanged(user).catch(e => console.error("Auth error:", e)));
 
     initMenuIcons();
     this._setupPlayButtons();
@@ -225,8 +225,9 @@ export class GameController {
         if (ft >= 1 && ft <= 3) counts[ft - 1]++;
       }
     }
+    const maxFlag = this.dungeonSession.maxDangerLevel || 3;
     section.style.display = "";
-    el.innerHTML = [1, 2, 3].map((f, i) =>
+    el.innerHTML = [1, 2, 3].filter(f => f <= maxFlag).map((f, i) =>
       `<span class="flag-cnt flag-${f}">旗${f}:<strong>${counts[i]}</strong></span>`
     ).join("");
   }

@@ -75,13 +75,19 @@ export class AuthFlow {
       this.screenNavigator.showGameScreen();
       this.logUI.add(`ログイン: ${user.displayName || user.email}`);
 
-      const savedData = await this.firebaseManager.loadUserData();
-      if (savedData) {
-        const player = new Player(savedData);
-        const battle = new BattleSystem(player);
-        this.onPlayerLoaded(player, battle);
-        this.logUI.add("セーブデータを読み込みました");
-      } else {
+      try {
+        const savedData = await this.firebaseManager.loadUserData();
+        if (savedData) {
+          const player = new Player(savedData);
+          const battle = new BattleSystem(player);
+          this.onPlayerLoaded(player, battle);
+          this.logUI.add("セーブデータを読み込みました");
+        } else {
+          this.onGuestPlay();
+        }
+      } catch (error) {
+        console.error("セーブデータ読み込みエラー:", error);
+        this.logUI.add("セーブデータの読み込みに失敗しました");
         this.onGuestPlay();
       }
     } else {
