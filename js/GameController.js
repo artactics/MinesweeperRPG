@@ -95,6 +95,7 @@ export class GameController {
       getPlayer: () => this.player,
       logUI: this.logUI,
       onMarkUsed: () => this.dungeonSession.markSkillOrItemUsed(),
+      getSession: () => this.dungeonSession,
       onAfterUse: () => {
         this.updateUI();
         this.saveGameData();
@@ -130,6 +131,7 @@ export class GameController {
     this.playerHudUI = new PlayerHudUI({
       getPlayer: () => this.player,
       onUseItem: (itemId, fromHand) => this.itemUsage.useItem(itemId, fromHand),
+      getItemUseCount: (itemId) => this.dungeonSession.getItemUseCount(itemId),
       onUseSkill: (skill) => {
         const used = this.minesweeperInput.useFieldSkill(skill);
         if (used) this.dungeonSession.markSkillOrItemUsed();

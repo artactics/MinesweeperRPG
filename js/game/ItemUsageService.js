@@ -9,11 +9,12 @@ export class ItemUsageService {
    * @param {import("../ui/LogUI.js").LogUI} options.logUI
    * @param {() => void} options.onAfterUse
    */
-  constructor({ getPlayer, logUI, onAfterUse, onMarkUsed }) {
+  constructor({ getPlayer, logUI, onAfterUse, onMarkUsed, getSession }) {
     this.getPlayer = getPlayer;
     this.logUI = logUI;
     this.onAfterUse = onAfterUse;
     this.onMarkUsed = onMarkUsed || (() => {});
+    this.getSession = getSession || (() => null);
   }
 
   /**
@@ -22,6 +23,13 @@ export class ItemUsageService {
    * @param {boolean} fromHand - true: 手持ち, false: 倉庫
    */
   useItem(itemId, fromHand = true) {
+    const session = this.getSession();
+    const inDungeon = session && session.grid !== null;
+    if (inDungeon && !session.canUseItem(itemId)) {
+      this.logUI.add(`このアイテムは今回のダンジョンで使用上限（5回）に達しています`);
+      return;
+    }
+
     const player = this.getPlayer();
     const items = fromHand ? player.handItems : player.inventory;
     const item = items[itemId];
@@ -62,6 +70,7 @@ export class ItemUsageService {
     }
 
     player.removeItem(itemId, fromHand);
+    if (inDungeon) session.recordItemUse(itemId);
     this.onMarkUsed();
     this.onAfterUse();
   }

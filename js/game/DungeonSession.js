@@ -36,10 +36,16 @@ export class DungeonSession {
     /** 星評価トラッキング */
     this.usedSkillOrItem = false;
     this.encounteredEnemy = false;
+    /** アイテム使用回数トラッキング（ダンジョン層ごとにリセット） */
+    this.itemUsageCounts = {};
   }
 
   markSkillOrItemUsed() { this.usedSkillOrItem = true; }
   markEnemyEncountered()  { this.encounteredEnemy  = true; }
+
+  getItemUseCount(itemId)       { return this.itemUsageCounts[itemId] || 0; }
+  recordItemUse(itemId)         { this.itemUsageCounts[itemId] = (this.itemUsageCounts[itemId] || 0) + 1; }
+  canUseItem(itemId, limit = 5) { return this.getItemUseCount(itemId) < limit; }
 
   /**
    * ダンジョンに入場し盤面を生成
@@ -83,6 +89,7 @@ export class DungeonSession {
     this.entryPlayerLevel = player.level;
     this.usedSkillOrItem = false;
     this.encounteredEnemy = false;
+    this.itemUsageCounts = {};
 
     player.bonusAtk = 0;
     this.flagMode = false;
@@ -277,6 +284,7 @@ export class DungeonSession {
   /** 撤退時：仮装備破棄・手持ちリセット・HP全回復・セッション終了 */
   abandon() {
     this.discardDungeonEquipment();
+    this.itemUsageCounts = {};
     const player = this.getPlayer();
     player.handItems  = {};
     player.hp         = player.maxHp;

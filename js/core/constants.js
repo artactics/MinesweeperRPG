@@ -58,9 +58,9 @@ export const DUNGEON_CONFIG = {
 };
 
 export const ENEMY_TYPES = {
-  SLIME:    { name: "スライム", iconUrl: ENEMY_IMG("slime.svg"), color: "#4CAF50", baseHp: 10, baseAtk: 2, baseExp: 5, dangerRange: [0, 2],
+  SLIME:    { name: "スライム", iconUrl: ENEMY_IMG("slime.svg"), color: "#4CAF50", baseHp: 15, baseAtk: 2, baseExp: 5, dangerRange: [0, 2],
     skills: [{ id: "drain", chance: 0.20 }] },
-  GOBLIN:   { name: "ゴブリン", iconUrl: ENEMY_IMG("goblin.svg"), color: "#8BC34A", baseHp: 20, baseAtk: 4, baseExp: 8, dangerRange: [1, 4],
+  GOBLIN:   { name: "ゴブリン", iconUrl: ENEMY_IMG("goblin.svg"), color: "#8BC34A", baseHp: 25, baseAtk: 4, baseExp: 8, dangerRange: [1, 4],
     skills: [{ id: "charge", chance: 0.20 }] },
   WOLF:     { name: "オオカミ", iconUrl: ENEMY_IMG("wolf.svg"), color: "#A1887F", baseHp: 40, baseAtk: 7, baseExp: 10, dangerRange: [2, 5],
     skills: [{ id: "fire_mark", chance: 0.20 }] },

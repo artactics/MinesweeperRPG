@@ -358,6 +358,18 @@ body {
   font-size: 0.88rem;
 }
 
+.item-row__limit {
+  font-size: 0.72rem;
+  color: #777;
+  margin-right: 4px;
+  min-width: 2.4em;
+  text-align: right;
+}
+
+.item-row__limit--zero {
+  color: #c44;
+}
+
 .item-row__use-btn {
   font-size: 0.78rem;
   padding: 3px 10px;

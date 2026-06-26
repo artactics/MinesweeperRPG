@@ -10,10 +10,11 @@ export class PlayerHudUI {
    * @param {() => import("../core/Player.js").Player} options.getPlayer
    * @param {(itemId: string, fromHand: boolean) => void} options.onUseItem
    */
-  constructor({ getPlayer, onUseItem, onUseSkill }) {
+  constructor({ getPlayer, onUseItem, onUseSkill, getItemUseCount }) {
     this.getPlayer = getPlayer;
     this.onUseItem = onUseItem;
     this.onUseSkill = onUseSkill || (() => {});
+    this.getItemUseCount = getItemUseCount || (() => 0);
   }
 
   /** 倉庫アイテムリストを再描画 */
@@ -64,12 +65,22 @@ export class PlayerHudUI {
       itemInfo.className = "item-row__info";
       itemInfo.innerHTML = `${renderItemIcon(item)}<span>${item.name} x${item.count}</span>`;
 
+      const usedCount = this.getItemUseCount(itemId);
+      const remaining = Math.max(0, 5 - usedCount);
+
+      const limitNote = document.createElement("span");
+      limitNote.className = "item-row__limit";
+      limitNote.textContent = `残${remaining}`;
+      if (remaining === 0) limitNote.classList.add("item-row__limit--zero");
+
       const useBtn = document.createElement("button");
       useBtn.className = "item-row__use-btn";
       useBtn.textContent = "使用";
+      useBtn.disabled = remaining <= 0;
       useBtn.onclick = () => this.onUseItem(itemId, fromHand);
 
       itemDiv.appendChild(itemInfo);
+      itemDiv.appendChild(limitNote);
       itemDiv.appendChild(useBtn);
       container.appendChild(itemDiv);
     }
